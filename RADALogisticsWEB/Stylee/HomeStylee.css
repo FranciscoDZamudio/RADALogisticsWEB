@@ -1,0 +1,85 @@
+﻿@import url("https://fonts.googleapis.com/css?family=Raleway:400,400i,700");
+
+body {
+    background-image: url('../pictures/4857390.jpg');
+    background-size: cover; /* Hace que la imagen cubra toda la pantalla */
+    background-position: center center; /* Centra la imagen */
+    background-attachment: fixed; /* Hace que la imagen no se desplace al hacer scroll */
+    height: 100vh; /* Asegura que el fondo cubra toda la altura de la ventana */
+    margin: 0; /* Elimina los márgenes predeterminados */
+    overflow: hidden;
+}
+
+.container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    height: 100vh;
+    z-index: 5;
+    position: relative;
+    .logo
+
+{
+    margin: 0 auto;
+    margin-bottom: 10vw;
+    max-width: 100px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 100%;
+
+{
+    width: 100%;
+}
+
+}
+}
+
+
+* {
+    font-family: -apple-system, BlinkMacSystemFont, "San Francisco", Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    margin: 0;
+}
+
+.labelTittles {
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    grid-area: 1/1/2/2;
+    position: relative;
+    a
+
+{
+    font-family: Raleway, serif;
+    color: #333;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    position: relative;
+    text-align: center;
+    margin: 1vh auto;
+    padding: 2.5vh 0;
+    width: 80%;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(15px);
+    border-radius: 5px;
+    box-shadow: 1px 1px 0 0 rgba(255, 255, 255, 0.8) inset, 3px 5px 10px 0 rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    will-change: color, text-shadow, font-size;
+    transition: ease all 0.3s;
+    &:hover
+
+{
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.8);
+}
+
+}
+}
