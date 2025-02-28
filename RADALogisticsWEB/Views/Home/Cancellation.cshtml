@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - History";
+}
+
+<link href="~/Stylee/Cancellation.css" rel="stylesheet" />
+
+<div class="container" style="text-align: center; width: 100%; height: 100%">
+
+    <div style="text-align: center; min-width: 100%; height: 100% ">
+
+        <h3 class="labelTitt"> History of cancelled movements </h3>
+        <h5 style="text-align:center"> View history cancelled </h5>
+
+        <hr>
+        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+            <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+                <span class="text">Return to back</span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+            </button>
+        </div>
+        <hr>
+
+        @using (Html.BeginForm("Cancellation", "Home", FormMethod.Post))
+        {
+            <h5> Date range </h5>
+            <div class="form-row">
+
+                <p style="text-align: center;">&nbsp;</p>
+
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4" style="font-family: Century Gothic ">Date Start</label>
+                    <input id="TimeStart" style="max-width:100vh;" name="TimeStart" type="date" /> <br>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4" style="font-family: Century Gothic ">Date End</label>
+                    <input id="Timeend" style="max-width: 100vh;" name="Timeend" type="date" /> <br>
+                </div>
+
+                <p style="text-align: center;">&nbsp;</p>
+
+                <button style="width:45vh" type="submit" class="Bto_saved">
+                    🪢 Query
+                </button>
+
+                <p style="text-align: center;">&nbsp;</p>
+            </div>
+        }
+
+
+
+    </div>
+
+</div>
+
+<p style="text-align: center;">&nbsp;</p>
+<h4 style="text-align:center" class="Tittlelabel"> Latest cancelled movements entered into the system </h4>
+<h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
+
+<ul class="responsive-table">
+    <li class="table-header" id="tableData">
+
+        <div class="col col-1">Folio</div>
+
+        <div class="col col-2">Reason</div>
+
+        <div class="col col-3">Company</div>
+
+        <div class="col col-4">Date</div>
+
+    </li>
+    @foreach (var person in ViewBag.Records)
+    {
+        <li class="table-row" id="tblCustomers">
+
+            <div class="col col-1" data-label="Folio">@person.Folio</div>
+
+            <div class="col col-2" data-label="Reason">@person.Reason</div>
+
+            <div class="col col-3" data-label="Company">@person.Company</div>
+
+            <div class="col col-4" data-label="Datetime"> @person.Datetime</div>
+
+        </li>
+    }
+</ul>
+

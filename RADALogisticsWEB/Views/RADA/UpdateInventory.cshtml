@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - Update Inventory";
+}
+
+<link href="~/Stylee/PagesRADAStylee.css" rel="stylesheet" />
+
+<div class="container" style="text-align: center; width: 100%; height: 100%">
+
+    <div style="text-align: center; min-width: 100%; ">
+
+
+        <p style="text-align: center;">&nbsp;</p>
+        <img src="~/Pictures/actualizar.png" height="90" />
+        <p style="text-align: center;">&nbsp;</p>
+
+        <h4 class="labelTitt">
+            Updating Inventory Data - Inventory Control View
+        </h4>
+        <h5 style="text-align:center">Update Information</h5>
+
+        <hr>
+        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+            <button class="animated-button" onclick="location.href='@Url.Action("Inventory", "RADA")'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+                <span class="text">Return to back</span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+            </button>
+        </div>
+        <hr>
+
+       @using (Html.BeginForm("Update", "RADA", FormMethod.Post))
+        {
+
+            <input value="@ViewBag.ID" name="id" id="id" hidden="hidden" />
+
+
+            <p style="text-align: center;">&nbsp;</p>
+
+            <h5 class="Tittlelabel"> Information Container Inventory</h5>
+            <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
+            <p style="text-align: center;">&nbsp;</p>
+            <div class="group">
+                <input type="text" id="Username" name="Username" value="@ViewBag.User" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Enter your Username:</label>
+            </div>
+
+            <div class="group">
+                <input type="text" id="Container" name="Container" value="@ViewBag.Container" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Container:</label>
+            </div>
+
+            <div class="group">
+                <input type="text" id="LocationCode" name="LocationCode" value="@ViewBag.LocationCode" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Location:</label>
+            </div>
+
+            <div class="group">
+                <input type="text" id="Date" name="Date" value="@ViewBag.Datetime" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Date:</label>
+            </div>
+
+            <p style="text-align: center;">&nbsp;</p>
+            <button type="submit" class="Bto_saved">
+                ♻️ Update
+            </button>
+        }
+
+    </div>
+</div>
+
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
+

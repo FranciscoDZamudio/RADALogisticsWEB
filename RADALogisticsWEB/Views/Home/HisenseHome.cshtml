@@ -9,16 +9,16 @@
 
     <hr>
     <h3 class="labelTitt"> Welcome to the Rada Logistics system </h3>
-    <h4 class="labelTitt">¡ @ViewBag.User !</h4>
+    <h4 style="font-size:15px" class="labelTitt">¡ @ViewBag.User !</h4>
     <h5 class="labelTitt">Select one of the options:</h5>
     <hr>
 
     <nav class="menu">
-        @*<a @Html.ActionLink("‍👷 Supervisors", "Supervisors", "Users")</a>*@
         @*<a @Html.ActionLink("📩 Entry Request", "NewIonizer", "Ioni")</a>
         <a @Html.ActionLink("📥 Inventory Control", "QueryID", "Ioni")</a>*@
-        <a @Html.ActionLink("📤 Request Container", "Menu", "Home")</a>
-        <a @Html.ActionLink("🗂️ View Records", "Menu", "Home")</a>
+        <a @Html.ActionLink("📤 Request Container", "RequestContainer", "HISENSE")</a>
+        <a @Html.ActionLink("‍🔴 Cancellation history", "Cancellation", "Home")</a>
+        <a @Html.ActionLink("🗂️ View Records", "Records", "History")</a>
         <a @Html.ActionLink("⛔ Logout", "LogIn", "Login")</a>
     </nav>
 

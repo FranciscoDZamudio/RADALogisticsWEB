@@ -208,6 +208,7 @@ namespace RADALogisticsWEB.Controllers
                 return RedirectToAction("NewUser", "Users");
             }
         }
+
         private void GetUsuarios()
             {
                 if (GetUsers.Count > 0)

@@ -1,0 +1,149 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - Request Container";
+}
+
+<link href="~/Stylee/HisensePages.css" rel="stylesheet" />
+
+<div class="container" style="text-align: center; width: 100%; height: 100%">
+
+    <div style="text-align: center; min-width: 100%; ">
+
+
+        <h3 class="labelTitt"> Request for Container Movements </h3>
+        <h5 style="text-align:center"> Request Moves </h5>
+        <hr>
+        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+            <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+                <span class="text">Return to back</span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+            </button>
+        </div>
+        <hr>
+
+       @using (Html.BeginForm("ProcessData", "HISENSE", FormMethod.Post))
+        {
+            <p style="text-align: center;">&nbsp;</p>
+            <h5 class="Tittlelabel"> Username Overview </h5>
+            <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
+            <p style="text-align: center;">&nbsp;</p>
+
+            <div class="group">
+                <input style="font-size:12px" readonly="@true" type="text" id="User" name="User" value="@ViewBag.User" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+
+            <h5 class="Tittlelabel"> Container Overview </h5>
+            <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
+            <p style="text-align: center;">&nbsp;</p>
+
+            <h5 class="Tittlelabel">Status:</h5>
+            <div class="group">
+                <select name="Type" id="Type" class="form-control" style="max-width: 40vh; color: black; text-align: center ">
+
+                    <option value="CAR"> CAR </option>
+                    <option value="VAC"> VAC </option>
+
+                </select>
+            </div>
+            <p style="text-align: center;">&nbsp;</p>
+
+            <div class="group">
+                <input style="font-size:15px" type="text" id="Container" name="Container" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Enter your Container:</label>
+            </div>
+
+            <div class="group">
+                <input style="font-size:15px" type="text" id="Origins" name="Origins" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Origins Location:</label>
+            </div>
+
+            <div class="group">
+                <input style="font-size:15px" type="text" id="Destination" name="Destination" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Destination Location:</label>
+            </div>
+
+            <p style="text-align: center;">&nbsp;</p>
+            <button type="submit" class="Bto_saved">
+                ✅ Save
+            </button>
+            <p style="text-align: center;">&nbsp;</p>
+            <p style="text-align: center;">&nbsp;</p>
+            <p style="text-align: center;">&nbsp;</p>
+        }
+
+    </div>
+
+</div>
+
+
+<p style="text-align: center;">&nbsp;</p>
+<h4 style="text-align:center" class="Tittlelabel"> Request Recently Requested Containers </h4>
+<h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
+
+<ul class="responsive-table">
+    <li class="table-header" id="tableData">
+
+        <div class="col col-1">Folio</div>
+
+        <div class="col col-2">Who Request</div>
+
+        <div class="col col-3">Container</div>
+
+        <div class="col col-4">Destination Location</div>
+
+        <div class="col col-5">Origins Location</div>
+
+        <div class="col col-6">Status</div>
+
+        <div class="col col-7">Message</div>
+
+        <div class="col col-8">Date</div>
+
+        <div class="col col-9">Options</div>
+    </li>
+    @foreach (var person in ViewBag.Records)
+    {
+        <li class="table-row" id="tblCustomers">
+
+            <div class="col col-1" data-label="Folio">@person.Folio</div>
+
+            <div class="col col-2" data-label="Username">@person.Who_Send</div>
+
+            <div class="col col-3" data-label="Container"> @person.Container</div>
+
+            <div class="col col-4" data-label="Destination Location"> @person.Destination_Location</div>
+
+            <div class="col col-5" data-label="Origins Location"> @person.Origins_Location</div>
+
+            <div class="col col-6" data-label="Status"> @person.Status</div>
+
+            <div class="col col-7" data-label="Message"> @person.message</div>
+
+            <div class="col col-8" data-label="Date"> @person.Datetime</div>
+
+            <div class="col col-9" data-label="Options">
+
+                @Html.ActionLink("❌ Delete", "CancelContainer", new { ID = @person.Folio }) /
+                @Html.ActionLink("🎴 Details", "Details", new { ID = @person.Folio })
+
+            </div>
+        </li>
+    }
+</ul>
+
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>

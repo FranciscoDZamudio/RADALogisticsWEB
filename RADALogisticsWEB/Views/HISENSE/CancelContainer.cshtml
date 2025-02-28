@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - Remove";
+}
+
+<link href="~/Stylee/HisensePages.css" rel="stylesheet" />
+
+<div class="container" style="text-align: center; width: 100%">
+
+    <div style="text-align: center; min-width: 100%; ">
+
+        <p style="text-align: center;">&nbsp;</p>
+        <h4 class="labelTitt" style="font-size:24px"> ❌ Remove Container Movement </h4>
+        <h5 style="text-align: center; font-size: 16px"> Enter the reason why you are removing the Movement </h5>
+
+        <hr>
+        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+
+            <button class="animated-button" onclick="location.href='@Url.Action("RequestContainer","HISENSE")'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+                <span class="text">Return to back</span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+            </button>
+
+        </div>
+        <hr>
+
+       @using (Html.BeginForm("Delete", "HISENSE", FormMethod.Post))
+        {
+            <input id="ID" name="ID" value="@ViewBag.ID" hidden="hidden" style="text-align:center" />
+
+            <p style="text-align: center;">&nbsp;</p>
+            <p style="text-align: center;">&nbsp;</p>
+            <div class="group">
+                <input type="text" id="Reason" name="Reason" style=" font-size: 15px" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Reason Remove:</label>
+            </div>
+
+            <p style="text-align: center;">&nbsp;</p>
+            <p style="text-align: center;">&nbsp;</p>
+            <p style="text-align: center;">&nbsp;</p>
+            <p style="text-align: center;">&nbsp;</p>
+            <button type="submit" class="Bto_saved">
+                📍 Remove
+            </button>
+        }
+    </div>
+
+</div>
+

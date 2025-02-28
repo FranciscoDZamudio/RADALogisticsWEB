@@ -1,0 +1,240 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - Records";
+}
+
+<link href="~/Stylee/RecordsStylee.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="~/Scripts/jquery.table2excel.min.js"></script>
+
+<div class="container" style="text-align: center; width: 100%; height: 100%">
+
+    <div style="text-align: center; min-width: 100%; ">
+
+        <img src="~/Pictures/base-de-datos.png" height="90" />
+        <p style="text-align: center;">&nbsp;</p>
+        <h4> CONTAINER MOVEMENT HISTORY - Query View data containers </h4>
+        <h5> View transaction information by date range </h5>
+
+        <hr>
+        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+            <button class="animated-button" onclick="location.href='@Url.Action("HisenseHome", "Home")'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+                <span class="text">Return to back</span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+            </button>
+        </div>
+        <hr>
+
+        @using (Html.BeginForm("Records", "History", FormMethod.Post))
+        {
+            <h5> Date range </h5>
+            <div class="form-row">
+
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4" style="font-family: Century Gothic ">Date Start</label>
+                    <input id="TimeStart" style="max-width:100vh;" name="TimeStart" type="date" /> <br>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4" style="font-family: Century Gothic ">Date End</label>
+                    <input id="Timeend" style="max-width: 100vh;" name="Timeend" type="date" /> <br>
+                </div>
+
+                <p style="text-align: center;">&nbsp;</p>
+
+                <button style="width:45vh" type="submit" class="Bto_saved">
+                    🪢 Query
+                </button>
+
+                <p style="text-align: center;">&nbsp;</p>
+            </div>
+        }
+    </div>
+</div>
+
+<p style="text-align: center;">&nbsp;</p>
+<h4 style="text-align:center" class="Tittlelabel"> Latest inventory records entered into the system </h4>
+<h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
+
+<ul class="responsive-table">
+    <li class="table-header" id="tableData">
+
+        <div class="col col-1">Folio</div>
+
+        <div class="col col-1">Container</div>
+
+        <div class="col col-2">Origins</div>
+
+        <div class="col col-3">Destination</div>
+
+        <div class="col col-4">Status</div>
+
+        <div class="col col-5">HRequest</div>
+
+        <div class="col col-6">HConfirm</div>
+
+        <div class="col col-7">HFinish</div>
+
+        <div class="col col-8">Who Request</div>
+
+        <div class="col col-9">Choffer</div>
+
+        <div class="col col-10">Comment</div>
+
+        <div class="col col-11">Date</div>
+
+        <div class="col col-1">Options</div>
+
+    </li>
+   @foreach (var person in ViewBag.Records)
+    {
+        <li class="table-row" id="tblCustomers">
+
+            <div class="col col-1" data-label="Folio">@person.Folio</div>
+
+            <div class="col col-1" data-label="Container">@person.Container</div>
+
+            <div class="col col-2" data-label="Origins">@person.Origen</div>
+
+            <div class="col col-3" data-label="Destination"> @person.Destination</div>
+
+            <div class="col col-4" data-label="Status"> @person.Status</div>
+
+            <div class="col col-5" data-label="HRequest"> @person.HSolicitud</div>
+
+            <div class="col col-6" data-label="HConfirm"> @person.HConfirm</div>
+
+            <div class="col col-7" data-label="HFinish"> @person.HFinish</div>
+
+            <div class="col col-8" data-label="Who Request"> @person.WhoRequest</div>
+
+            <div class="col col-9" data-label="Choffer"> @person.Choffer</div>
+
+            <div class="col col-10" data-label="Comment"> @person.Comment</div>
+
+            <div class="col col-11" data-label="Date"> @person.Date</div>
+
+            <div class="col col-1" data-label="Options">
+
+                @Html.ActionLink("❌ Delete", "CancelContainerR", new { ID = @person.Folio })
+
+            </div>
+        </li>
+    }
+</ul>
+
+<table id="myTable" class="table2excel" class="table table-striped table-responsive-xl table-hover" hidden="hidden">
+    <tr>
+
+        <th style="text-align:center">
+            <p> Container</p>
+        </th>
+        <th style="text-align:center">
+            <p>
+                Origins Loc
+            </p>
+        </th>
+        <th style="text-align:center">
+            <p>
+                Destination Loc
+            </p>
+        </th>
+        <th style="text-align:center">
+            <p>Status</p>
+        </th>
+        <th style="text-align:center">
+            <p>HRequest</p>
+        </th>
+        <th style="text-align:center">
+            <p>HConfirm</p>
+        </th>
+        <th style="text-align:center">
+            <p>HFinish</p>
+        </th>
+        <th style="text-align:center">
+            <p>
+                Who Request
+            </p>
+        </th>
+        <th style="text-align:center">
+            <p>Choffer</p>
+        </th>
+        <th style="text-align:center">
+            <p>Comment</p>
+        </th>
+        <th style="text-align:center">
+            <p>Date</p>
+        </th>
+
+    </tr>
+    <tbody id="Table01">
+       @foreach (var person in ViewBag.Records)
+        {
+            <tr>
+
+                <td>
+                    @person.Container
+                </td>
+                <td>
+                    @person.Origen
+                </td>
+                <td>
+                    @person.Destination
+                </td>
+                <td>
+                    @person.Status
+                </td>
+                <td>
+                    @person.HSolicitud
+                </td>
+                <td>
+                    @person.HConfirm
+                </td>
+                <td>
+                    @person.HFinish
+                </td>
+                <td>
+                    @person.WhoRequest
+                </td>
+                <td>
+                    @person.Choffer
+                </td>
+                <td>
+                    @person.Comment
+                </td>
+                <td>
+                    @person.Date
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p style="text-align: center;">&nbsp;</p>
+<div style="text-align:center">
+    <button id="Bton_Export" class="btn btn-success" style="text-align:left"> Export xls. <i class="fa fa-file-text"></i></button>
+</div>
+<p style="text-align: center;">&nbsp;</p>
+
+<script>
+    var datenow = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    // Function export grid to excel
+    $("#Bton_Export").click(function () {
+        $("#myTable").table2excel({
+            name: "Backup file for HTML content",
+
+            //  include extension also
+            filename: "Control de Movimientos de Contenedores " + datenow + ".xls",
+
+            // 'True' is set if background and font colors preserved
+            preserveColors: false
+        });
+    });
+</script>
+

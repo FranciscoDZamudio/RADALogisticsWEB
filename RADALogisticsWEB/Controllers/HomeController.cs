@@ -4,11 +4,14 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using RADALogisticsWEB.Models;
 
 namespace RADALogisticsWEB.Controllers
 {
     public class HomeController : Controller
     {    //connection SQL server (database)
+        List<MovimientosEliminados> GetDelleted = new List<MovimientosEliminados>();
+        List<MovimientosEliminados> GetDelletedquery = new List<MovimientosEliminados>();
         SqlConnection DBSPP = new SqlConnection("Data Source=RADAEmpire.mssql.somee.com ;Initial Catalog=RADAEmpire ;User ID=RooRada; password=rada1311");
         SqlCommand con = new SqlCommand();
         SqlDataReader dr;
@@ -17,7 +20,6 @@ namespace RADALogisticsWEB.Controllers
         public ActionResult AdministratorHome()
         {
             ViewBag.User = Session["Username"];
-            Username = Session["Username"].ToString();
 
             if (Session.Count <= 0)
             {
@@ -25,8 +27,9 @@ namespace RADALogisticsWEB.Controllers
             }
             else
             {
+                string username = Session["Username"].ToString();
                 string TypeLog = null;
-                SqlCommand log = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + Session["Username"].ToString() + "'", DBSPP);
+                SqlCommand log = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + username + "'", DBSPP);
                 DBSPP.Open();
                 SqlDataReader drlog = log.ExecuteReader();
                 if (drlog.HasRows)
@@ -40,22 +43,16 @@ namespace RADALogisticsWEB.Controllers
 
                 if (TypeLog == "ADMINISTRATOR")
                 {
-                    //Go to next page (Menu Scroll)
-                    Session["Username"] = Username;
                     return View();
                 }
                 else
                 {
                     if (TypeLog == "HISENSE")
                     {
-                        Session["Username"] = Username;
                         return RedirectToAction("HisenseHome", "Home");
                     }
                     else
                     {
-                        //View pages RADA
-                        //Go to next page (Menu Scroll)
-                        Session["Username"] = Username;
                         return RedirectToAction("RadaHome", "Home");
                     }
                 }
@@ -65,7 +62,6 @@ namespace RADALogisticsWEB.Controllers
         public ActionResult RadaHome()
         {
             ViewBag.User = Session["Username"];
-            Username = Session["Username"].ToString();
 
             if (Session.Count <= 0)
             {
@@ -73,8 +69,9 @@ namespace RADALogisticsWEB.Controllers
             }
             else
             {
+                string username = Session["Username"].ToString();
                 string TypeLog = null;
-                SqlCommand log = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + Session["Username"].ToString() + "'", DBSPP);
+                SqlCommand log = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + username + "'", DBSPP);
                 DBSPP.Open();
                 SqlDataReader drlog = log.ExecuteReader();
                 if (drlog.HasRows)
@@ -88,23 +85,16 @@ namespace RADALogisticsWEB.Controllers
 
                 if (TypeLog == "ADMINISTRATOR")
                 {
-                    //Go to next page (Menu Scroll)
-                    Session["Username"] = Username;
                     return RedirectToAction("AdministratorHome", "Home");
                 }
                 else
                 {
                     if (TypeLog == "HISENSE")
                     {
-                        //Go to next page (Menu Scroll)
-                        Session["Username"] = Username;
                         return RedirectToAction("HisenseHome", "Home");
                     }
                     else
                     {
-                        //View pages RADA
-                        //Go to next page (Menu Scroll)
-                        Session["Username"] = Username;
                         return View();
                     }
                 }
@@ -114,7 +104,6 @@ namespace RADALogisticsWEB.Controllers
         public ActionResult HisenseHome()
         {
             ViewBag.User = Session["Username"];
-            Username = Session["Username"].ToString();
 
             if (Session.Count <= 0)
             {
@@ -122,8 +111,9 @@ namespace RADALogisticsWEB.Controllers
             }
             else
             {
+                string username = Session["Username"].ToString();
                 string TypeLog = null;
-                SqlCommand log = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + Session["Username"].ToString() + "'", DBSPP);
+                SqlCommand log = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + username + "'", DBSPP);
                 DBSPP.Open();
                 SqlDataReader drlog = log.ExecuteReader();
                 if (drlog.HasRows)
@@ -137,27 +127,136 @@ namespace RADALogisticsWEB.Controllers
 
                 if (TypeLog == "ADMINISTRATOR")
                 {
-                    //Go to next page (Menu Scroll)
-                    Session["Username"] = Username;
                     return RedirectToAction("AdministratorHome", "Home");
                 }
                 else
                 {
                     if (TypeLog == "HISENSE")
                     {
-                        //Go to next page (Menu Scroll)
-                        Session["Username"] = Username;
                         return View();
                     }
                     else
                     {
-                        //View pages RADA
-                        //Go to next page (Menu Scroll)
-                        Session["Username"] = Username;
                         return RedirectToAction("RadaHome", "Home");
                     }
                 }
             }
         }
+
+        public ActionResult Cancellation()
+        {
+            ViewBag.User = Session["Username"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                GetCancelled();
+                ViewBag.Records = GetDelleted;
+                ViewBag.Count = GetDelleted.Count.ToString();
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Cancellation(string Timeend, string TimeStart)
+        {
+            ViewBag.User = Session["Username"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                int count = 0;
+                string sqlTimeStart = null;
+                string sqlTimeend = null;
+
+                if (Timeend != "" && TimeStart != "")
+                {
+                    if (TimeStart == "")
+                    {
+                        sqlTimeStart = "";
+                    }
+                    else
+                    {
+                        sqlTimeStart = " and CAST(Datetime AS DATE) BETWEEN '" + TimeStart + "'";
+                    }
+
+                    if (Timeend == "")
+                    {
+                        sqlTimeend = "";
+                    }
+                    else
+                    {
+                        sqlTimeend = " and '" + Timeend + "' order by ID desc";
+                    }
+                }
+                else
+                {
+                    count = count + 2;
+                }
+
+                if (count >= 2)
+                {
+                    GetCancelled();
+                    ViewBag.Records = GetDelleted;
+                    ViewBag.Count = GetDelleted.Count.ToString();
+                    return View();
+                }
+                else
+                {
+                    DBSPP.Open();
+                    con.Connection = DBSPP;
+                    con.CommandText = "Select top (1000) * from RADAEmpires_DRemoves where Active = '1'" + sqlTimeStart + sqlTimeend + "";
+                    dr = con.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        GetDelletedquery.Add(new MovimientosEliminados()
+                        {
+                            Folio = (dr["Folio"].ToString()),
+                            Reason = (dr["Reason"].ToString()),
+                            Company = (dr["Company"].ToString()),
+                            Datetime = Convert.ToDateTime(dr["Datetime"].ToString()),
+                        });
+                    }
+                    DBSPP.Close();
+
+                    ViewBag.Records = GetDelletedquery;
+                    ViewBag.Count = GetDelletedquery.Count.ToString();
+                    return View();
+                }
+            }
+        }
+
+        private void GetCancelled()
+        {
+            if (GetDelleted.Count > 0)
+            {
+                GetDelleted.Clear();
+            }
+            else
+            {
+                DBSPP.Open();
+                con.Connection = DBSPP;
+                con.CommandText = "Select top (1000) * from RADAEmpires_DRemoves where Active = '1' order by ID desc";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {
+                    GetDelleted.Add(new MovimientosEliminados()
+                    {
+                        Folio = (dr["Folio"].ToString()),
+                        Reason = (dr["Reason"].ToString()),
+                        Company = (dr["Company"].ToString()),
+                        Datetime = Convert.ToDateTime(dr["Datetime"].ToString()),
+                    });
+                }
+                DBSPP.Close();
+            }
+        }
+
     }
 }
