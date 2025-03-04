@@ -251,7 +251,7 @@ namespace RADALogisticsWEB.Controllers
                             ViewBag.comment = comment;
                             ViewBag.date = date;
                             ViewBag.Request = request;
-
+                            ViewBag.ID = ID.ToString();
                             return View();
                         }
                     }
@@ -300,6 +300,58 @@ namespace RADALogisticsWEB.Controllers
             }
         }
 
+        public ActionResult ReturnContainer(string ID)
+        {
+            ViewBag.User = Session["Username"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                
+
+                return View();
+            }
+        }
+
+        public ActionResult ConfirmContainer(string id)
+        {
+            ViewBag.User = Session["Username"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                //query message ------------------------------------------------------------------------------------------------------------------
+                string updateQuery = "UPDATE RADAEmpire_CEntryContrainers SET Time_Finished = @Time_Finished WHERE Folio_Request = @ID";
+                using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
+                {
+                    DBSPP.Open();
+                    command.Parameters.AddWithValue("@Time_Finished", DateTime.Now.ToString("HH:mm:ss"));
+                    command.Parameters.AddWithValue("@ID", id);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                //query message ------------------------------------------------------------------------------------------------------------------
+                string updateQuery2 = "UPDATE RADAEmpire_BRequestContainers SET message = @message WHERE Folio = @ID";
+                using (SqlCommand command = new SqlCommand(updateQuery2, DBSPP))
+                {
+                    DBSPP.Open();
+                    command.Parameters.AddWithValue("@message", "Movement Completed");
+                    command.Parameters.AddWithValue("@ID", id);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                return RedirectToAction("EntryContainer", "RADA");
+            }
+        }
+
         public ActionResult ProcessData(string User, string Container, string Location)
         {
             ViewBag.User = Session["Username"];
@@ -342,9 +394,26 @@ namespace RADALogisticsWEB.Controllers
             }
             else
             {
-                
+                string container = null, date = null, location = null;
+                // create generate randoms int value
+                SqlCommand conse = new SqlCommand("Select * from RADAEmpire_CInventoryControl where Active = '1' and ID = '" + ID.ToString() + "'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drconse = conse.ExecuteReader();
+                if (drconse.HasRows)
+                {
+                    while (drconse.Read())
+                    {
+                        container = drconse["Container"].ToString();
+                        date = drconse["Datetime"].ToString();
+                        location = drconse["LocationCode"].ToString();
+                    }
+                }
+                DBSPP.Close();
 
                 ViewBag.ID = ID;
+                ViewBag.Container = container.ToString();
+                ViewBag.Datetime = date.ToString();
+                ViewBag.LocationCode = location.ToString(); ;
                 return View();
             }
         }

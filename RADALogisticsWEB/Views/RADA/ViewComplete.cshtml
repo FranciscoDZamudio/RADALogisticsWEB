@@ -103,8 +103,9 @@
                 <div class="col-md-3" style="text-align:center">
 
                     <p style="font-size: 18px; color: #021e57 ">
-                        Time Finish:</pstyle="font-size:>
-                        <h1 style="font-size: 14px">@ViewBag.entrega</h1>
+                        Time Finish:
+                    </p>
+                    <h1 style="font-size: 14px">@ViewBag.entrega</h1>
 
                 </div>
 
@@ -120,10 +121,23 @@
 
         <p style="text-align: center;">&nbsp;</p>
         <p style="text-align: center;">&nbsp;</p>
+        @using (Html.BeginForm("ReturnContainer", "RADA", FormMethod.Post))
+        {
+            <input value="@ViewBag.ID" hidden="hidden" id="id" name="id"/>
+            <button type="submit" class="Bto_saved">
+                ⬅️ Return Select other Choffer
+            </button>
+        }
 
-        <button type="button" class="btn btn-outline-primary" style="background-color: #f44336; color: antiquewhite">Return Select other Choffer</button> &nbsp;&nbsp;
-        <button type="button" class="btn btn-outline-secondary" style="background-color: #04AA6D; color: antiquewhite ">Complete Movement</button>
-        <p style="text-align: center;">&nbsp;</p>
+        @using (Html.BeginForm("ConfirmContainer", "RADA", FormMethod.Post))
+        {
+            <input value="@ViewBag.ID" hidden="hidden" id="id" name="id"/>
+            <p style="text-align: center;">&nbsp;</p>
+            <p style="text-align: center;">&nbsp;</p>
+            <button type="submit" class="Bto_saved">
+                ✅ Complete Movement
+            </button>
+        }
         <p style="text-align: center;">&nbsp;</p>
     </div>
 
