@@ -232,7 +232,7 @@ namespace RADALogisticsWEB.Controllers
                             Password = (dr["Password"].ToString()),
                             Type_user = (dr["Type_user"].ToString()),
                             Email = (dr["Email"].ToString()),
-                            DateAdded = Convert.ToDateTime(dr["DateRequest"].ToString()),
+                            DateAdded = Convert.ToDateTime(dr["DateRequest"]),
                         });
                     }
                     DBSPP.Close();
