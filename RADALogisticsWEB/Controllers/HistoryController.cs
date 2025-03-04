@@ -80,7 +80,7 @@ namespace RADALogisticsWEB.Controllers
                 con.CommandText = "  Select top (1000) " +
                     " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date " +
-                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + "";
+                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {
@@ -97,7 +97,7 @@ namespace RADALogisticsWEB.Controllers
                         WhoRequest = (dr["WhoRequest"].ToString()),
                         Choffer = (dr["Choffer"].ToString()),
                         Comment = (dr["Comment"].ToString()),
-                        Date = (Convert.ToDateTime(dr["Date"].ToString())),
+                        Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
                     });
                 }
                 DBSPP.Close();
@@ -265,6 +265,17 @@ namespace RADALogisticsWEB.Controllers
                         int rowsAffected = command.ExecuteNonQuery();
                         DBSPP.Close();
                     }
+
+                    //query message
+                    string updateQuer3y = "UPDATE RADAEmpire_CEntryContrainers SET Cancel = @Cancel WHERE Folio_Request = @ID";
+                    using (SqlCommand comdmand = new SqlCommand(updateQuer3y, DBSPP))
+                    {
+                        DBSPP.Open();
+                        comdmand.Parameters.AddWithValue("@ID", ID);
+                        comdmand.Parameters.AddWithValue("@Cancel", true);
+                        int rowsAffected = comdmand.ExecuteNonQuery();
+                        DBSPP.Close();
+                    }
                     return RedirectToAction("Records", "History");
                 }
                 else
@@ -293,6 +304,17 @@ namespace RADALogisticsWEB.Controllers
                         int rowsAffected = command.ExecuteNonQuery();
                         DBSPP.Close();
                     }
+
+                    //query message
+                    string updateQuer3y = "UPDATE RADAEmpire_CEntryContrainers SET Cancel = @Cancel WHERE Folio_Request = @ID";
+                    using (SqlCommand comdmand = new SqlCommand(updateQuer3y, DBSPP))
+                    {
+                        DBSPP.Open();
+                        comdmand.Parameters.AddWithValue("@ID", ID);
+                        comdmand.Parameters.AddWithValue("@Cancel", true);
+                        int rowsAffected = comdmand.ExecuteNonQuery();
+                        DBSPP.Close();
+                    }
                     return RedirectToAction("Records", "History");
                 }
             }
@@ -311,7 +333,7 @@ namespace RADALogisticsWEB.Controllers
                 con.CommandText = "  Select top (1000) " +
                     " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date " +
-                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio";
+                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio ORDER by a.Folio desc";
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {
@@ -326,12 +348,12 @@ namespace RADALogisticsWEB.Controllers
                         HConfirm = (dr["HConfirm"].ToString()),
                         HFinish = (dr["HFinish"].ToString()),
                         WhoRequest = (dr["WhoRequest"].ToString()),
-                        Choffer = (dr["Choffer"].ToString()),
+                        Choffer = dr["Choffer"].ToString(),
                         Comment = (dr["Comment"].ToString()),
-                        Date = (Convert.ToDateTime(dr["Date"].ToString())),
+                        Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
                     });
                 }
-                DBSPP.Close();
+            DBSPP.Close();
             }
         }
     }

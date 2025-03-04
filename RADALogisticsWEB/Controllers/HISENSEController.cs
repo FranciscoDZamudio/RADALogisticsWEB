@@ -155,8 +155,8 @@ namespace RADALogisticsWEB.Controllers
                 //Guardar informacion a la base de datos del proyecto
                 DBSPP.Open();
                 SqlCommand RADAdocument = new SqlCommand("insert into RADAEmpire_CEntryContrainers" +
-                    "(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date,AreaWork, Active) values " +
-                    "(@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date,@AreaWork, @Active) ", DBSPP);
+                    "(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date,AreaWork, Active,Cancel) values " +
+                    "(@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date,@AreaWork, @Active, @Cancel) ", DBSPP);
                 //--------------------------------------------------------------------------------------------------------------------------------
                 RADAdocument.Parameters.AddWithValue("@Folio_Request", Folio.ToString());
                 RADAdocument.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
@@ -167,6 +167,7 @@ namespace RADALogisticsWEB.Controllers
                 RADAdocument.Parameters.AddWithValue("@Date", DateTime.Now.ToString("yyyy-MM-dd"));
                 RADAdocument.Parameters.AddWithValue("@AreaWork", "RADALogistics");
                 RADAdocument.Parameters.AddWithValue("@Active", true);
+                RADAdocument.Parameters.AddWithValue("@Cancel", false);
                 RADAdocument.ExecuteNonQuery();
                 DBSPP.Close();
                 //--------------------------------------------------------------------------------------------------------------------------------
@@ -281,6 +282,17 @@ namespace RADALogisticsWEB.Controllers
                     command.Parameters.AddWithValue("@message", "Canceled by Hisense");
                     command.Parameters.AddWithValue("@ID", ID);
                     int rowsAffected = command.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                //query message
+                string updateQuer3y = "UPDATE RADAEmpire_CEntryContrainers SET Cancel = @Cancel WHERE Folio_Request = @ID";
+                using (SqlCommand comdmand = new SqlCommand(updateQuer3y, DBSPP))
+                {
+                    DBSPP.Open();
+                    comdmand.Parameters.AddWithValue("@ID", ID);
+                    comdmand.Parameters.AddWithValue("@Cancel", true);
+                    int rowsAffected = comdmand.ExecuteNonQuery();
                     DBSPP.Close();
                 }
                 return RedirectToAction("RequestContainer", "HISENSE");

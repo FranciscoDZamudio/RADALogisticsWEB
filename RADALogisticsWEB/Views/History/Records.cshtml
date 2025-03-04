@@ -31,9 +31,8 @@
         </div>
         <hr>
 
-        @using (Html.BeginForm("Records", "History", FormMethod.Post))
+       @using (Html.BeginForm("Records", "History", FormMethod.Post))
         {
-            <h5> Date range </h5>
             <div class="form-row">
 
                 <div class="form-group col-md-6">
@@ -94,7 +93,12 @@
     </li>
    @foreach (var person in ViewBag.Records)
     {
-        <li class="table-row" id="tblCustomers">
+        <li class="table-row" id="tblCustomers" style="color:black ; background-color: 
+    @(person.Comment == "Canceled by Rada" ? "#f98684" : 
+      person.Comment == "Canceled by Hisense" ? "#f98684" :
+      person.Comment == "PENDING" ? "#ffcbcb" :
+      person.Comment == "Movement Completed" ? "#dcfecd" :
+      person.Comment == "Movement in process" ? "#b8dca9" : "black")">
 
             <div class="col col-1" data-label="Folio">@person.Folio</div>
 

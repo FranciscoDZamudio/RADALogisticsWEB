@@ -18,6 +18,6 @@ namespace RADALogisticsWEB.Models
         public string WhoRequest { get; set; }
         public string Choffer { get; set; }
         public string Comment { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
     }
 }

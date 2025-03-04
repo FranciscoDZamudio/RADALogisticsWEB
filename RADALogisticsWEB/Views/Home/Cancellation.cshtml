@@ -75,8 +75,10 @@
 
         <div class="col col-4">Date</div>
 
+        @*<div class="col col-4">Options</div>*@
+
     </li>
-    @foreach (var person in ViewBag.Records)
+   @foreach (var person in ViewBag.Records)
     {
         <li class="table-row" id="tblCustomers">
 
@@ -87,6 +89,10 @@
             <div class="col col-3" data-label="Company">@person.Company</div>
 
             <div class="col col-4" data-label="Datetime"> @person.Datetime</div>
+
+            @*<div class="col col-4" data-label="Options">
+                @Html.ActionLink("⚡ Restore movements", "Restore", new { ID = @person.Folio })
+            </div>*@
 
         </li>
     }

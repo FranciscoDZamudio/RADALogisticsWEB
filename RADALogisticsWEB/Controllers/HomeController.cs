@@ -143,6 +143,67 @@ namespace RADALogisticsWEB.Controllers
             }
         }
 
+        public ActionResult Restore(string ID)
+        {
+            ViewBag.User = Session["Username"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                string Folio_Request = null;
+                //create generate randoms int value
+                SqlCommand conse = new SqlCommand("Select Folio_Request from RADAEmpire_CEntryContrainers where Active = '1' and Cancel = '1' and Folio_Request = '" + ID.ToString() + "'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drconse = conse.ExecuteReader();
+                if (drconse.HasRows)
+                {
+                    while (drconse.Read())
+                    {
+                        Folio_Request = drconse["Folio_Request"].ToString();
+                    }
+                }
+                DBSPP.Close();
+
+                //query message ------------------------------------------------------------------------------------------------------------------
+                string updateQuery = "UPDATE RADAEmpire_CEntryContrainers SET Cancel = @Cancel WHERE Folio_Request = @ID";
+                using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
+                {
+                    DBSPP.Open();
+                    command.Parameters.AddWithValue("@Cancel", false);
+                    command.Parameters.AddWithValue("@ID", Folio_Request.ToString());
+                    int rowsAffected = command.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                //query message ------------------------------------------------------------------------------------------------------------------
+                string updateQuery2 = "UPDATE RADAEmpires_DRemoves SET Active = @Active WHERE Folio = @ID";
+                using (SqlCommand command2 = new SqlCommand(updateQuery2, DBSPP))
+                {
+                    DBSPP.Open();
+                    command2.Parameters.AddWithValue("@Active", false);
+                    command2.Parameters.AddWithValue("@ID", Folio_Request.ToString());
+                    int rowsAffected = command2.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                //query message ------------------------------------------------------------------------------------------------------------------
+                string updateQuery12 = "UPDATE RADAEmpire_BRequestContainers SET message = @message WHERE Folio = @ID";
+                using (SqlCommand command2 = new SqlCommand(updateQuery12, DBSPP))
+                {
+                    DBSPP.Open();
+                    command2.Parameters.AddWithValue("@message", "");
+                    command2.Parameters.AddWithValue("@ID", Folio_Request.ToString());
+                    int rowsAffected = command2.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                return RedirectToAction("Restore", "Home");
+            }
+        }
+
         public ActionResult Cancellation()
         {
             ViewBag.User = Session["Username"];

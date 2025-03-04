@@ -1,0 +1,112 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - Entry Container";
+}
+
+<link href="~/Stylee/PageRADAEntry.css" rel="stylesheet" />
+
+<div class="container" style="text-align: center; width: 100%; height: 100%">
+
+    <div style="text-align: center; min-width: 100%; ">
+
+        <h3 class="labelTitt"> Entry of requested container movements </h3>
+        <h5 style="text-align:center"> Container inbound and request </h5>
+
+        <hr>
+        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+            <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+                <span class="text">Return to back</span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+            </button>
+        </div>
+        <hr>
+
+    </div>
+</div>
+
+<div class="form-row">
+    <input id="TimeStart" style="max-width:100%; font-size:15px" name="TimeStart" type="date" /> <br>
+</div>
+<p style="text-align: center;">&nbsp;</p>
+
+<h4 style="text-align:center" class="Tittlelabel"> Latest requested records entered into the system </h4>
+<h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
+
+<ul class="responsive-table">
+    <li class="table-header" id="tableData">
+
+        <div class="col col-1">Folio</div>
+
+        <div class="col col-1">Container</div>
+
+        <div class="col col-2">Origins</div>
+
+        <div class="col col-3">Destination</div>
+
+        <div class="col col-4">Status</div>
+
+        <div class="col col-5">HRequest</div>
+
+        <div class="col col-6">HConfirm</div>
+
+        <div class="col col-7">HFinish</div>
+
+        <div class="col col-8">Who Request</div>
+
+        <div class="col col-9">Choffer</div>
+
+        <div class="col col-11">Date</div>
+
+        <div class="col col-10">Comment</div>
+
+        <div class="col col-12">Options</div>
+
+    </li>
+    @foreach (var person in ViewBag.Records)
+    {
+<li class="table-row" id="tblCustomers" style="color:black ; background-color: 
+    @(person.Comment == "Canceled by Rada" ? "#f98684" : 
+      person.Comment == "Canceled by Hisense" ? "#f98684" :
+      person.Comment == "PENDING" ? "#ffcbcb" :
+      person.Comment == "Movement Completed" ? "#dcfecd" :
+      person.Comment == "Movement in process" ? "#b8dca9" : "black")">
+
+    <div class="col col-1" data-label="Folio">@person.Folio</div>
+
+    <div class="col col-1" data-label="Container">@person.Container</div>
+
+    <div class="col col-2" data-label="Origins">@person.Origen</div>
+
+    <div class="col col-3" data-label="Destination"> @person.Destination</div>
+
+    <div class="col col-4" data-label="Status"> @person.Status</div>
+
+    <div class="col col-5" data-label="HRequest"> @person.HSolicitud</div>
+
+    <div class="col col-6" data-label="HConfirm"> @person.HConfirm</div>
+
+    <div class="col col-7" data-label="HFinish"> @person.HFinish</div>
+
+    <div class="col col-8" data-label="Who Request"> @person.WhoRequest</div>
+
+    <div class="col col-9" data-label="Choffer"> @person.Choffer</div>
+
+    <div class="col col-11" data-label="Date"> @person.Date</div>
+
+    <div class="col col-10" data-label="Comment"> @person.Comment</div>
+
+    <div class="col col-12" data-label="Options">
+
+        @Html.ActionLink("🎚️ View", "ViewConfirm", new { ID = @person.Folio })
+
+    </div>
+</li>
+    }
+</ul>
+

@@ -120,6 +120,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ControlPanelController.cs" />
     <Compile Include="Controllers\HISENSEController.cs" />
     <Compile Include="Controllers\HistoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -156,7 +157,7 @@
     <Content Include="Pictures\Logo-RADA-1-300x212.ico" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <None Include="Properties\PublishProfiles\IISProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\FTPProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -174,8 +175,10 @@
     <Content Include="Stylee\HomeStylee.css" />
     <Content Include="Stylee\LogIn_StyleePage.css" />
     <Content Include="Stylee\NewUsersStylee.css" />
+    <Content Include="Stylee\PageRADAEntry.css" />
     <Content Include="Stylee\PagesRADAStylee.css" />
     <Content Include="Stylee\RecordsStylee.css" />
+    <Content Include="Stylee\PagesRADAConfirms.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -205,9 +208,13 @@
     <Content Include="Views\History\CancelContainerR.cshtml" />
     <Content Include="Views\History\CancelContainerH.cshtml" />
     <Content Include="Views\Home\Cancellation.cshtml" />
+    <Content Include="Views\RADA\EntryContainer.cshtml" />
+    <Content Include="Views\RADA\ViewConfirm.cshtml" />
+    <Content Include="Views\RADA\ViewComplete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\ControlPanel\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -117,7 +117,12 @@
     </li>
     @foreach (var person in ViewBag.Records)
     {
-        <li class="table-row" id="tblCustomers">
+        <li class="table-row" id="tblCustomers" style="color:black ; background-color: 
+    @(person.message == "Canceled by Rada" ? "#f98684" : 
+      person.message == "Canceled by Hisense" ? "#f98684" :
+      person.message == "PENDING" ? "#ffcbcb" :
+      person.message == "Movement Completed" ? "#dcfecd" :
+      person.message == "Movement in process" ? "#b8dca9" : "black")">
 
             <div class="col col-1" data-label="Folio">@person.Folio</div>
 

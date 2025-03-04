@@ -1,9 +1,9 @@
 ﻿
 @{
-    ViewBag.Title = "RADA Logistics - Details";
+    ViewBag.Title = "ViewComplete";
 }
 
-<link href="~/Stylee/HisensePages.css" rel="stylesheet" />
+<link href="~/Stylee/PagesRADAConfirms.css" rel="stylesheet" />
 
 <div class="container" style="text-align: center; width: 100%; height: 100%">
 
@@ -16,7 +16,7 @@
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("RequestContainer", "HISENSE")'">
+            <button class="animated-button" onclick="location.href='@Url.Action("EntryContainer", "RADA")'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
                     <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
                 </svg>
@@ -81,48 +81,6 @@
             </div>
         </center>
 
-        @*<h5 class="Tittlelabel" style="font: bold; font-size: 18px; color: #021e57 "> Request by Container </h5>
-        <div class="group">
-            <input type="text" id="Request" name="Request" value="@ViewBag.Request" readonly="@true" required>
-            <span class="highlight"></span>
-            <span class="bar"></span>
-        </div>
-
-        <h5 class="Tittlelabel" style="font: bold; font-size: 18px; color: #021e57 "> Container </h5>
-        <div class="group">
-            <input type="text" id="Container" name="Container" value="@ViewBag.Container" readonly="@true" required>
-            <span class="highlight"></span>
-            <span class="bar"></span>
-        </div>
-
-        <h5 class="Tittlelabel" style="font: bold; font-size: 18px; color: #021e57 "> Status </h5>
-        <div class="group">
-            <input type="text" id="Status" name="Status" value="@ViewBag.Status" readonly="@true" required>
-            <span class="highlight"></span>
-            <span class="bar"></span>
-        </div>
-
-        <h5 class="Tittlelabel" style="font: bold; font-size: 18px; color: #021e57 "> Origins Location </h5>
-        <div class="group">
-            <input type="text" id="origins" name="origins" value="@ViewBag.origins" readonly="@true" required>
-            <span class="highlight"></span>
-            <span class="bar"></span>
-        </div>
-
-        <h5 class="Tittlelabel" style="font: bold; font-size: 18px; color: #021e57 "> Destination Location </h5>
-        <div class="group">
-            <input type="text" id="destination" name="destination" value="@ViewBag.destination" readonly="@true" required>
-            <span class="highlight"></span>
-            <span class="bar"></span>
-        </div>*@
-
-        @*<h5 class="Tittlelabel" style="font: bold; font-size: 18px; color: #021e57 "> Message </h5>
-        <div class="group">
-            <input type="text" id="destination" style="font: bold; font-size: 14px" name="destination" value="@ViewBag.comment" readonly="@true" required>
-            <span class="highlight"></span>
-            <span class="bar"></span>
-        </div>*@
-
         <h5 class="Tittlelabel" style="font: bold; font-size: 18px"> Movement in the process of a driver </h5>
         <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
         <p style="text-align: center;">&nbsp;</p>
@@ -144,8 +102,9 @@
 
                 <div class="col-md-3" style="text-align:center">
 
-                    <p style="font-size: 18px; color: #021e57 ">Time Finish:</pstyle="font-size:>
-                    <h1 style="font-size: 14px">@ViewBag.entrega</h1>
+                    <p style="font-size: 18px; color: #021e57 ">
+                        Time Finish:</pstyle="font-size:>
+                        <h1 style="font-size: 14px">@ViewBag.entrega</h1>
 
                 </div>
 
@@ -158,34 +117,14 @@
             </div>
         </center>
 
-        @*<h5 class="Tittlelabel" style="font: bold; font-size: 18px; color: #021e57 "> Time Request </h5>
-        <div class="group">
-            <input type="text" id="Solicitud" name="Solicitud" value="@ViewBag.Solicitud" readonly="@true" required>
-            <span class="highlight"></span>
-            <span class="bar"></span>
-        </div>
 
-        <h5 class="Tittlelabel" style="font: bold; font-size: 18px; color: #021e57 "> Time Confirmation </h5>
-        <div class="group">
-            <input type="text" id="Confirmacion" name="Confirmacion" value="@ViewBag.Confirmacion" readonly="@true" required>
-            <span class="highlight"></span>
-            <span class="bar"></span>
-        </div>
+        <p style="text-align: center;">&nbsp;</p>
+        <p style="text-align: center;">&nbsp;</p>
 
-        <h5 class="Tittlelabel" style="font: bold; font-size: 18px; color: #021e57 "> Time Finish </h5>
-        <div class="group">
-            <input type="text" id="entrega" name="entrega" value="@ViewBag.entrega" readonly="@true" required>
-            <span class="highlight"></span>
-            <span class="bar"></span>
-        </div>
-
-        <h5 class="Tittlelabel" style="font: bold; font-size: 18px; color: #021e57 "> Choffer Mov </h5>
-        <div class="group">
-            <input type="text" id="choffer" name="choffer" value="@ViewBag.choffer" readonly="@true" required>
-            <span class="highlight"></span>
-            <span class="bar"></span>
-        </div>*@
-
+        <button type="button" class="btn btn-outline-primary" style="background-color: #f44336; color: antiquewhite">Return Select other Choffer</button> &nbsp;&nbsp;
+        <button type="button" class="btn btn-outline-secondary" style="background-color: #04AA6D; color: antiquewhite ">Complete Movement</button>
+        <p style="text-align: center;">&nbsp;</p>
+        <p style="text-align: center;">&nbsp;</p>
     </div>
 
 </div>
