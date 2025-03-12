@@ -47,7 +47,7 @@ namespace RADALogisticsWEB.Controllers
             if (Session.Count <= 0)
             {
                 return RedirectToAction("LogIn", "Login");
-            }
+            } 
             else
             {
                 string messages = null, WhoSend = null, Container = null, Destination = null, Origins = null, Status = null, DateTime = null, Date = null;
