@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - New Area";
+}
+
+<link href="~/Stylee/NewUsersStylee.css" rel="stylesheet" />
+
+<div class="container" style="text-align: center; width: 100%; height: 100%">
+
+    <div style="text-align: center; min-width: 100%;">
+
+        <h4 class="labelTitt"> Generate new work area for the driver </h4>
+        <h5 style="text-align:center">Create New Area</h5>
+
+        <hr>
+        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+            <button class="animated-button" onclick="location.href='@Url.Action("NewChoffer","Users")'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+                <span class="text">Return to back</span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+            </button>
+        </div>
+        <hr>
+
+        @using (Html.BeginForm("Insert", "Users", FormMethod.Post))
+        {
+            <p style="text-align: center;">&nbsp;</p>
+
+            <input style="font-size:12px" readonly="@true" type="text" id="User" name="User" value="@ViewBag.User" hidden="hidden" required>
+
+            <h5 class="Tittlelabel"> New Area Overview </h5>
+            <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
+            <p style="text-align: center;">&nbsp;</p>
+
+            <div class="group">
+                <input type="text" id="Name" name="Name" style="text-transform: uppercase;" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Enter the name of the area:</label>
+            </div>
+
+            <p style="text-align: center;">&nbsp;</p>
+            <button type="submit" class="Bto_saved" style="width: 35vh">
+                ✅ Save
+            </button>
+        }
+
+        <p style="text-align: center;">&nbsp;</p>
+        <p style="text-align: center;">&nbsp;</p>
+
+        <h4 class="Tittlelabel"> Areas recently registered to the system </h4>
+        <h5 class="Tittlelabel"> Total Records: @ViewBag.Count </h5>
+
+        <ul class="responsive-table">
+            <li class="table-header" id="tableData">
+
+                <div class="col col-1">ID</div>
+
+                <div class="col col-2">Who Create</div>
+
+                <div class="col col-2">Area</div>
+
+                <div class="col col-5">Date</div>
+
+                <div class="col col-7">Options</div>
+            </li>
+
+            @foreach (var person in ViewBag.Records)
+            {
+                <li class="table-row" id="tblCustomers">
+
+                    <div class="col col-1" data-label="ID">@person.id</div>
+
+                    <div class="col col-2" data-label="Username">@person.Who_create</div>
+
+                    <div class="col col-2" data-label="Container"> @person.Name</div>
+
+                    <div class="col col-5" data-label="Location"> @person.Datetime</div>
+
+                    <div class="col col-7" data-label="Options">
+
+                        @Html.ActionLink("❌ Delete", "RemoveArea", new { ID = @person.id })
+
+                    </div>
+
+                </li>
+            }
+
+        </ul>
+    </div>
+
+</div>
+

@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - Home";
+}
+
+<link href="~/Stylee/HomeStylee.css" rel="stylesheet" />
+
+<div class="container" style="text-align: center">
+
+    <hr>
+    <h4 class="labelTitt"> Create new users in the Rada Logistics system </h4>
+    <h5 class="labelTitt">Select one of the options:</h5>
+    <hr>
+
+    <nav class="menu">
+        <a @Html.ActionLink("🔹 New users", "NewUser", "Users")</a>
+        <a @Html.ActionLink("🔸 New driver", "NewChoffer", "Users")</a>
+        <a @Html.ActionLink("⛔ Return to back", "AdministratorHome", "Home")</a>
+    </nav>
+
+</div>

@@ -14,7 +14,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RADALogisticsWEB</RootNamespace>
     <AssemblyName>RADALogisticsWEB</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -55,9 +55,9 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -130,6 +130,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Areas.cs" />
+    <Compile Include="Models\Choferes.cs" />
     <Compile Include="Models\Historial.cs" />
     <Compile Include="Models\Inventario.cs" />
     <Compile Include="Models\MovimientosEliminados.cs" />
@@ -154,7 +156,10 @@
     <Content Include="Pictures\base-de-datos.png" />
     <Content Include="Pictures\camiones-carretera-montana-al-atardecer-4-2048x1364.jpg" />
     <Content Include="Pictures\datos.png" />
+    <Content Include="Pictures\icono usuario.png" />
+    <Content Include="Pictures\icono_choffuer.png" />
     <Content Include="Pictures\Logo-RADA-1-300x212.ico" />
+    <Content Include="Pictures\logo_radas-removebg-preview.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\FTPProfile.pubxml" />
@@ -211,6 +216,13 @@
     <Content Include="Views\RADA\EntryContainer.cshtml" />
     <Content Include="Views\RADA\ViewConfirm.cshtml" />
     <Content Include="Views\RADA\ViewComplete.cshtml" />
+    <Content Include="Views\Users\Home.cshtml" />
+    <Content Include="Views\Users\NewChoffer.cshtml" />
+    <Content Include="Views\Users\Area.cshtml" />
+    <Content Include="Views\Users\UpdateDriver.cshtml" />
+    <Content Include="Views\History\Record.cshtml" />
+    <Content Include="Views\History\HRecord.cshtml" />
+    <Content Include="Views\History\InventoryRecords.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

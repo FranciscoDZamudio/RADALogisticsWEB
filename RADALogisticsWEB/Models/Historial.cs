@@ -17,6 +17,7 @@ namespace RADALogisticsWEB.Models
         public string HFinish { get; set; }
         public string WhoRequest { get; set; }
         public string Choffer { get; set; }
+        public string fastcard { get; set; }
         public string Comment { get; set; }
         public string Date { get; set; }
     }

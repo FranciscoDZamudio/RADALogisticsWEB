@@ -1,9 +1,9 @@
 ﻿
 @{
-    ViewBag.Title = "RADA Logistics - Inventory";
+    ViewBag.Title = "RADA Logistics - Inventory Records";
 }
 
-<link href="~/Stylee/PagesRADAStylee.css" rel="stylesheet" />
+<link href="~/Stylee/RecordsStylee.css" rel="stylesheet" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="~/Scripts/jquery.table2excel.min.js"></script>
 
@@ -11,12 +11,12 @@
 
     <div style="text-align: center; min-width: 100%; ">
 
-        <h3 class="labelTitt"> Inventory Control </h3>
-        <h5 style="text-align:center"> Create Inventary and update control </h5>
+        <h4> Inventory Control - Inventory History </h4>
+        <h5> See a range of dates for the following information </h5>
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
+            <button class="animated-button" onclick="location.href='@Url.Action("Inventory", "RADA")'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
                     <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
                 </svg>
@@ -29,61 +29,34 @@
         </div>
         <hr>
 
-        @using (Html.BeginForm("ProcessData", "RADA", FormMethod.Post))
+       @using (Html.BeginForm("InventoryRecords", "History", FormMethod.Post))
         {
-            <p style="text-align: center;">&nbsp;</p>
-            <h5 class="Tittlelabel"> Username Overview </h5>
-            <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
-            <p style="text-align: center;">&nbsp;</p>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4" style="font-family: Century Gothic ">Date Start</label>
+                    <input id="TimeStart" style="max-width:100vh;" name="TimeStart" type="date" /> <br>
+                </div>
 
-            <div class="group">
-                <input style="font-size:12px" readonly="@true" type="text" id="User" name="User" value="@ViewBag.User" required>
-                <span class="highlight"></span>
-                <span class="bar"></span>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4" style="font-family: Century Gothic ">Date End</label>
+                    <input id="Timeend" style="max-width: 100vh;" name="Timeend" type="date" /> <br>
+                </div>
+
+                <p style="text-align: center;">&nbsp;</p>
+
+                <button style="width:45vh" type="submit" class="Bto_saved">
+                    🪢 Query
+                </button>
+
+                <p style="text-align: center;">&nbsp;</p>
             </div>
-
-            <h5 class="Tittlelabel"> Container Overview </h5>
-            <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
-            <p style="text-align: center;">&nbsp;</p>
-
-            <div class="group">
-                <input type="text" id="Container" name="Container" required>
-                <span class="highlight"></span>
-                <span class="bar"></span>
-                <label>Enter your Container:</label>
-            </div>
-
-            <div class="group">
-                <input type="text" id="Location" name="Location" required>
-                <span class="highlight"></span>
-                <span class="bar"></span>
-                <label>Enter location:</label>
-            </div>
-
-            <p style="text-align: center;">&nbsp;</p>
-            <button type="submit" class="Bto_saved">
-                ✅ Save
-            </button>
-            <p style="text-align: center;">&nbsp;</p>
         }
     </div>
-
 </div>
-
-@*<div class="form-row" style="width: 100%; text-align: center">
-
-        <p class="tittleSearch">Select Date: </p>
-        <input id="TimeStart" style="max-width: 100%" name="TimeStart" type="date" /> <br>
-
-    </div>*@
 
 <p style="text-align: center;">&nbsp;</p>
 <h4 style="text-align:center" class="Tittlelabel"> Latest inventory records entered into the system </h4>
 <h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
-
-<div style="text-align:center">
-    <p style="padding:5px 0px 5px 0px">@Html.ActionLink("View History", "InventoryRecords", "History")</p>
-</div>
 
 @using (Html.BeginForm("UpdateInventory", "RADA", FormMethod.Post))
 {
@@ -105,7 +78,7 @@
 
             <div class="col col-7" style="text-align:center">Options</div>
         </li>
-        @foreach (var person in ViewBag.Records)
+       @foreach (var person in ViewBag.Records)
         {
 
             <li class="table-row" id="tblCustomers">
@@ -123,10 +96,8 @@
                 <div class="col col-6" data-label="Date" style="text-align:center"> @person.Datetimes</div>
 
                 <div class="col col-7" data-label="Options" style="text-align:center">
-
-                    @Html.ActionLink("❌ Delete", "RemoveInventary", new { ID = @person.ID }) /
-                    @Html.ActionLink("♻️ Update", "UpdateInventory", new { ID = @person.ID })
-
+                    <a href="@Url.Action("RemoveInventary", "RADA" , new { ID = @person.ID })" class="link-label"> ❌ Delete </a> /
+                    <a href="@Url.Action("UpdateInventory", "RADA" ,  new { ID = @person.ID })" class="link-label"> ♻️ Update </a>
                 </div>
 
             </li>
@@ -182,9 +153,6 @@
 </table>
 
 <p style="text-align: center;">&nbsp;</p>
-<p style="text-align: center;">&nbsp;</p>
-
-@*<p style="text-align: center;">&nbsp;</p>
 <div style="text-align:center">
     <button id="Bton_Export" class="btn btn-success" style="text-align:left"> Export xls. <i class="fa fa-file-text"></i></button>
 </div>
@@ -198,10 +166,11 @@
             name: "Backup file for HTML content",
 
             //  include extension also
-            filename: "Inventary Control Container " + datenow + ".xls",
+            filename: "Control de Movimientos de Contenedores " + datenow + ".xls",
 
             // 'True' is set if background and font colors preserved
             preserveColors: false
         });
     });
-</script>*@
+</script>
+

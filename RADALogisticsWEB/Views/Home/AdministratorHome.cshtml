@@ -6,24 +6,36 @@
 <link href="~/Stylee/HomeStylee.css" rel="stylesheet" />
 
 <div class="container" style="text-align: center">
-
-    <hr>
+    <img src="~/Pictures/logo_radas-removebg-preview.png" height="100" />
     <h3 class="labelTitt"> Welcome to the Rada Logistics system </h3>
     <h4 style="font-size:15px" class="labelTitt">¡ @ViewBag.User !</h4>
     <h5 class="labelTitt">Select one of the options:</h5>
     <hr>
 
+    <h5 class="Tittlelabel"> Admin Options </h5>
+    <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
     <nav class="menu">
-        @*<a @Html.ActionLink("‍👷 Supervisors", "Supervisors", "Users")</a>*@
-        <a @Html.ActionLink("👷 Users Control", "NewUser", "Users")</a>
-        <a @Html.ActionLink("🔸 Hisense Funcions", "Menu", "Home")</a>
-        <a @Html.ActionLink("🔸 RADA Functions", "Menu", "Home")</a>
-        <a @Html.ActionLink("⛔ Logout", "LogIn", "Login")</a>
-        @*<a @Html.ActionLink("📩 Entry Request", "NewIonizer", "Ioni")</a>
-            <a @Html.ActionLink("📥 Inventory Control", "QueryID", "Ioni")</a>
-            <a @Html.ActionLink("🗂️ View Records", "Menu", "Home")</a>
-            <a @Html.ActionLink("🗑️ Request Container", "Menu", "Home")</a>
-            <a @Html.ActionLink("🔙 Return Home", "Menu", "Home")</a>*@
+        <a @Html.ActionLink("👷 Users Control", "Home", "Users")</a>
+        <a @Html.ActionLink("🗂️ View Records", "Records", "History")</a>
+        <a @Html.ActionLink("‍🔴 Cancellation history", "Cancellation", "Home")</a>
     </nav>
 
+    <h5 class="Tittlelabel"> Hisense User Options </h5>
+    <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
+    <nav class="menu">
+        <a @Html.ActionLink("📤 Request Container", "RequestContainer", "HISENSE")</a>
+    </nav>
+
+    <h5 class="Tittlelabel"> RADA User Options </h5>
+    <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
+    <nav class="menu">
+        <a @Html.ActionLink("📥 Entry Container", "EntryContainer", "RADA")</a>
+        <a @Html.ActionLink("🏗️ Inventory Control", "Inventory", "RADA")</a>
+        <a @Html.ActionLink("⛔ Logout", "LogIn", "Login")</a>
+    </nav>
+
+    <p style="text-align: center;">&nbsp;</p>
+    <p style="text-align: center;">&nbsp;</p>
+    <p style="text-align: center;">&nbsp;</p>
+    <p style="text-align: center;">&nbsp;</p>
 </div>

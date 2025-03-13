@@ -118,23 +118,12 @@
             </div>
         </center>
 
-
-        <p style="text-align: center;">&nbsp;</p>
-        <p style="text-align: center;">&nbsp;</p>
-        @using (Html.BeginForm("ReturnContainer", "RADA", FormMethod.Post))
-        {
-            <input value="@ViewBag.ID" hidden="hidden" id="id" name="id"/>
-            <button type="submit" class="Bto_saved">
-                ⬅️ Return Select other Choffer
-            </button>
-        }
-
-        @using (Html.BeginForm("ConfirmContainer", "RADA", FormMethod.Post))
+       @using (Html.BeginForm("ConfirmContainer", "RADA", FormMethod.Post))
         {
             <input value="@ViewBag.ID" hidden="hidden" id="id" name="id"/>
             <p style="text-align: center;">&nbsp;</p>
             <p style="text-align: center;">&nbsp;</p>
-            <button type="submit" class="Bto_saved">
+            <button type="submit" class="Bto_saved" style="width:40vh">
                 ✅ Complete Movement
             </button>
         }
