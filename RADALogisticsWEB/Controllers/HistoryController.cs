@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -526,6 +527,7 @@ namespace RADALogisticsWEB.Controllers
             }
         }
 
+
         public ActionResult Delete(string ID, string Reason, string Company)
         {
             ViewBag.User = Session["Username"];
@@ -538,7 +540,16 @@ namespace RADALogisticsWEB.Controllers
             {
                 if (Company == "RADA")
                 {
-                    //Guardar informacion a la base de datos del proyecto
+                    // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                    DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                    // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                    TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                    // Formatear la fecha para que sea adecuada para la base de datos
+                    string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
                     DBSPP.Open();
                     SqlCommand PalletControl = new SqlCommand("insert into RADAEmpires_DRemoves" +
                         "(Folio, Reason, Datetime, Active,Company) values " +
@@ -546,7 +557,7 @@ namespace RADALogisticsWEB.Controllers
                     //--------------------------------------------------------------------------------------------------------------------------------
                     PalletControl.Parameters.AddWithValue("@Folio", ID.ToString());
                     PalletControl.Parameters.AddWithValue("@Reason", Reason.ToString());
-                    PalletControl.Parameters.AddWithValue("@Datetime", DateTime.Now.ToString());
+                    PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString());
                     PalletControl.Parameters.AddWithValue("@Active", true);
                     PalletControl.Parameters.AddWithValue("@Company", "RADA");
                     PalletControl.ExecuteNonQuery();
@@ -577,7 +588,16 @@ namespace RADALogisticsWEB.Controllers
                 }
                 else
                 {
-                    //Guardar informacion a la base de datos del proyecto
+                    // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                    DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                    // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                    TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                    // Formatear la fecha para que sea adecuada para la base de datos
+                    string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
                     DBSPP.Open();
                     SqlCommand PalletControl = new SqlCommand("insert into RADAEmpires_DRemoves" +
                         "(Folio, Reason, Datetime, Active,Company) values " +
@@ -585,7 +605,7 @@ namespace RADALogisticsWEB.Controllers
                     //--------------------------------------------------------------------------------------------------------------------------------
                     PalletControl.Parameters.AddWithValue("@Folio", ID.ToString());
                     PalletControl.Parameters.AddWithValue("@Reason", Reason.ToString());
-                    PalletControl.Parameters.AddWithValue("@Datetime", DateTime.Now.ToString());
+                    PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString());
                     PalletControl.Parameters.AddWithValue("@Active", true);
                     PalletControl.Parameters.AddWithValue("@Company", "HISENSE");
                     PalletControl.ExecuteNonQuery();

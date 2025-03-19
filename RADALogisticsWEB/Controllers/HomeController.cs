@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using RADALogisticsWEB.Models;
+using System.Globalization;
 
 namespace RADALogisticsWEB.Controllers
 {
@@ -16,6 +17,32 @@ namespace RADALogisticsWEB.Controllers
         SqlCommand con = new SqlCommand();
         SqlDataReader dr;
         public string Username { get; set; }
+
+        public static string ConvertirFechaAlemanaAUsa(string fechaHora)
+        {
+            try
+            {
+                // Definir la zona horaria de Alemania y EE.UU. (Ejemplo: Eastern Time)
+                TimeZoneInfo zonaAlemania = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+                TimeZoneInfo zonaUSA = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"); // Cambia según la zona de EE.UU.
+
+                // Convertir la fecha de string a DateTime en formato alemán
+                DateTime fechaUtc = DateTime.ParseExact(fechaHora, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                // Convertir la fecha a UTC (desde Alemania)
+                DateTime fechaEnUtc = TimeZoneInfo.ConvertTimeToUtc(fechaUtc, zonaAlemania);
+
+                // Convertir la fecha desde UTC a la zona horaria de EE.UU.
+                DateTime fechaUsa = TimeZoneInfo.ConvertTimeFromUtc(fechaEnUtc, zonaUSA);
+
+                // Devolver la fecha en formato USA
+                return fechaUsa.ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
 
         public ActionResult AdministratorHome()
         {

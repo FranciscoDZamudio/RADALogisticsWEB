@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -187,11 +188,21 @@ namespace RADALogisticsWEB.Controllers
 
                 if (validation == null)
                 {
+                    // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                    DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                    // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                    TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                    // Formatear la fecha para que sea adecuada para la base de datos
+                    string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
                     //Guardar informacion a la base de datos del proyecto
                     DBSPP.Open();
                     SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_AChoffer" +
                         "(Who_create, Username, Fastcard, Area, Active,Shift,Date,Datetime) values " +
-                        "(@Who_create, @Username, @Fastcard, @Area, @Active,@Shift,getdate(), getdate()) ", DBSPP);
+                        "(@Who_create, @Username, @Fastcard, @Area, @Active,@Shift,@Date,@Datetime) ", DBSPP);
                     //--------------------------------------------------------------------------------------------
                     PalletControl.Parameters.AddWithValue("@Who_create", User.ToString());
                     PalletControl.Parameters.AddWithValue("@Username", Username.ToString());
@@ -199,6 +210,8 @@ namespace RADALogisticsWEB.Controllers
                     PalletControl.Parameters.AddWithValue("@Area", Area.ToString());
                     PalletControl.Parameters.AddWithValue("@Shift", Shift.ToString());
                     PalletControl.Parameters.AddWithValue("@Active", true);
+                    PalletControl.Parameters.AddWithValue("@Date", usTime.ToString());
+                    PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString());
                     PalletControl.ExecuteNonQuery();
                     DBSPP.Close();
                     //--------------------------------------------------------------------------------------------
@@ -375,16 +388,26 @@ namespace RADALogisticsWEB.Controllers
 
                 if (validation == null)
                 {
+                    // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                    DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                    // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                    TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                    // Formatear la fecha para que sea adecuada para la base de datos
+                    string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
                     //Guardar informacion a la base de datos del proyecto
                     DBSPP.Open();
                     SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_AAreas" +
                         "(Who_create, Name, Datetime, Date, Active) values " +
-                        "(@Who_create, @Name, getdate(), getdate(), @Active) ", DBSPP);
+                        "(@Who_create, @Name,@Datetime, @Date, @Active) ", DBSPP);
                     //--------------------------------------------------------------------------------------------
                     PalletControl.Parameters.AddWithValue("@Who_create", User.ToString());
                     PalletControl.Parameters.AddWithValue("@Name", Name.ToString());
-                    //PalletControl.Parameters.AddWithValue("@Datetime", DateTime.Now.ToString());
-                    //PalletControl.Parameters.AddWithValue("@Date", DateTime.Now.ToString());
+                    PalletControl.Parameters.AddWithValue("@Date", usTime);
+                    PalletControl.Parameters.AddWithValue("@Datetime", usTime);
                     PalletControl.Parameters.AddWithValue("@Active", true);
                     PalletControl.ExecuteNonQuery();
                     DBSPP.Close();
@@ -419,6 +442,16 @@ namespace RADALogisticsWEB.Controllers
 
             if (Validation == null)
             {
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(1);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
                 //Guardar informacion a la base de datos del proyecto
                 DBSPP.Open();
                 SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_AUsers" +
@@ -431,8 +464,10 @@ namespace RADALogisticsWEB.Controllers
                 PalletControl.Parameters.AddWithValue("@Password", Pass.ToString());
                 PalletControl.Parameters.AddWithValue("@Type_user", TypeUsers.ToString());
                 PalletControl.Parameters.AddWithValue("@Email", Email.ToString());
-                PalletControl.Parameters.AddWithValue("@DateAdded", DateTime.Now.ToString());
-                PalletControl.Parameters.AddWithValue("@DateRequest", DateTime.Now.ToString());
+                PalletControl.Parameters.AddWithValue("@DateAdded", usTime);
+                PalletControl.Parameters.AddWithValue("@DateRequest", usTime);
+                //PalletControl.Parameters.AddWithValue("@DateAdded", DateTime.Now.ToString());
+                //PalletControl.Parameters.AddWithValue("@DateRequest", DateTime.Now.ToString());
                 PalletControl.Parameters.AddWithValue("@Active", true);
                 PalletControl.Parameters.AddWithValue("@Createby", UserCreate);
                 PalletControl.ExecuteNonQuery();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -181,6 +182,16 @@ namespace RADALogisticsWEB.Controllers
             }
             else
             {
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
                 string fast = null;
                 // create generate randoms int value
                 SqlCommand conse = new SqlCommand("Select Fastcard from RADAEmpire_AChoffer where Active = '1' and Username = '" + Choffer.ToString() + "'", DBSPP);
@@ -212,7 +223,7 @@ namespace RADALogisticsWEB.Controllers
                 {
                     DBSPP.Open();
                     coms.Parameters.AddWithValue("@Username", Username.ToString());
-                    coms.Parameters.AddWithValue("@Time_Confirm", DateTime.Now.ToString("HH:mm:ss"));
+                    coms.Parameters.AddWithValue("@Time_Confirm", usTime.ToString("HH:mm:ss"));
                     coms.Parameters.AddWithValue("@Choffer", Choffer.ToString());
                     coms.Parameters.AddWithValue("@ID", ID);
                     coms.Parameters.AddWithValue("@FastCard", fast.ToString());
@@ -400,12 +411,22 @@ namespace RADALogisticsWEB.Controllers
             }
             else
             {
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
                 //query message ------------------------------------------------------------------------------------------------------------------
                 string updateQuery = "UPDATE RADAEmpire_CEntryContrainers SET Time_Finished = @Time_Finished WHERE Folio_Request = @ID";
                 using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
                 {
                     DBSPP.Open();
-                    command.Parameters.AddWithValue("@Time_Finished", DateTime.Now.ToString("HH:mm:ss"));
+                    command.Parameters.AddWithValue("@Time_Finished", usTime.ToString("HH:mm:ss"));
                     command.Parameters.AddWithValue("@ID", id);
                     int rowsAffected = command.ExecuteNonQuery();
                     DBSPP.Close();
@@ -436,6 +457,16 @@ namespace RADALogisticsWEB.Controllers
             }
             else
             {
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
                 //Guardar informacion a la base de datos del proyecto
                 DBSPP.Open();
                 SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_CInventoryControl" +
@@ -446,8 +477,8 @@ namespace RADALogisticsWEB.Controllers
                 PalletControl.Parameters.AddWithValue("@Container", Container.ToString());
                 PalletControl.Parameters.AddWithValue("@LocationCode", Location.ToString());
                 PalletControl.Parameters.AddWithValue("@Status", "Container is move to " + Location);
-                PalletControl.Parameters.AddWithValue("@Date", DateTime.Now.ToString());
-                PalletControl.Parameters.AddWithValue("@Datetime", DateTime.Now.ToString());
+                PalletControl.Parameters.AddWithValue("@Date", usTime.ToString());
+                PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString());
                 PalletControl.Parameters.AddWithValue("@Active", true);
                
                 PalletControl.ExecuteNonQuery();
@@ -554,13 +585,24 @@ namespace RADALogisticsWEB.Controllers
 
         private void GetEntryRequest()
         {
+
             if (GetRecords.Count > 0)
             {
                 GetRecords.Clear();
             }
             else
             {
-                string datenow = DateTime.Now.ToString();
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                string datenow = usTime.ToString();
                 DBSPP.Open();
                 con.Connection = DBSPP;
                 con.CommandText = "  Select top (1000) " +
