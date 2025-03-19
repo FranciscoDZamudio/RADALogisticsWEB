@@ -90,39 +90,39 @@
         <ul class="responsive-table">
             <li class="table-header" id="tableData">
 
-                <div class="col col-1">ID</div>
+                <div class="col col-1" style="text-align:center">ID</div>
 
-                <div class="col col-2">Who Create</div>
+                <div class="col col-2" style="text-align:center">Who Create</div>
 
-                <div class="col col-2">Username</div>
+                <div class="col col-2" style="text-align:center">Username</div>
 
-                <div class="col col-1">FastCard</div>
+                <div class="col col-1" style="text-align:center">FastCard</div>
 
-                <div class="col col-3">Area</div>
+                <div class="col col-3" style="text-align:center">Area</div>
 
-                <div class="col col-1">Shift</div>
+                <div class="col col-1" style="text-align:center">Shift</div>
 
-                <div class="col col-5">Date</div>
+                <div class="col col-5" style="text-align:center">Date</div>
 
-                <div class="col col-7">Options</div>
+                <div class="col col-7" style="text-align:center">Options</div>
             </li>
             @foreach (var person in ViewBag.RecordChoffers)
             {
                 <li class="table-row" id="tblCustomers">
 
-                    <div class="col col-1" data-label="ID">@person.ID</div>
+                    <div class="col col-1" data-label="ID" style="text-align:center">@person.ID</div>
 
-                    <div class="col col-2" data-label="Who Create">@person.Who_create</div>
+                    <div class="col col-2" data-label="Who Create" style="text-align:center">@person.Who_create</div>
 
-                    <div class="col col-2" data-label="Username">@person.Username</div>
+                    <div class="col col-2" data-label="Username" style="text-align:center">@person.Username</div>
 
-                    <div class="col col-1" data-label="Fastcard"> @person.Fastcard</div>
+                    <div class="col col-1" data-label="Fastcard" style="text-align:center"> @person.Fastcard</div>
 
-                    <div class="col col-3" data-label="Area"> @person.Area</div>
+                    <div class="col col-3" data-label="Area" style="text-align:center"> @person.Area</div>
 
-                    <div class="col col-1" data-label="Shift"> @person.Shift</div>
+                    <div class="col col-1" data-label="Shift" style="text-align:center"> @person.Shift</div>
 
-                    <div class="col col-5" data-label="Date"> @person.Datetime</div>
+                    <div class="col col-5" data-label="Date" style="text-align:center"> @person.Datetime</div>
 
                     <div class="col col-7" data-label="Options">
 

@@ -110,36 +110,36 @@
             <ul class="responsive-table">
                 <li class="table-header" id="tableData">
 
-                    <div class="col col-1">ID</div>
+                    <div class="col col-1" style="text-align:center">ID</div>
 
-                    <div class="col col-2">Username</div>
+                    <div class="col col-2" style="text-align:center">Username</div>
 
-                    <div class="col col-2">Credentials</div>
+                    <div class="col col-2" style="text-align:center">Credentials</div>
 
-                    <div class="col col-3">Log In</div>
+                    <div class="col col-3" style="text-align:center">Log In</div>
 
-                    <div class="col col-4">Type User</div>
+                    <div class="col col-4" style="text-align:center">Type User</div>
 
-                    <div class="col col-5">Date</div>
+                    <div class="col col-5" style="text-align:center">Date</div>
 
-                    <div class="col col-7">Options</div>
+                    <div class="col col-7" style="text-align:center">Options</div>
                 </li>
                @foreach (var person in ViewBag.Records)
                 {
 
                     <li class="table-row" id="tblCustomers">
 
-                        <div class="col col-1" data-label="ID">@person.ID</div>
+                        <div class="col col-1" data-label="ID" style="text-align:center">@person.ID</div>
 
-                        <div class="col col-2" data-label="Username">@person.Username</div>
+                        <div class="col col-2" data-label="Username" style="text-align:center">@person.Username</div>
 
-                        <div class="col col-2" data-label="Credentials"> @person.Employee_Number</div>
+                        <div class="col col-2" data-label="Credentials" style="text-align:center"> @person.Employee_Number</div>
 
-                        <div class="col col-3" data-label="Log In"> @person.Login_session</div>
+                        <div class="col col-3" data-label="Log In" style="text-align:center"> @person.Login_session</div>
 
-                        <div class="col col-4" data-label="Type User"> @person.Type_user</div>
+                        <div class="col col-4" data-label="Type User" style="text-align:center"> @person.Type_user</div>
 
-                        <div class="col col-5" data-label="Date"> @person.DateAdded</div>
+                        <div class="col col-5" data-label="Date" style="text-align:center"> @person.DateAdded</div>
 
                         <div class="col col-7" data-label="Options">
 

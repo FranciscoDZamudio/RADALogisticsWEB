@@ -59,30 +59,30 @@
         <ul class="responsive-table">
             <li class="table-header" id="tableData">
 
-                <div class="col col-1">ID</div>
+                <div class="col col-1" style="text-align:center">ID</div>
 
-                <div class="col col-2">Who Create</div>
+                <div class="col col-2" style="text-align:center">Who Create</div>
 
-                <div class="col col-2">Area</div>
+                <div class="col col-2" style="text-align:center">Area</div>
 
-                <div class="col col-5">Date</div>
+                <div class="col col-5" style="text-align:center">Date</div>
 
-                <div class="col col-7">Options</div>
+                <div class="col col-7" style="text-align:center">Options</div>
             </li>
 
             @foreach (var person in ViewBag.Records)
             {
                 <li class="table-row" id="tblCustomers">
 
-                    <div class="col col-1" data-label="ID">@person.id</div>
+                    <div class="col col-1" data-label="ID" style="text-align:center">@person.id</div>
 
-                    <div class="col col-2" data-label="Username">@person.Who_create</div>
+                    <div class="col col-2" data-label="Username" style="text-align:center">@person.Who_create</div>
 
-                    <div class="col col-2" data-label="Container"> @person.Name</div>
+                    <div class="col col-2" data-label="Container" style="text-align:center"> @person.Name</div>
 
-                    <div class="col col-5" data-label="Location"> @person.Datetime</div>
+                    <div class="col col-5" data-label="Location" style="text-align:center"> @person.Datetime</div>
 
-                    <div class="col col-7" data-label="Options">
+                    <div class="col col-7" data-label="Options" style="text-align:center">
 
                         @Html.ActionLink("❌ Delete", "RemoveArea", new { ID = @person.id })
 
