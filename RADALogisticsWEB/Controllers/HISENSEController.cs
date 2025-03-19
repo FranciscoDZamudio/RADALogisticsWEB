@@ -156,7 +156,7 @@ namespace RADALogisticsWEB.Controllers
                 PalletControl.Parameters.AddWithValue("@message", "PENDING");
                 PalletControl.Parameters.AddWithValue("@shift", "0");
                 PalletControl.Parameters.AddWithValue("@Date", usTime.ToString());
-                PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString());
+                PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString("HH:mm:ss"));
                 PalletControl.Parameters.AddWithValue("@Active", true);
 
                 PalletControl.ExecuteNonQuery();
