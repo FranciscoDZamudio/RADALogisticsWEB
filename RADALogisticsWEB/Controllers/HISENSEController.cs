@@ -149,9 +149,9 @@ namespace RADALogisticsWEB.Controllers
                 //--------------------------------------------------------------------------------------------------------------------------------
                 PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
                 PalletControl.Parameters.AddWithValue("@Who_Send", User.ToString());
-                PalletControl.Parameters.AddWithValue("@Container", Container.ToString());
-                PalletControl.Parameters.AddWithValue("@Destination_Location", Destination.ToString());
-                PalletControl.Parameters.AddWithValue("@Origins_Location", Origins.ToString());
+                PalletControl.Parameters.AddWithValue("@Container", Container.ToUpper());
+                PalletControl.Parameters.AddWithValue("@Destination_Location", Destination.ToUpper());
+                PalletControl.Parameters.AddWithValue("@Origins_Location", Origins.ToUpper());
                 PalletControl.Parameters.AddWithValue("@Status", Type.ToString());
                 PalletControl.Parameters.AddWithValue("@message", "PENDING");
                 PalletControl.Parameters.AddWithValue("@shift", "0");
