@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "table";
+}
+
+@foreach (var person in ViewBag.Records)
+{
+    <li class="table-row" id="tblCustomers" style="color:black ; background-color:
+    @(person.message == "Canceled by Rada" ? "#F9D0D0" :
+      person.message == "Canceled by Hisense" ? "#F9D0D0" :
+      person.message == "PENDING" ? "#F8E6E6" :
+      person.message == "Movement Completed" ? "#D0F9E5" :
+      person.message == "Movement in process" ? "#E5F8EC" : "black")">
+
+        <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
+
+        <div class="col col-2" data-label="Username" style="text-align:center">@person.Who_Send</div>
+
+        <div class="col col-3" data-label="Container" style="text-align:center"> @person.Container</div>
+
+        <div class="col col-4" data-label="Destination Location" style="text-align:center"> @person.Destination_Location</div>
+
+        <div class="col col-5" data-label="Origins Location" style="text-align:center"> @person.Origins_Location</div>
+
+        <div class="col col-6" data-label="Status" style="text-align:center"> @person.Status</div>
+
+        <div class="col col-7" data-label="Message" style="text-align:center"> @person.message</div>
+
+        <div class="col col-8" data-label="Date" style="text-align:center"> @person.Datetime</div>
+
+        <div class="col col-9" data-label="Options" style="text-align:center">
+
+            @*@Html.ActionLink("❌ Delete", "CancelContainer", new { ID = @person.Folio }) /*@
+            @Html.ActionLink("🎴 Details", "Details", new { ID = @person.Folio })
+
+        </div>
+    </li>
+}

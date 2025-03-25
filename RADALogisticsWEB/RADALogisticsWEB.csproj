@@ -223,6 +223,7 @@
     <Content Include="Views\History\Record.cshtml" />
     <Content Include="Views\History\HRecord.cshtml" />
     <Content Include="Views\History\InventoryRecords.cshtml" />
+    <Content Include="Views\HISENSE\table.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

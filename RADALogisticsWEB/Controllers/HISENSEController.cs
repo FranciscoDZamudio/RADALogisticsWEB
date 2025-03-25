@@ -96,6 +96,13 @@ namespace RADALogisticsWEB.Controllers
             }
         }
 
+        public PartialViewResult ActualizarTabla()
+        {
+            GetContainers();
+            ViewBag.Records = GetListed; // Obtener nuevamente los datos
+            return PartialView("table", ViewBag.Records);
+        }
+
         public ActionResult ProcessData(string User, string Type, string Container, string Origins, string Destination)
         {
             ViewBag.User = Session["Username"];

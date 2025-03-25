@@ -4,6 +4,7 @@
 }
 
 <link href="~/Stylee/HisensePages.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <div class="container" style="text-align: center; width: 100%; height: 100%">
 
@@ -18,7 +19,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
                     <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
                 </svg>
-                <span class="text">Return to back</span>
+                <span class="text"> Return to back Home </span>
                 <span class="circle"></span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
                     <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
@@ -27,7 +28,7 @@
         </div>
         <hr>
 
-       @using (Html.BeginForm("ProcessData", "HISENSE", FormMethod.Post))
+        @using (Html.BeginForm("ProcessData", "HISENSE", FormMethod.Post))
         {
             <p style="text-align: center;">&nbsp;</p>
             <h5 class="Tittlelabel"> Username Overview </h5>
@@ -115,40 +116,31 @@
 
         <div class="col col-9" style="text-align:center">Options</div>
     </li>
-    @foreach (var person in ViewBag.Records)
-    {
-        <li class="table-row" id="tblCustomers" style="color:black ; background-color: 
-    @(person.message == "Canceled by Rada" ? "#F9D0D0" : 
-      person.message == "Canceled by Hisense" ? "#F9D0D0" :
-      person.message == "PENDING" ? "#F8E6E6" :
-      person.message == "Movement Completed" ? "#D0F9E5" :
-      person.message == "Movement in process" ? "#E5F8EC" : "black")">
 
-            <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
+    <div id="tabla-container">
+        @Html.Partial("table") <!-- Cargar la tabla al inicio -->
+    </div>
 
-            <div class="col col-2" data-label="Username" style="text-align:center">@person.Who_Send</div>
-
-            <div class="col col-3" data-label="Container" style="text-align:center"> @person.Container</div>
-
-            <div class="col col-4" data-label="Destination Location" style="text-align:center"> @person.Destination_Location</div>
-
-            <div class="col col-5" data-label="Origins Location" style="text-align:center"> @person.Origins_Location</div>
-
-            <div class="col col-6" data-label="Status" style="text-align:center"> @person.Status</div>
-
-            <div class="col col-7" data-label="Message" style="text-align:center"> @person.message</div>
-
-            <div class="col col-8" data-label="Date" style="text-align:center"> @person.Datetime</div>
-
-            <div class="col col-9" data-label="Options" style="text-align:center">
-
-                @*@Html.ActionLink("❌ Delete", "CancelContainer", new { ID = @person.Folio }) /*@
-                @Html.ActionLink("🎴 Details", "Details", new { ID = @person.Folio })
-
-            </div>
-        </li>
-    }
 </ul>
+
+<script>
+    function actualizarTabla() {
+        $.ajax({
+            url: '/HISENSE/ActualizarTabla', // Llama al método en el controlador
+            type: 'GET',
+            success: function (data) {
+                $("#tabla-container").html(data); // Reemplaza la tabla con la nueva versión
+                console.log("Tabla actualizada.");
+            },
+            error: function () {
+                console.log("Error al actualizar la tabla.");
+            }
+        });
+    }
+
+    // Llamar la función cada 10 segundos
+    setInterval(actualizarTabla, 10000);
+</script>
 
 <p style="text-align: center;">&nbsp;</p>
 <p style="text-align: center;">&nbsp;</p>

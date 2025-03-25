@@ -47,6 +47,7 @@ body {
     color: black;
 }
 
+
 .menu {
     display: flex;
     flex-direction: column;
@@ -59,7 +60,7 @@ body {
     font-family: Raleway, serif;
     color: #333;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 700;
     line-height: 1;
     position: relative;
