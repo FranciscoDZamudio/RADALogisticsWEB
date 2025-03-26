@@ -5,13 +5,13 @@ using System.Web;
 
 namespace RADALogisticsWEB.Models
 {
-    public class Areas
+    public class AsignacionDeAreas
     {
-        public string id { get; set; }
-        public string Name { get; set; }
-        public string Username { get; set; }
-        public string Area { get; set; }
+        public int ID { get; set; }
         public string Who_create { get; set; }
+        public string Username { get; set; }
+        public string Enterprise { get; set; }
+        public string Areas { get; set; }
         public string Datetime { get; set; }
     }
 }

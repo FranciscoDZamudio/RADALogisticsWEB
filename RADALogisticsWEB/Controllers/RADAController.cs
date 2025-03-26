@@ -15,6 +15,9 @@ namespace RADALogisticsWEB.Controllers
         List<Historial> GetRecords = new List<Historial>();
         List<Historial> GetRecordsQuery = new List<Historial>();
         List<Inventario> GetInventary = new List<Inventario>();
+
+        List<string> filtroAreas = new List<string>();
+
         //connection SQL server (database)
         SqlConnection DBSPP = new SqlConnection("Data Source=RADAEmpire.mssql.somee.com ;Initial Catalog=RADAEmpire ;User ID=RooRada; password=rada1311");
         SqlCommand con = new SqlCommand();
@@ -58,46 +61,177 @@ namespace RADALogisticsWEB.Controllers
             }
             else
             {
+                string name = Session["Username"].ToString();
+
                 if (query == "1")
                 {
+
+                    string validation = null;
+                    //create generate randoms int value
+                    SqlCommand conse = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + name + "'", DBSPP);
                     DBSPP.Open();
-                    con.Connection = DBSPP;
-                    con.CommandText = "Select top (1000) " +
-                        " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                        " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date " +
-                        " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + date.ToString() + "' ORDER by a.Folio desc";
-                    dr = con.ExecuteReader();
-                    while (dr.Read())
+                    SqlDataReader drconse = conse.ExecuteReader();
+                    if (drconse.HasRows)
                     {
-                        GetRecordsQuery.Add(new Historial()
+                        while (drconse.Read())
                         {
-                            Folio = (dr["Folio"].ToString()),
-                            Container = (dr["Container"].ToString()),
-                            Origen = (dr["Origen"].ToString()),
-                            Destination = (dr["Destination"].ToString()),
-                            Status = (dr["Status"].ToString()),
-                            HSolicitud = (dr["HSolicitud"].ToString()),
-                            HConfirm = (dr["HConfirm"].ToString()),
-                            HFinish = (dr["HFinish"].ToString()),
-                            WhoRequest = (dr["WhoRequest"].ToString()),
-                            Choffer = (dr["Choffer"].ToString()),
-                            Comment = (dr["Comment"].ToString()),
-                            Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
-                        });
+                            validation = drconse["Type_user"].ToString();
+                        }
                     }
                     DBSPP.Close();
-                    ViewBag.Records = GetRecordsQuery;
-                    ViewBag.Count = GetRecordsQuery.Count.ToString();
-                    return View();
+
+                    if (validation == "ADMINISTRATOR")
+                    {
+                        DBSPP.Open();
+                        con.Connection = DBSPP;
+                        con.CommandText = "Select top (1000) " +
+                            " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                            " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area  " +
+                            " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + date.ToString() + "' ORDER by a.Folio desc";
+                        dr = con.ExecuteReader();
+                        while (dr.Read())
+                        {
+                            GetRecordsQuery.Add(new Historial()
+                            {
+                                Folio = (dr["Folio"].ToString()),
+                                Container = (dr["Container"].ToString()),
+                                Origen = (dr["Origen"].ToString()),
+                                Destination = (dr["Destination"].ToString()),
+                                Status = (dr["Status"].ToString()),
+                                HSolicitud = (dr["HSolicitud"].ToString()),
+                                HConfirm = (dr["HConfirm"].ToString()),
+                                HFinish = (dr["HFinish"].ToString()),
+                                WhoRequest = (dr["WhoRequest"].ToString()),
+                                Choffer = (dr["Choffer"].ToString()),
+                                Comment = (dr["Comment"].ToString()),
+                                Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                                Area = (dr["Area"].ToString()),
+                            });
+                        }
+                        DBSPP.Close();
+                        ViewBag.Records = GetRecordsQuery;
+                        ViewBag.Count = GetRecordsQuery.Count.ToString();
+                        return View();
+                    }
+                    else
+                    {
+
+                        DBSPP.Open();
+                        con.Connection = DBSPP;
+                        con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
+                        dr = con.ExecuteReader();
+                        while (dr.Read())
+                        {
+                            if (dr["Username"].ToString() == name)
+                            {
+                                filtroAreas.Add(dr["Areas"].ToString());
+                            }
+                        }
+                        DBSPP.Close();
+
+                        DBSPP.Open();
+                        con.Connection = DBSPP;
+                        con.CommandText = "Select top (1000) " +
+                            " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                            " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area  " +
+                            " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + date.ToString() + "' ORDER by a.Folio desc";
+                        dr = con.ExecuteReader();
+                        while (dr.Read())
+                        {
+                            string areaActual = dr["Area"].ToString();
+
+                            if (filtroAreas.Contains(areaActual))
+                            {
+                                GetRecordsQuery.Add(new Historial()
+                                {
+                                    Folio = (dr["Folio"].ToString()),
+                                    Container = (dr["Container"].ToString()),
+                                    Origen = (dr["Origen"].ToString()),
+                                    Destination = (dr["Destination"].ToString()),
+                                    Status = (dr["Status"].ToString()),
+                                    HSolicitud = (dr["HSolicitud"].ToString()),
+                                    HConfirm = (dr["HConfirm"].ToString()),
+                                    HFinish = (dr["HFinish"].ToString()),
+                                    WhoRequest = (dr["WhoRequest"].ToString()),
+                                    Choffer = (dr["Choffer"].ToString()),
+                                    Comment = (dr["Comment"].ToString()),
+                                    Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                                    Area = (dr["Area"].ToString()),
+                                });
+                            }
+                        }
+                        DBSPP.Close();
+                        ViewBag.Records = GetRecordsQuery;
+                        ViewBag.Count = GetRecordsQuery.Count.ToString();
+                        return View();
+                    }
                 }
                 else
                 {
-                    GetEntryRequest();
-                    ViewBag.Records = GetRecords;
-                    ViewBag.Count = GetRecords.Count.ToString();
-                    return View();
+                    string validation = null;
+                    //create generate randoms int value
+                    SqlCommand conse = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + name + "'", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drconse = conse.ExecuteReader();
+                    if (drconse.HasRows)
+                    {
+                        while (drconse.Read())
+                        {
+                            validation = drconse["Type_user"].ToString();
+                        }
+                    }
+                    DBSPP.Close();
+
+                    if (validation == "ADMINISTRATOR")
+                    {
+                        GetEntryRequest();
+                        ViewBag.Records = GetRecords;
+                        ViewBag.Count = GetRecords.Count.ToString();
+                        return View();
+                    }
+                    else
+                    {
+                        DBSPP.Open();
+                        con.Connection = DBSPP;
+                        con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
+                        dr = con.ExecuteReader();
+                        while (dr.Read())
+                        {
+                            if (dr["Username"].ToString() == name)
+                            {
+                                filtroAreas.Add(dr["Areas"].ToString());
+                            }
+                        }
+                        DBSPP.Close();
+
+                        GetEntryRequest(filtroAreas);
+                        ViewBag.Records = GetRecords;
+                        ViewBag.Count = GetRecords.Count.ToString();
+                        return View();
+                    }
                 }
             }
+        }
+
+        public PartialViewResult ActualizarTabla(string name)
+        {
+            DBSPP.Open();
+            con.Connection = DBSPP;
+            con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
+            dr = con.ExecuteReader();
+            while (dr.Read())
+            {
+                if (dr["Username"].ToString() == name)
+                {
+                    filtroAreas.Add(dr["Areas"].ToString());
+                }
+            }
+            DBSPP.Close();
+
+            GetEntryRequest(filtroAreas);
+            ViewBag.Records = GetRecords; // Obtener nuevamente los datos
+            ViewBag.Count = GetRecords.Count.ToString();
+            return PartialView("table", ViewBag.Records);
         }
 
         public ActionResult ViewConfirm(string ID)
@@ -583,6 +717,84 @@ namespace RADALogisticsWEB.Controllers
             }
         }
 
+        private void GetEntryRequest(List<string> filtroAreas)
+        {
+
+            if (GetRecords.Count > 0)
+            {
+                GetRecords.Clear();
+            }
+            else
+            {
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                string datenow = usTime.ToString();
+                DBSPP.Open();
+                con.Connection = DBSPP;
+                con.CommandText = "  Select top (1000) " +
+                    " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area  " +
+                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + datenow.ToString() + "' ORDER by a.Folio desc";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {
+                    string areaActual = dr["Area"].ToString();
+
+                    if (filtroAreas.Contains(areaActual))
+                    {
+                        GetRecords.Add(new Historial()
+                        {
+                            Folio = (dr["Folio"].ToString()),
+                            Container = (dr["Container"].ToString()),
+                            Origen = (dr["Origen"].ToString()),
+                            Destination = (dr["Destination"].ToString()),
+                            Status = (dr["Status"].ToString()),
+                            HSolicitud = (dr["HSolicitud"].ToString()),
+                            HConfirm = (dr["HConfirm"].ToString()),
+                            HFinish = (dr["HFinish"].ToString()),
+                            WhoRequest = (dr["WhoRequest"].ToString()),
+                            Choffer = (dr["Choffer"].ToString()),
+                            Comment = (dr["Comment"].ToString()),
+                            Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                            Area = (dr["Area"].ToString()),
+                        });
+                    }
+                }
+                DBSPP.Close();
+            }
+        }
+
+        private void GetUsers()
+        {
+            if (GetChoffer.Count > 0)
+            {
+                GetChoffer.Clear();
+            }
+            else
+            {
+                DBSPP.Open();
+                con.Connection = DBSPP;
+                con.CommandText = "Select * from RADAEmpire_AChoffer where Active = '1' order by ID desc";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {
+                    GetChoffer.Add(new Usuarios()
+                    {
+                        Username = (dr["Username"].ToString()),
+                    });
+                }
+                DBSPP.Close();
+            }
+        }
+
         private void GetEntryRequest()
         {
 
@@ -607,7 +819,7 @@ namespace RADALogisticsWEB.Controllers
                 con.Connection = DBSPP;
                 con.CommandText = "  Select top (1000) " +
                     " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date " +
+                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area  " +
                     " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + datenow.ToString() + "' ORDER by a.Folio desc";
                 dr = con.ExecuteReader();
                 while (dr.Read())
@@ -626,29 +838,7 @@ namespace RADALogisticsWEB.Controllers
                         Choffer = (dr["Choffer"].ToString()),
                         Comment = (dr["Comment"].ToString()),
                         Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
-                    });
-                }
-                DBSPP.Close();
-            }
-        }
-
-        private void GetUsers()
-        {
-            if (GetChoffer.Count > 0)
-            {
-                GetChoffer.Clear();
-            }
-            else
-            {
-                DBSPP.Open();
-                con.Connection = DBSPP;
-                con.CommandText = "Select * from RADAEmpire_AChoffer where Active = '1' order by ID desc";
-                dr = con.ExecuteReader();
-                while (dr.Read())
-                {
-                    GetChoffer.Add(new Usuarios()
-                    {
-                        Username = (dr["Username"].ToString()),
+                        Area = (dr["Area"].ToString()),
                     });
                 }
                 DBSPP.Close();

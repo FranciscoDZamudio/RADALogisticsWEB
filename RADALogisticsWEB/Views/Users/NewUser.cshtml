@@ -122,11 +122,11 @@
 
                     <div class="col col-5" style="text-align:center">Date</div>
 
-                    <div class="col col-7" style="text-align:center">Options</div>
+                    <div class="col col-8" style="text-align:center">Options</div>
+
                 </li>
                @foreach (var person in ViewBag.Records)
                 {
-
                     <li class="table-row" id="tblCustomers">
 
                         <div class="col col-1" data-label="ID" style="text-align:center">@person.ID</div>
@@ -141,10 +141,20 @@
 
                         <div class="col col-5" data-label="Date" style="text-align:center"> @person.DateAdded</div>
 
-                        <div class="col col-7" data-label="Options">
+                        <div class="col col-8" data-label="Options" style="text-align:center">
 
-                            @Html.ActionLink("❌ Delete", "RemoveUser", new { ID = @person.ID }) /
-                            @Html.ActionLink("♻️ Update", "UpdateProcess", new { ID = @person.ID })
+                            @if (person.Type_user == "HISENSE")
+                            {
+                                @: @Html.ActionLink("🪢 Area Assignment", "Assignment", new { id = @person.ID }) /
+                            }
+
+                            @if (person.Type_user == "RADA")
+                            {
+                                @: @Html.ActionLink("🪢 Area Assignment", "Assignments", new { id = @person.ID }) /
+                            }
+
+                            @Html.ActionLink("♻️ Update", "UpdateProcess", new { ID = @person.ID }) /
+                            @Html.ActionLink("❌ Delete", "RemoveUser", new { ID = @person.ID })
 
                         </div>
 

@@ -52,7 +52,6 @@
                 <label>Enter your FastCard:</label>
             </div>
 
-
             <h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Assigned work Area:</h5>
             <div class="group">
 
@@ -65,7 +64,6 @@
 
                 <p style="padding:10px 0px 0px 0px">@Html.ActionLink("New Area", "Area")</p>
             </div>
-
 
             <h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Assigned work shift:</h5>
             <div class="group">
@@ -104,7 +102,7 @@
 
                 <div class="col col-5" style="text-align:center">Date</div>
 
-                <div class="col col-7" style="text-align:center">Options</div>
+                <div class="col col-2" style="text-align:center">Options</div>
             </li>
             @foreach (var person in ViewBag.RecordChoffers)
             {
@@ -124,10 +122,11 @@
 
                     <div class="col col-5" data-label="Date" style="text-align:center"> @person.Datetime</div>
 
-                    <div class="col col-7" data-label="Options">
+                    <div class="col col-2" data-label="Options" style="text-align:center">
 
-                        @Html.ActionLink("❌ Delete", "RemoverChoffer", new { id = @person.ID }) /
-                        @Html.ActionLink("♻️ Update", "UpdateDriver", new { id = @person.ID })
+                        @*@Html.ActionLink("🪢 Area Assignment", "Assignments", new { id = @person.ID}) /*@
+                        @Html.ActionLink("♻️ Update", "UpdateDriver", new { id = @person.ID }) /
+                        @Html.ActionLink("❌ Delete", "RemoverChoffer", new { id = @person.ID })
 
                     </div>
 

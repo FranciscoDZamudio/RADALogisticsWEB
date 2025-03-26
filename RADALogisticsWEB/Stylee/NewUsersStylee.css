@@ -302,6 +302,12 @@ label {
     text-align: left;
 }
 
+.col-8 {
+    flex-basis: 40%;
+    text-align: left;
+}
+
+
 
 
 .col-10 {

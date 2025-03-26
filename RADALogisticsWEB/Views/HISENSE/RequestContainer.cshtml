@@ -47,13 +47,24 @@
 
             <h5 class="Tittlelabel">Status:</h5>
             <div class="group">
-                <select name="Type" id="Type" class="form-control" style="max-width: 40vh; color: black; text-align: center ">
+                <select name="Type" id="Type" class="form-control" style="max-width: 30vh; color: black; text-align: center ">
 
                     <option value="CAR"> CAR </option>
                     <option value="VAC"> VAC </option>
 
                 </select>
             </div>
+
+            <h5 class="Tittlelabel"> Movement Area: </h5>
+            <div class="group" style="padding: 5px 0px 0px 0px">
+                <select name="Area" id="Area" class="form-control" style="max-width: 30vh; color: black; text-align: center">
+                    @foreach (var person in ViewBag.listed)
+                    {
+                        <option value="@person.Area">@person.Area</option>
+                    }
+                </select>
+            </div>
+
             <p style="text-align: center;">&nbsp;</p>
 
             <div class="group">

@@ -12,6 +12,8 @@ namespace RADALogisticsWEB.Controllers
     public class HISENSEController : Controller
     {
         List<Solicitud_Contenedores> GetListed = new List<Solicitud_Contenedores>();
+        List<Areas> getArea = new List<Areas>();
+        List<Areas> getAreaAll = new List<Areas>();
         //connection SQL server (database)
         SqlConnection DBSPP = new SqlConnection("Data Source=RADAEmpire.mssql.somee.com ;Initial Catalog=RADAEmpire ;User ID=RooRada; password=rada1311");
         SqlCommand con = new SqlCommand();
@@ -82,62 +84,56 @@ namespace RADALogisticsWEB.Controllers
         public ActionResult RequestContainer()
         {
             ViewBag.User = Session["Username"];
-
             if (Session.Count <= 0)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
-                GetContainers();
-                ViewBag.Records = GetListed;
-                ViewBag.Count = GetListed.Count.ToString();
-                return View();
-            }
-        }
-
-        public PartialViewResult ActualizarTabla()
-        {
-            GetContainers();
-            ViewBag.Records = GetListed; // Obtener nuevamente los datos
-            return PartialView("table", ViewBag.Records);
-        }
-
-        public ActionResult ProcessData(string User, string Type, string Container, string Origins, string Destination)
-        {
-            ViewBag.User = Session["Username"];
-
-            if (Session.Count <= 0)
-            {
-                return RedirectToAction("LogIn", "Login");
-            }
-            else
-            {
+                string name = Session["Username"].ToString();
+                string val = null;
                 //create generate randoms int value
-                string randomval = null;
-                SqlCommand conse = new SqlCommand("Select top (1) ID from RADAEmpire_BRequestContainers order by ID desc", DBSPP);
+                SqlCommand conse = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + Session["Username"].ToString() + "'", DBSPP);
                 DBSPP.Open();
                 SqlDataReader drconse = conse.ExecuteReader();
                 if (drconse.HasRows)
                 {
                     while (drconse.Read())
                     {
-                        randomval = drconse[0].ToString();//234 + 1216 + 
+                        val = drconse[0].ToString();
                     }
-                }
-                else
-                {
-                    randomval = "0";
                 }
                 DBSPP.Close();
 
-                int sum = int.Parse(randomval) + 1;
+                if (val == "HISENSE")
+                {
+                    GetContainers();
+                    GetAreas(name);
+                    ViewBag.Records = GetListed;
+                    ViewBag.listed = getArea;
+                    ViewBag.Count = GetListed.Count.ToString();
+                    return View();
+                }
+                else
+                {
+                    GetContainers();
+                    GetAreasAll();
+                    ViewBag.Records = GetListed;
+                    ViewBag.listed = getAreaAll;
+                    ViewBag.Count = GetListed.Count.ToString();
+                    return View();
+                }
+            }
+        }
 
-                //Random folio = new Random();
-                //int val = folio.Next(1, 1000000000);
-                string Folio = null;
-                Folio = "MOV" + sum.ToString();
-
+        private void GetAreasAll()
+        {
+            if (getAreaAll.Count > 0)
+            {
+                getAreaAll.Clear();
+            }
+            else
+            {
                 // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
                 DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
 
@@ -148,50 +144,160 @@ namespace RADALogisticsWEB.Controllers
                 // Formatear la fecha para que sea adecuada para la base de datos
                 string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
 
-                //Guardar informacion a la base de datos del proyecto
                 DBSPP.Open();
-                SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
-                    "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active) values " +
-                    "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active) ", DBSPP);
-                //--------------------------------------------------------------------------------------------------------------------------------
-                PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
-                PalletControl.Parameters.AddWithValue("@Who_Send", User.ToString());
-                PalletControl.Parameters.AddWithValue("@Container", Container.ToUpper());
-                PalletControl.Parameters.AddWithValue("@Destination_Location", Destination.ToUpper());
-                PalletControl.Parameters.AddWithValue("@Origins_Location", Origins.ToUpper());
-                PalletControl.Parameters.AddWithValue("@Status", Type.ToString());
-                PalletControl.Parameters.AddWithValue("@message", "PENDING");
-                PalletControl.Parameters.AddWithValue("@shift", "0");
-                PalletControl.Parameters.AddWithValue("@Date", usTime.ToString());
-                PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString("HH:mm:ss"));
-                PalletControl.Parameters.AddWithValue("@Active", true);
-
-                PalletControl.ExecuteNonQuery();
+                con.Connection = DBSPP;
+                con.CommandText = "Select Name from RADAEmpire_AAreas where Active = '1'";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {
+                    getAreaAll.Add(new Areas()
+                    {
+                        Area = (dr["Name"].ToString()),
+                    });
+                }
                 DBSPP.Close();
-                //--------------------------------------------------------------------------------------------------------------------------------
+            }
+        }
 
-                //Guardar informacion a la base de datos del proyecto
+        private void GetAreas(string name)
+        {
+            if (getArea.Count > 0)
+            {
+                getArea.Clear();
+            }
+            else
+            {
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
                 DBSPP.Open();
-                SqlCommand RADAdocument = new SqlCommand("insert into RADAEmpire_CEntryContrainers" +
-                    "(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date,AreaWork, Active,Cancel) values " +
-                    "(@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date,@AreaWork, @Active, @Cancel) ", DBSPP);
-                //--------------------------------------------------------------------------------------------------------------------------------
-                RADAdocument.Parameters.AddWithValue("@Folio_Request", Folio.ToString());
-                RADAdocument.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
-                RADAdocument.Parameters.AddWithValue("@Time_Confirm", "00:00:00");
-                RADAdocument.Parameters.AddWithValue("@Choffer", "PENDNING CONFIRM");
-                RADAdocument.Parameters.AddWithValue("@FastCard", "PENDNING CONFIRM");
-                RADAdocument.Parameters.AddWithValue("@Time_Finished", "00:00:00");
-                RADAdocument.Parameters.AddWithValue("@Date", usTime.ToString());
-                RADAdocument.Parameters.AddWithValue("@AreaWork", "RADALogistics");
-                RADAdocument.Parameters.AddWithValue("@Active", true);
-                RADAdocument.Parameters.AddWithValue("@Cancel", false);
-                RADAdocument.ExecuteNonQuery();
+                con.Connection = DBSPP;
+                con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1'";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {
+                    if (dr["Username"].ToString() == name)
+                    {
+                        getArea.Add(new Areas()
+                        {
+                            Username = (dr["Username"].ToString()),
+                            Area = (dr["Areas"].ToString()),
+                        });
+                    }
+                }
                 DBSPP.Close();
-                //--------------------------------------------------------------------------------------------------------------------------------
+            }
+        }
 
+        public PartialViewResult ActualizarTabla()
+        {
+            GetContainers();
+            ViewBag.Records = GetListed; // Obtener nuevamente los datos
+            return PartialView("table", ViewBag.Records);
+        }
 
-                return RedirectToAction("RequestContainer", "HISENSE");
+        public ActionResult ProcessData(string User, string Type, string Container, string Origins, string Destination, string Area)
+        {
+            ViewBag.User = Session["Username"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                if (Area == null)
+                {
+                    return RedirectToAction("RequestContainer", "HISENSE");
+                }
+                else
+                {
+                    //create generate randoms int value
+                    string randomval = null;
+                    SqlCommand conse = new SqlCommand("Select top (1) ID from RADAEmpire_BRequestContainers order by ID desc", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drconse = conse.ExecuteReader();
+                    if (drconse.HasRows)
+                    {
+                        while (drconse.Read())
+                        {
+                            randomval = drconse[0].ToString();//234 + 1216 + 
+                        }
+                    }
+                    else
+                    {
+                        randomval = "0";
+                    }
+                    DBSPP.Close();
+
+                    int sum = int.Parse(randomval) + 1;
+
+                    //Random folio = new Random();
+                    //int val = folio.Next(1, 1000000000);
+                    string Folio = null;
+                    Folio = "MOV" + sum.ToString();
+
+                    // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                    DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                    // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                    TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                    // Formatear la fecha para que sea adecuada para la base de datos
+                    string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                    //Guardar informacion a la base de datos del proyecto
+                    DBSPP.Open();
+                    SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
+                        "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active) values " +
+                        "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active) ", DBSPP);
+                    //--------------------------------------------------------------------------------------------------------------------------------
+                    PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
+                    PalletControl.Parameters.AddWithValue("@Who_Send", User.ToString());
+                    PalletControl.Parameters.AddWithValue("@Container", Container.ToUpper());
+                    PalletControl.Parameters.AddWithValue("@Destination_Location", Destination.ToUpper());
+                    PalletControl.Parameters.AddWithValue("@Origins_Location", Origins.ToUpper());
+                    PalletControl.Parameters.AddWithValue("@Status", Type.ToString());
+                    PalletControl.Parameters.AddWithValue("@message", "PENDING");
+                    PalletControl.Parameters.AddWithValue("@shift", Area.ToString());
+                    PalletControl.Parameters.AddWithValue("@Date", usTime.ToString());
+                    PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString("HH:mm:ss"));
+                    PalletControl.Parameters.AddWithValue("@Active", true);
+
+                    PalletControl.ExecuteNonQuery();
+                    DBSPP.Close();
+                    //--------------------------------------------------------------------------------------------------------------------------------
+
+                    //Guardar informacion a la base de datos del proyecto
+                    DBSPP.Open();
+                    SqlCommand RADAdocument = new SqlCommand("insert into RADAEmpire_CEntryContrainers" +
+                        "(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date,AreaWork, Active,Cancel) values " +
+                        "(@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date,@AreaWork, @Active, @Cancel) ", DBSPP);
+                    //--------------------------------------------------------------------------------------------------------------------------------
+                    RADAdocument.Parameters.AddWithValue("@Folio_Request", Folio.ToString());
+                    RADAdocument.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
+                    RADAdocument.Parameters.AddWithValue("@Time_Confirm", "00:00:00");
+                    RADAdocument.Parameters.AddWithValue("@Choffer", "PENDNING CONFIRM");
+                    RADAdocument.Parameters.AddWithValue("@FastCard", "PENDNING CONFIRM");
+                    RADAdocument.Parameters.AddWithValue("@Time_Finished", "00:00:00");
+                    RADAdocument.Parameters.AddWithValue("@Date", usTime.ToString());
+                    RADAdocument.Parameters.AddWithValue("@AreaWork", "RADALogistics");
+                    RADAdocument.Parameters.AddWithValue("@Active", true);
+                    RADAdocument.Parameters.AddWithValue("@Cancel", false);
+                    RADAdocument.ExecuteNonQuery();
+                    DBSPP.Close();
+                    //--------------------------------------------------------------------------------------------------------------------------------
+
+                    return RedirectToAction("RequestContainer", "HISENSE");
+                }
             }
         }
 

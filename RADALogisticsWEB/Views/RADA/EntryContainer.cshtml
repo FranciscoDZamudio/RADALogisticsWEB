@@ -12,7 +12,7 @@
 
         <h4 class="labelTitt"> Entry of requested container movements </h4>
         <h5 style="text-align:center"> Container inbound and request </h5>
-
+        <input value="@ViewBag.User" hidden="hidden" id="user" name="user" />
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
             <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
@@ -29,6 +29,7 @@
         <hr>
     </div>
 </div>
+
 @using (Html.BeginForm("Query", "RADA", FormMethod.Post))
 {
     <div class="form-row">
@@ -72,71 +73,37 @@
 
         <div class="col col-9" style="text-align:center">Choffer</div>
 
-        <div class="col col-11" style="text-align:center">Date</div>
-
         <div class="col col-10" style="text-align:center">Comment</div>
+
+        <div class="col col-10" style="text-align:center">Area</div>
+
+        <div class="col col-11" style="text-align:center">Date</div>
 
         <div class="col col-12" style="text-align:center">Options</div>
 
     </li>
-    @foreach (var person in ViewBag.Records)
-    {
-        <li class="table-row" id="tblCustomers" style="color:black ; background-color:
-    @(person.Comment == "Canceled by Rada" ? "#F9D0D0" :
-      person.Comment == "Canceled by Hisense" ? "#F9D0D0" :
-      person.Comment == "PENDING" ? "#F8E6E6" :
-      person.Comment == "Movement Completed" ? "#D0F9E5" :
-      person.Comment == "Movement in process" ? "#E5F8EC" : "black")">
 
-            <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
+    <div id="tabla-container">
+        @Html.Partial("table") <!-- Cargar la tabla al inicio -->
+    </div>
 
-            <div class="col col-1" data-label="Container" style="text-align:center">@person.Container</div>
-
-            <div class="col col-2" data-label="Origins" style="text-align:center">@person.Origen</div>
-
-            <div class="col col-3" data-label="Destination" style="text-align:center"> @person.Destination</div>
-
-            <div class="col col-4" data-label="Status" style="text-align:center"> @person.Status</div>
-
-            <div class="col col-5" data-label="HRequest" style="text-align:center"> @person.HSolicitud</div>
-
-            <div class="col col-6" data-label="HConfirm" style="text-align:center"> @person.HConfirm</div>
-
-            <div class="col col-7" data-label="HFinish" style="text-align:center"> @person.HFinish</div>
-
-            <div class="col col-8" data-label="Who Request" style="text-align:center"> @person.WhoRequest</div>
-
-            <div class="col col-9" data-label="Choffer" style="text-align:center"> @person.Choffer</div>
-
-            <div class="col col-11" data-label="Date" style="text-align:center"> @person.Date</div>
-
-            <div class="col col-10" data-label="Comment" style="text-align:center"> @person.Comment</div>
-
-            <div class="col col-12" data-label="Options" style="text-align:center">
-
-                @Html.ActionLink("🎚️ View", "ViewConfirm", new { ID = @person.Folio })
-
-            </div>
-        </li>
-    }
 </ul>
 
-@*<script>
-    $(document).ready(function () {
-        $("#fechaInput").change(function () { // Se ejecuta al seleccionar una fecha
-            var fechaSeleccionada = $(this).val();
-
-            $.ajax({
-                url: "/RADA/Query", // Ruta del controlador
-                type: "GET",
-                data: { fecha: fechaSeleccionada },
-                success: function (response) {
-                    $("#contenedor").html(data); // Inserta la vista parcial en el div
-                },
-                error: function (xhr, status, error) {
-                    alert("Error: " + error);
-                }
-            });
+<script>
+    function actualizarTabla() {
+        $.ajax({
+            url: '/RADA/ActualizarTabla', // Llama al método en el controlador
+            type: 'GET',
+            data: { name: user },
+            success: function (data) {
+                $("#tabla-container").html(data); // Reemplaza la tabla con la nueva versión
+                console.log("Tabla actualizada.");
+            },
+            error: function () {
+                console.log("Error al actualizar la tabla.");
+            }
         });
-    });
-</script>*@
+    }
+    // Llamar la función cada 10 segundos
+    setInterval(actualizarTabla, 10000);
+</script>

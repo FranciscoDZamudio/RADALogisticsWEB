@@ -131,6 +131,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Areas.cs" />
+    <Compile Include="Models\AsignacionDeAreas.cs" />
     <Compile Include="Models\Choferes.cs" />
     <Compile Include="Models\Historial.cs" />
     <Compile Include="Models\Inventario.cs" />
@@ -224,6 +225,9 @@
     <Content Include="Views\History\HRecord.cshtml" />
     <Content Include="Views\History\InventoryRecords.cshtml" />
     <Content Include="Views\HISENSE\table.cshtml" />
+    <Content Include="Views\RADA\table.cshtml" />
+    <Content Include="Views\Users\Assignment.cshtml" />
+    <Content Include="Views\Users\Assignments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
