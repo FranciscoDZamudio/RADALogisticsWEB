@@ -234,7 +234,7 @@ label {
     background: none;
     color: #1C34A2;
     cursor: pointer;
-    width: 80%;
+    width: 35vh;
     border-radius: 12px;
     left: 50%;
     -ms-transform: translate(-50%, -50%);
@@ -268,12 +268,12 @@ label {
 }
 
 .col-1 {
-    flex-basis: 10%;
+    flex-basis: 25%;
     text-align: left;
 }
 
 .col-2 {
-    flex-basis: 30%;
+    flex-basis: 25%;
     text-align: left;
 }
 
@@ -283,75 +283,42 @@ label {
 }
 
 .col-4 {
-    flex-basis: 20%;
+    flex-basis: 15%;
     text-align: left;
 }
 
 .col-5 {
-    flex-basis: 20%;
+    flex-basis: 25%;
     text-align: left;
 }
 
 .col-6 {
-    flex-basis: 35%;
+    flex-basis: 25%;
     text-align: left;
 }
 
 .col-7 {
-    flex-basis: 15%;
+    flex-basis: 25%;
     text-align: left;
 }
 
 .col-8 {
-    flex-basis: 30%;
+    flex-basis: 45%;
     text-align: left;
 }
 
-
-
+.col-9 {
+    flex-basis: 35%;
+    text-align: left;
+}
 
 .col-10 {
-    flex-basis: 5%;
+    flex-basis: 35%;
     text-align: left;
 }
 
 .col-11 {
-    flex-basis: 5%;
-    text-align: left;
-}
-
-.col-12 {
-    flex-basis: 15%;
-    text-align: left;
-}
-
-.col-13 {
-    flex-basis: 15%;
-    text-align: left;
-}
-
-.col-14 {
-    flex-basis: 25%;
-    text-align: left;
-}
-
-.col-15 {
-    flex-basis: 20%;
-    text-align: left;
-}
-
-.col-16 {
-    flex-basis: 20%;
-    text-align: left;
-}
-
-.col-17 {
-    flex-basis: 25%;
-    text-align: left;
-}
-
-.col-18 {
-    flex-basis: 25%;
+    flex-basis: 32%;
     text-align: left;
 }
 

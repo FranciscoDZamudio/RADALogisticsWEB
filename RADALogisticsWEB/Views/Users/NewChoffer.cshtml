@@ -33,7 +33,7 @@
         </div>
         <hr>
 
-        @using (Html.BeginForm("ProcessChoffer", "Users", FormMethod.Post))
+       @using (Html.BeginForm("ProcessChoffer", "Users", FormMethod.Post))
         {
             <input type="text" id="User" name="User" value="@ViewBag.User" hidden="hidden" required>
 
@@ -56,7 +56,7 @@
             <div class="group">
 
                 <select name="Area" id="Area" class="form-control" style="max-width: 30vh; color: black; text-align: center">
-                    @foreach (var person in ViewBag.Records)
+                   @foreach (var person in ViewBag.Records)
                     {
                         <option value="@person.Name">@person.Name</option>
                     }
@@ -88,7 +88,7 @@
         <ul class="responsive-table">
             <li class="table-header" id="tableData">
 
-                <div class="col col-1" style="text-align:center">ID</div>
+                <div class="col col-1" style="text-align:center",>ID</div>
 
                 <div class="col col-2" style="text-align:center">Who Create</div>
 
@@ -104,7 +104,7 @@
 
                 <div class="col col-2" style="text-align:center">Options</div>
             </li>
-            @foreach (var person in ViewBag.RecordChoffers)
+           @foreach (var person in ViewBag.RecordChoffers)
             {
                 <li class="table-row" id="tblCustomers">
 

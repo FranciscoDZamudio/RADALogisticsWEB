@@ -27,7 +27,7 @@
         </div>
         <hr>
 
-       @using (Html.BeginForm("UpdateConfirmContainer", "RADA", FormMethod.Post))
+        @using (Html.BeginForm("UpdateConfirmContainer", "RADA", FormMethod.Post))
         {
             @*<h5 class="Tittlelabel"> Username Overview </h5>
             <hr style="border: 1px solid #CECECE; width: 40vh; margin: 5px auto">
@@ -38,9 +38,11 @@
             </div>*@
             <input hidden="hidden" value="@ViewBag.id" id="ID" name="ID" />
             <input hidden="hidden" value="@ViewBag.Username" id="Username" name="Username" />
+            <input hidden="hidden" value="@ViewBag.area" id="area" name="area" />
 
-            <h1 style="font-size:22px"> Container Movement Information </h1>
-            <p style="text-align: center;">&nbsp;</p>
+            <h1 style = "font-size:22px" > Container Movement Information</h1>
+
+            <p style = "text-align: center;" > &nbsp;</p>
 
             <center>
                 <div class="row" style="text-align:center">

@@ -12,6 +12,8 @@ namespace RADALogisticsWEB.Controllers
     public class HISENSEController : Controller
     {
         List<Solicitud_Contenedores> GetListed = new List<Solicitud_Contenedores>();
+        List<DetailsTable> GetDetails = new List<DetailsTable>();
+
         List<Areas> getArea = new List<Areas>();
         List<Areas> getAreaAll = new List<Areas>();
         //connection SQL server (database)
@@ -76,6 +78,9 @@ namespace RADALogisticsWEB.Controllers
                 ViewBag.comment = comment;
                 ViewBag.date = date;
                 ViewBag.Request = request;
+
+                GetDetailss(ID);
+                ViewBag.Records = GetDetails;
 
                 return View();
             }
@@ -203,7 +208,7 @@ namespace RADALogisticsWEB.Controllers
             return PartialView("table", ViewBag.Records);
         }
 
-        public ActionResult ProcessData(string User, string Type, string Container, string Origins, string Destination, string Area)
+        public ActionResult ProcessData(string User, string Type, string Container, string Origins, string Destination, string Area, string ActivoHidden)
         {
             ViewBag.User = Session["Username"];
 
@@ -257,8 +262,8 @@ namespace RADALogisticsWEB.Controllers
                     //Guardar informacion a la base de datos del proyecto
                     DBSPP.Open();
                     SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
-                        "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active) values " +
-                        "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active) ", DBSPP);
+                        "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest) values " +
+                        "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest) ", DBSPP);
                     //--------------------------------------------------------------------------------------------------------------------------------
                     PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
                     PalletControl.Parameters.AddWithValue("@Who_Send", User.ToString());
@@ -271,6 +276,7 @@ namespace RADALogisticsWEB.Controllers
                     PalletControl.Parameters.AddWithValue("@Date", usTime.ToString());
                     PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString("HH:mm:ss"));
                     PalletControl.Parameters.AddWithValue("@Active", true);
+                    PalletControl.Parameters.AddWithValue("@GruaRequest", ActivoHidden);
 
                     PalletControl.ExecuteNonQuery();
                     DBSPP.Close();
@@ -295,9 +301,115 @@ namespace RADALogisticsWEB.Controllers
                     RADAdocument.ExecuteNonQuery();
                     DBSPP.Close();
                     //--------------------------------------------------------------------------------------------------------------------------------
+                   
+                    //Generar una lista por areas
+                    List<string> lista = new List<string>();
+
+                    if (Area == "ENVIOS" && Type == "CAR")
+                    {
+                        lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                        lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                        lista.Add("CHOFER EN PROCESO DE ESTACIONAMIENTO CAJA");
+                        lista.Add("CHOFER SOLTANDO CAJA");
+                        lista.Add("CHOFER TERMINA MOVIMIENTO");
+                    }
+                    else
+                    {
+                        if (Area == "ENVIOS" && Type == "VAC")
+                        {
+                            lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                            lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
+                            lista.Add("CHOFER SOLTANDO CAJA");
+                            lista.Add("CHOFER TERMINA MOVIMIENTO");
+                        }
+                        else
+                        {
+                            if (Area == "PT" && Type == "CAR")
+                            {
+                                lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                                lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                lista.Add("CHOFER EN PROCESO DE ESTACIONAMIENTO CAJA");
+                                lista.Add("CHOFER SOLTANDO CAJA");
+                                lista.Add("CHOFER TERMINA MOVIMIENTO");
+                            }
+                            else
+                            {
+                                if (Area == "PT" && Type == "VAC")
+                                {
+                                    lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                                    lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                    lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
+                                    lista.Add("CHOFER SOLTANDO CAJA");
+                                    lista.Add("CHOFER TERMINA MOVIMIENTO");
+                                }
+                            }
+                        }
+                    }
+
+                    // Guardar información de cada paso en la base de datos
+                    DBSPP.Open();
+                    foreach (string paso in lista)
+                    {
+                        SqlCommand ProcessDB = new SqlCommand("INSERT INTO RADAEmpires_DZDetailsHisense " +
+                            "(Folio, Type_StatusContainer, GruaMov, Process_Movement, End_date, Status, Comment, Date_Process, Activo) " +
+                            "VALUES (@Folio, @Type_StatusContainer, @GruaMov, @Process_Movement, @End_date, @Status, @Comment, GETDATE(), @Activo)", DBSPP);
+
+                        ProcessDB.Parameters.AddWithValue("@Folio", Folio.ToString());
+                        ProcessDB.Parameters.AddWithValue("@Type_StatusContainer", Type.ToString());
+                        ProcessDB.Parameters.AddWithValue("@GruaMov", ActivoHidden);
+                        ProcessDB.Parameters.AddWithValue("@Process_Movement", paso); // Aquí se guarda cada paso de la lista
+                        ProcessDB.Parameters.AddWithValue("@End_date", "00:00:00");
+                        ProcessDB.Parameters.AddWithValue("@Status", "PENDIENTE");
+                        ProcessDB.Parameters.AddWithValue("@Comment", "SIN COMENTARIOS");
+                        ProcessDB.Parameters.AddWithValue("@Activo", true);
+
+                        ProcessDB.ExecuteNonQuery();
+                    }
+                    DBSPP.Close();
 
                     return RedirectToAction("RequestContainer", "HISENSE");
                 }
+            }
+        }
+
+        private void GetDetailss(string ID)
+        {
+            if (GetDetails.Count > 0)
+            {
+                GetDetails.Clear();
+            }
+            else
+            {
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                DBSPP.Open();
+                con.Connection = DBSPP;
+                con.CommandText = "Select * from RADAEmpires_DZDetailsHisense where Activo = '1' and Folio = '" + ID + "' order by ID ASC";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {
+                    GetDetails.Add(new DetailsTable()
+                    {
+                        Folio = (dr["Folio"].ToString()),
+                        Type_Status = (dr["Type_StatusContainer"].ToString()),
+                        GruaMov = (dr["GruaMov"].ToString()),
+                        ProcessMovement = (dr["Process_Movement"].ToString()),
+                        End_date = (dr["End_date"].ToString()),
+                        Status = ((dr["Status"].ToString())),
+                        Comment = (dr["Comment"].ToString()),
+                        Date_Process = Convert.ToDateTime(dr["Date_Process"]).ToString("d"),
+                    });
+                }
+                DBSPP.Close();
             }
         }
 

@@ -15,6 +15,7 @@ namespace RADALogisticsWEB.Controllers
         List<Inventario> GetInventary = new List<Inventario>();
         List<Inventario> GetInventaryquery = new List<Inventario>();
         List<Historial> GetRecordsQeury = new List<Historial>();
+        List<Historial> GetRecordsNow = new List<Historial>();
 
         List<string> filtroAreas = new List<string>();
 
@@ -23,6 +24,383 @@ namespace RADALogisticsWEB.Controllers
         SqlCommand con = new SqlCommand();
         SqlDataReader dr;
         // GET: History
+
+        [HttpPost]
+        public ActionResult Dashboard(string TimeStart)
+        {
+            ViewBag.User = Session["Username"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                if (TimeStart == "")
+                {
+                    // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                    DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                    // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                    TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                    // Formatear la fecha para que sea adecuada para la base de datos
+                    string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                    string moreMovement = null, totalRecs = null, CanceledRows = null;
+                    //create generate randoms int value
+                    SqlCommand conse = new SqlCommand("Select Top (1) shift, COUNT(Active) as Total " +
+                        " from RADAEmpire_BRequestContainers where Active = '1' and Date = '" + usTime.ToString("yyyy-MM-dd") + "' group by shift order by Total desc", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drconse = conse.ExecuteReader();
+                    if (drconse.HasRows)
+                    {
+                        while (drconse.Read())
+                        {
+                            moreMovement = drconse["shift"].ToString();
+                        }
+                    }
+                    else
+                    {
+                        moreMovement = "AREA NO FOUND";
+                    }
+                    DBSPP.Close();
+
+                    //create generate randoms int value
+                    SqlCommand totalRecords = new SqlCommand("Select COUNT(Active) as Total " +
+                        " from RADAEmpire_BRequestContainers where Active = '1' and Date = '" + usTime.ToString("yyyy-MM-dd") + "' order by Total desc", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drtotalRecords = totalRecords.ExecuteReader();
+                    if (drtotalRecords.HasRows)
+                    {
+                        while (drtotalRecords.Read())
+                        {
+                            totalRecs = drtotalRecords["Total"].ToString();
+                        }
+                    }
+                    else
+                    {
+                        totalRecs = "0";
+                    }
+                    DBSPP.Close();
+
+                    //create generate randoms int value
+                    SqlCommand Deleterows = new SqlCommand("Select COUNT(Active) as Total " +
+                        " from RADAEmpire_BRequestContainers where Active = '1' and Date = '" + usTime.ToString("yyyy-MM-dd") + "' and message = 'Canceled by Rada' order by Total desc", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drDeleterows = Deleterows.ExecuteReader();
+                    if (drDeleterows.HasRows)
+                    {
+                        while (drDeleterows.Read())
+                        {
+                            CanceledRows = drDeleterows["Total"].ToString();
+                        }
+                    }
+                    else
+                    {
+                        CanceledRows = "0";
+                    }
+                    DBSPP.Close();
+
+                    ViewBag.Date = DateTime.Now.ToString("yyyy-MM-dd");
+                    //impresion de informacion
+                    ViewBag.CanceledTotals = CanceledRows;
+                    ViewBag.RecordTotals = totalRecs;
+                    ViewBag.MoreMovement = moreMovement;
+
+                    GetRecordNows();
+                    ViewBag.Records = GetRecordsNow;
+                    ViewBag.count = GetRecordsNow.Count.ToString();
+
+                    return View();
+                }
+                else
+                {
+                    // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                    DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                    // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                    TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                    // Formatear la fecha para que sea adecuada para la base de datos
+                    string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                    string moreMovement = null, totalRecs = null, CanceledRows = null;
+                    //create generate randoms int value
+                    SqlCommand conse = new SqlCommand("Select Top (1) shift, COUNT(Active) as Total " +
+                        " from RADAEmpire_BRequestContainers where Active = '1' and Date = '" + Convert.ToDateTime(TimeStart).ToString("yyyy-MM-dd") + "' group by shift order by Total desc", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drconse = conse.ExecuteReader();
+                    if (drconse.HasRows)
+                    {
+                        while (drconse.Read())
+                        {
+                            moreMovement = drconse["shift"].ToString();
+                        }
+                    }
+                    else
+                    {
+                        moreMovement = "AREA NO FOUND";
+                    }
+                    DBSPP.Close();
+
+                    //create generate randoms int value
+                    SqlCommand totalRecords = new SqlCommand("Select COUNT(Active) as Total " +
+                        " from RADAEmpire_BRequestContainers where Active = '1' and Date = '" + Convert.ToDateTime(TimeStart).ToString("yyyy-MM-dd") + "' order by Total desc", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drtotalRecords = totalRecords.ExecuteReader();
+                    if (drtotalRecords.HasRows)
+                    {
+                        while (drtotalRecords.Read())
+                        {
+                            totalRecs = drtotalRecords["Total"].ToString();
+                        }
+                    }
+                    else
+                    {
+                        totalRecs = "0";
+                    }
+                    DBSPP.Close();
+
+                    //create generate randoms int value
+                    SqlCommand Deleterows = new SqlCommand("Select COUNT(Active) as Total " +
+                        " from RADAEmpire_BRequestContainers where Active = '1' and Date = '" + Convert.ToDateTime(TimeStart).ToString("yyyy-MM-dd") + "' and message = 'Canceled by Rada' order by Total desc", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drDeleterows = Deleterows.ExecuteReader();
+                    if (drDeleterows.HasRows)
+                    {
+                        while (drDeleterows.Read())
+                        {
+                            CanceledRows = drDeleterows["Total"].ToString();
+                        }
+                    }
+                    else
+                    {
+                        CanceledRows = "0";
+                    }
+                    DBSPP.Close();
+
+                    ViewBag.Date = Convert.ToDateTime(TimeStart).ToString("yyyy-MM-dd");
+
+                    //impresion de informacion
+                    ViewBag.CanceledTotals = CanceledRows;
+                    ViewBag.RecordTotals = totalRecs;
+                    ViewBag.MoreMovement = moreMovement;
+
+                    DBSPP.Open();
+                    con.Connection = DBSPP;
+                    con.CommandText = "  Select top (1000) " +
+                        " b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                        " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
+                        " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + Convert.ToDateTime(TimeStart).ToString("yyyy-MM-dd") + "' ORDER by a.Folio desc";
+                    dr = con.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        GetRecordsNow.Add(new Historial()
+                        {
+                            Folio = (dr["Folio"].ToString()),
+                            Container = (dr["Container"].ToString()),
+                            Origen = (dr["Origen"].ToString()),
+                            Destination = (dr["Destination"].ToString()),
+                            Status = (dr["Status"].ToString()),
+                            HSolicitud = (dr["HSolicitud"].ToString()),
+                            HConfirm = (dr["HConfirm"].ToString()),
+                            HFinish = (dr["HFinish"].ToString()),
+                            WhoRequest = (dr["WhoRequest"].ToString()),
+                            Choffer = dr["Choffer"].ToString(),
+                            fastcard = dr["FastCard"].ToString(),
+                            Comment = (dr["Comment"].ToString()),
+                            Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                            Area = (dr["Area"].ToString()),
+                        });
+                    }
+                    DBSPP.Close();
+
+                    ViewBag.Records = GetRecordsNow;
+                    ViewBag.count = GetRecordsNow.Count.ToString();
+
+                    return View();
+                }
+            }
+        }
+
+        public ActionResult Dashboard()
+        {
+            ViewBag.User = Session["Username"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                string moreMovement = null, totalRecs = null, CanceledRows = null;
+                //create generate randoms int value
+                SqlCommand conse = new SqlCommand("Select Top (1) shift, COUNT(Active) as Total " +
+                    " from RADAEmpire_BRequestContainers where Active = '1' and Date = '" + usTime.ToString("yyyy-MM-dd") + "' group by shift order by Total desc", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drconse = conse.ExecuteReader();
+                if (drconse.HasRows)
+                {
+                    while (drconse.Read())
+                    {
+                        moreMovement = drconse["shift"].ToString();
+                    }
+                }
+                else
+                {
+                    moreMovement = "AREA NO FOUND";
+                }
+                DBSPP.Close();
+
+                //create generate randoms int value
+                SqlCommand totalRecords = new SqlCommand("Select COUNT(Active) as Total " +
+                    " from RADAEmpire_BRequestContainers where Active = '1' and Date = '" + usTime.ToString("yyyy-MM-dd") + "' order by Total desc", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drtotalRecords = totalRecords.ExecuteReader();
+                if (drtotalRecords.HasRows)
+                {
+                    while (drtotalRecords.Read())
+                    {
+                        totalRecs = drtotalRecords["Total"].ToString();
+                    }
+                }
+                else
+                {
+                    totalRecs = "0";
+                }
+                DBSPP.Close();
+
+                //create generate randoms int value
+                SqlCommand Deleterows = new SqlCommand("Select COUNT(Active) as Total " +
+                    " from RADAEmpire_BRequestContainers where Active = '1' and Date = '" + usTime.ToString("yyyy-MM-dd") + "' and message = 'Canceled by Rada' order by Total desc", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drDeleterows = Deleterows.ExecuteReader();
+                if (drDeleterows.HasRows)
+                {
+                    while (drDeleterows.Read())
+                    {
+                        CanceledRows = drDeleterows["Total"].ToString();
+                    }
+                }
+                else
+                {
+                    CanceledRows = "0";
+                }
+                DBSPP.Close();
+
+                ViewBag.Date = DateTime.Now.ToString("yyyy-MM-dd");
+                //impresion de informacion
+                ViewBag.CanceledTotals = CanceledRows;
+                ViewBag.RecordTotals = totalRecs;
+                ViewBag.MoreMovement = moreMovement;
+
+                GetRecordNows();
+                ViewBag.Records = GetRecordsNow;
+                ViewBag.count = GetRecordsNow.Count.ToString();
+
+                return View();
+            }
+        }
+
+        public List<Chart2Statusfiles> ChartToColumn()
+        {
+            List<Chart2Statusfiles> ListedLine = new List<Chart2Statusfiles>();
+
+            DBSPP.Open();
+            SqlCommand Line = new SqlCommand("Select message, COUNT(Active) as Total,Date from RADAEmpire_BRequestContainers " +
+                " where Active = '1' group by message, Date order by Total desc", DBSPP);
+            SqlDataReader drLine = Line.ExecuteReader();
+            if (drLine.HasRows)
+            {
+                while (drLine.Read())
+                {
+                    ListedLine.Add(new Chart2Statusfiles()
+                    {
+                        message = (drLine["message"].ToString()),
+                        Count = int.Parse(drLine["Total"].ToString()),
+                        Date = Convert.ToDateTime(drLine["Date"].ToString()),
+                    });
+                }
+            }
+            else
+            {
+                ListedLine.Clear();
+            }
+            DBSPP.Close();
+            return ListedLine;
+        }
+
+
+        public List<Chart2Statusfiles> ChartToColumnAreas()
+        {
+            List<Chart2Statusfiles> ListedLine = new List<Chart2Statusfiles>();
+
+            DBSPP.Open();
+            SqlCommand Line = new SqlCommand("Select shift, COUNT(Active) as Total,Date from RADAEmpire_BRequestContainers " +
+                " where Active = '1' group by shift, Date order by Total desc", DBSPP);
+            SqlDataReader drLine = Line.ExecuteReader();
+            if (drLine.HasRows)
+            {
+                while (drLine.Read())
+                {
+                    ListedLine.Add(new Chart2Statusfiles()
+                    {
+                        messageAreas = (drLine["shift"].ToString()),
+                        CountAreas = int.Parse(drLine["Total"].ToString()),
+                        DateAreas = Convert.ToDateTime(drLine["Date"].ToString()),
+                    });
+                }
+            }
+            else
+            {
+                ListedLine.Clear();
+            }
+            DBSPP.Close();
+            return ListedLine;
+        }
+
+        [HttpGet]
+        public JsonResult ReporteLineasAreas(string fechaFiltro)
+        {
+            HistoryController chartsController = new HistoryController();
+            List<Chart2Statusfiles> objetlisted = chartsController.ChartToColumnAreas();
+            // Filtrar los datos por la fecha proporcionada (asumiendo que r.Date es DateTime)
+            objetlisted = objetlisted
+            .Where(r => Convert.ToDateTime(r.DateAreas).Date == DateTime.Parse(fechaFiltro).Date)
+            .ToList();
+
+
+            return Json(objetlisted, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ReporteLineas(string fechaFiltro)
+        {
+            HistoryController chartsController = new HistoryController();
+            List<Chart2Statusfiles> objetlisted = chartsController.ChartToColumn();
+            // Filtrar los datos por la fecha proporcionada (asumiendo que r.Date es DateTime)
+            objetlisted = objetlisted
+            .Where(r => Convert.ToDateTime(r.Date).Date == DateTime.Parse(fechaFiltro).Date)
+            .ToList();
+
+
+            return Json(objetlisted, JsonRequestBehavior.AllowGet);
+        }
+
+
         public ActionResult InventoryRecords()
         {
             ViewBag.User = Session["Username"];
@@ -876,6 +1254,56 @@ namespace RADALogisticsWEB.Controllers
                         LocationCode = (dr["LocationCode"].ToString()),
                         Status = (dr["Status"].ToString()),
                         Date = Convert.ToDateTime(dr["Datetime"]),
+                    });
+                }
+                DBSPP.Close();
+            }
+        }
+
+
+        private void GetRecordNows()
+        {
+            if (GetRecordsNow.Count > 0)
+            {
+                GetRecordsNow.Clear();
+            }
+            else
+            {
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                DBSPP.Open();
+                con.Connection = DBSPP;
+                con.CommandText = "  Select top (1000) " +
+                    " b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
+                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + usTime + "' ORDER by a.Folio desc";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {
+                    GetRecordsNow.Add(new Historial()
+                    {
+                        Folio = (dr["Folio"].ToString()),
+                        Container = (dr["Container"].ToString()),
+                        Origen = (dr["Origen"].ToString()),
+                        Destination = (dr["Destination"].ToString()),
+                        Status = (dr["Status"].ToString()),
+                        HSolicitud = (dr["HSolicitud"].ToString()),
+                        HConfirm = (dr["HConfirm"].ToString()),
+                        HFinish = (dr["HFinish"].ToString()),
+                        WhoRequest = (dr["WhoRequest"].ToString()),
+                        Choffer = dr["Choffer"].ToString(),
+                        fastcard = dr["FastCard"].ToString(),
+                        Comment = (dr["Comment"].ToString()),
+                        Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                        Area = (dr["Area"].ToString()),
                     });
                 }
                 DBSPP.Close();

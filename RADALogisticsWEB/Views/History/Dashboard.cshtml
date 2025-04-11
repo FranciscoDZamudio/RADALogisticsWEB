@@ -1,0 +1,327 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - Dashboard";
+}
+
+<link href="~/Stylee/DashboardStylee.css" rel="stylesheet" />
+
+<div class="container" style="text-align: center; width: 100%; height: 100%">
+
+    <div style="text-align: center; min-width: 100%; ">
+
+        <h4 style="font-size:19px"> Main Container Movement and Information Dashboard </h4>
+        <h5> See a range of dates for the following information </h5>
+
+        <hr>
+        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+            <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+                <span class="text">Return to back</span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+            </button>
+        </div>
+        <hr>
+        @using (Html.BeginForm("Dashboard", "History", FormMethod.Post))
+        {
+            <div class="form-row" style="width: 100%; text-align: center">
+                <p class="tittleSearch">Select Date:</p>
+                <input id="TimeStart" name="TimeStart" type="date"
+                       style="width: 80%; margin: 0 auto; display: block;" />
+                <br>
+                <input id="DateMessage" name="DateMessage" value="@ViewBag.Date" hidden="hidden">
+            </div>
+
+            <p style="text-align: center;">&nbsp;</p>
+
+            <div class="form-row" style="width: 100%; text-align: center">
+
+                <button id="Update" name="Update" type="submit" class="Bto_saved">
+                    🔎 Query
+                </button>
+            </div>
+
+            <p style="text-align: center;">&nbsp;</p>
+            <hr>
+            <p style="text-align: center;">&nbsp;</p>
+
+            <center>
+                <div class="row" style="text-align:center">
+                    <div class="col-md-3" style="text-align:center">
+
+                        <p style="font-size:15px"> Area with the most Container Movements/Transfers: </p>
+                        <h2 style="font-size: 19px"> @ViewBag.MoreMovement </h2>
+
+                    </div>
+                    <div class="col-md-3" style="text-align:center">
+
+                        <p style="font-size: 15px">Total Container Requests:</p>
+                        <h2 style="font-size: 19px "> @ViewBag.RecordTotals Requests</h2>
+
+                    </div>
+
+                    <div class="col-md-3" style="text-align:center">
+
+                        <p style="font-size: 15px">Total Cancelled:</p>
+                        <h2 style="font-size: 19px "> @ViewBag.CanceledTotals Requests</h2>
+
+                    </div>
+
+                    <div class="col-md-3" style="text-align:center">
+
+                        <p style="font-size: 15px"> Lost Time due to Cancelled Containers (min):</p>
+                        <h2 style="font-size: 19px"> 320 min </h2>
+
+                    </div>
+                </div>
+            </center>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-md-6">
+
+                    @*<p style="text-align:center"> Cuantos movimientos pendientes hay por realizar </p>*@
+
+                    <canvas id="pie-chart2" style="width: 450px; height: 580px; display: block; margin: 0 auto;"></canvas>
+
+                </div>
+                <div class="col-md-6">
+
+                    @*<p style="text-align:center">  </p>*@
+
+                    <canvas id="pie-chart" style="width: 450px; height: 380px; display: block; margin: 0 auto; "></canvas>
+                </div>
+            </div>
+        }
+        </div>
+
+    <hr>
+
+    <h4 style="font-size:22px"> Latest container movement reports </h4>
+    <h4 style="font-size:17px"> Total Records: @ViewBag.count </h4>
+
+</div>
+
+<ul class="responsive-table">
+    <li class="table-header" id="tableData">
+
+        <div class="col col-1" style="text-align:center">Folio</div>
+
+        <div class="col col-1" style="text-align:center">Container</div>
+
+        <div class="col col-2" style="text-align:center">Origins</div>
+
+        <div class="col col-3" style="text-align:center">Destination</div>
+
+        <div class="col col-4" style="text-align:center">Status</div>
+
+        <div class="col col-5" style="text-align:center">HRequest</div>
+
+        <div class="col col-6" style="text-align:center">HConfirm</div>
+
+        <div class="col col-7" style="text-align:center">HFinish</div>
+
+        <div class="col col-8" style="text-align:center">Who Request</div>
+
+        <div class="col col-9" style="text-align:center">Choffer</div>
+
+        <div class="col col-10" style="text-align:center">Comment</div>
+
+        <div class="col col-11" style="text-align:center">Date</div>
+
+    </li>
+    @foreach (var person in ViewBag.Records)
+    {
+        <li class="table-row" id="tblCustomers" style="color:black ; background-color:
+    @(person.Comment == "Canceled by Rada" ? "#F9D0D0" :
+      person.Comment == "Canceled by Hisense" ? "#F9D0D0" :
+      person.Comment == "PENDING" ? "#F8E6E6" :
+        person.Comment == "CHOFER TERMINA MOVIMIENTO" ? "#D0F9E5" :
+      person.Comment == "Movement in process" ? "#E5F8EC" : "white")">
+
+            <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
+
+            <div class="col col-1" data-label="Container" style="text-align:center">@person.Container</div>
+
+            <div class="col col-2" data-label="Origins" style="text-align:center">@person.Origen</div>
+
+            <div class="col col-3" data-label="Destination" style="text-align:center"> @person.Destination</div>
+
+            <div class="col col-4" data-label="Status" style="text-align:center"> @person.Status</div>
+
+            <div class="col col-5" data-label="HRequest" style="text-align:center"> @person.HSolicitud</div>
+
+            <div class="col col-6" data-label="HConfirm" style="text-align:center"> @person.HConfirm</div>
+
+            <div class="col col-7" data-label="HFinish" style="text-align:center"> @person.HFinish</div>
+
+            <div class="col col-8" data-label="Who Request" style="text-align:center"> @person.WhoRequest</div>
+
+            <div class="col col-9" data-label="Choffer" style="text-align:center"> @person.Choffer</div>
+
+            <div class="col col-10" data-label="Comment" style="text-align:center"> @person.Comment</div>
+
+            <div class="col col-11" data-label="Date" style="text-align:center"> @person.Date</div>
+        </li>
+    }
+</ul>
+
+
+
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
+
+@section scripts{
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <script>
+
+        jQuery.ajax({
+                url: '@Url.Action("ReporteLineas", "History")',
+                data: { fechaFiltro: $('#DateMessage').val() },
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; chartset=utf-8",
+                success: function (data) {
+
+                    console.log(data)
+
+                    var ArrayLineas = [];
+                    var ArrayLostime = [];
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        ArrayLineas.push(data[i].message)
+                        ArrayLostime.push(data[i].Count)
+                    }
+
+                    // Colores por defecto
+                    var defaultColors = ["#BE95F2", "#9A95F2", "#85BDEF", "#7ED3EC", "#7EECDE",
+                        "#7EECBB", "#8EEC7E", "#ECC27E", "#EC9F7E", "#EC8B7E",
+                        "#EC93EA", "#EC93B4", "#F48282", "#CC6CE7", "#DFC57B"];
+
+                    // Crear una copia que vamos a modificar
+                    var backgroundColors = [...defaultColors];
+
+                    // Forzar color rojo para "Pending"
+                    for (var i = 0; i < ArrayLineas.length; i++) {
+
+                        if (ArrayLineas[i].toLowerCase() === "pending") {
+                            backgroundColors[i] = "#ff8f81 "; // rojo
+                        }
+
+                    }
+
+                    // Forzar color rojo para "Pending"
+                    for (var i = 0; i < ArrayLineas.length; i++) {
+
+                        if (ArrayLineas[i].toLowerCase() === "Canceled by Rada") {
+                            backgroundColors[i] = "#ff8f81 "; // rojo
+                        }
+
+                    }
+
+                    new Chart(document.getElementById("pie-chart2"), {
+                        type: 'doughnut',
+                        data: {
+                            labels: ArrayLineas,
+                            datasets: [{
+                                label: "Count",
+                                backgroundColor: backgroundColors,
+                                data: ArrayLostime
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'How many pending movements are there to make'
+                                }
+                            }
+                        }
+                    });
+
+                    console.log(ArrayLineas)
+                    console.log(ArrayLostime)
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+     });
+
+        jQuery.ajax({
+                url: '@Url.Action("ReporteLineasAreas", "History")',
+                data: { fechaFiltro: $('#DateMessage').val() },
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; chartset=utf-8",
+                success: function (data) {
+
+                    console.log(data)
+
+                    var ArrayLineas = [];
+                    var ArrayLostime = [];
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        ArrayLineas.push(data[i].messageAreas)
+                        ArrayLostime.push(data[i].CountAreas)
+                    }
+
+                    // Colores por defecto
+                    var defaultColors = ["#BE95F2", "#9A95F2", "#85BDEF", "#7ED3EC", "#7EECDE",
+                        "#7EECBB", "#8EEC7E", "#ECC27E", "#EC9F7E", "#EC8B7E",
+                        "#EC93EA", "#EC93B4", "#F48282", "#CC6CE7", "#DFC57B"];
+
+                    // Crear una copia que vamos a modificar
+                    var backgroundColors = [...defaultColors];
+
+                    // Forzar color rojo para "Pending"
+                    for (var i = 0; i < ArrayLineas.length; i++) {
+                        if (ArrayLineas[i].toLowerCase() === "pending") {
+                            backgroundColors[i] = "#ff8f81 "; // rojo
+                        }
+                    }
+
+                    new Chart(document.getElementById("pie-chart"), {
+                        type: 'doughnut',
+                        data: {
+                            labels: ArrayLineas,
+                            datasets: [{
+                                label: " Request",
+                                backgroundColor: backgroundColors,
+                                data: ArrayLostime
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Container Request by Area'
+                                }
+                            }
+                        }
+                    });
+
+                    console.log(ArrayLineas)
+                    console.log(ArrayLostime)
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+        });
+
+    </script>
+}
+

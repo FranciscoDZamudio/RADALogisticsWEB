@@ -132,7 +132,9 @@
     </Compile>
     <Compile Include="Models\Areas.cs" />
     <Compile Include="Models\AsignacionDeAreas.cs" />
+    <Compile Include="Models\Chart2Statusfiles.cs" />
     <Compile Include="Models\Choferes.cs" />
+    <Compile Include="Models\DetailsTable.cs" />
     <Compile Include="Models\Historial.cs" />
     <Compile Include="Models\Inventario.cs" />
     <Compile Include="Models\MovimientosEliminados.cs" />
@@ -165,6 +167,8 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\site20281-WebDeploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\chart.js" />
+    <Content Include="Scripts\chart.min.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -177,6 +181,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Stylee\Cancellation.css" />
+    <Content Include="Stylee\DashboardStylee.css" />
     <Content Include="Stylee\HisensePages.css" />
     <Content Include="Stylee\HomeStylee.css" />
     <Content Include="Stylee\LogIn_StyleePage.css" />
@@ -228,6 +233,8 @@
     <Content Include="Views\RADA\table.cshtml" />
     <Content Include="Views\Users\Assignment.cshtml" />
     <Content Include="Views\Users\Assignments.cshtml" />
+    <Content Include="Views\RADA\Comments.cshtml" />
+    <Content Include="Views\History\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

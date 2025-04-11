@@ -263,6 +263,32 @@ label {
     text-align: left;
 }
 
+.col-10 {
+    flex-basis: 20%;
+    text-align: left;
+}
+
+.col-11 {
+    flex-basis: 20%;
+    text-align: left;
+}
+.col-12 {
+    flex-basis: 10%;
+    text-align: left;
+}
+.col-13 {
+    flex-basis: 20%;
+    text-align: left;
+}
+.col-14{
+    flex-basis: 20%;
+    text-align: left;
+}
+.col-15 {
+    flex-basis: 20%;
+    text-align: left;
+}
+
 @media all and (max-width: 767px) {
     .table-header {
         display: none;

@@ -55,7 +55,7 @@
                 </select>
             </div>
 
-            <h5 class="Tittlelabel"> Movement Area: </h5>
+            <h5 class="Tittlelabel">Area:</h5>
             <div class="group" style="padding: 5px 0px 0px 0px">
                 <select name="Area" id="Area" class="form-control" style="max-width: 30vh; color: black; text-align: center">
                     @foreach (var person in ViewBag.listed)
@@ -65,10 +65,20 @@
                 </select>
             </div>
 
+            <div id="checkboxContainer">
+                <h5 class="Tittlelabel">
+                    Is the container in the Crane?
+                </h5>
+                @Html.CheckBox("Activo", new { id = "chkActivo" })
+                <label for="chkActivo">Activo</label>
+            </div>
+            <input type="hidden" name="ActivoHidden" id="ActivoHidden" value="NO" />
+
+            <p style="text-align: center;">&nbsp;</p>
             <p style="text-align: center;">&nbsp;</p>
 
             <div class="group">
-                <input style="font-size:15px" type="text" id="Container" name="Container" required>
+                <input style="font-size: 15px" type="text" id="Container" name="Container" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Enter your Container:</label>
@@ -151,6 +161,43 @@
 
     // Llamar la función cada 10 segundos
     setInterval(actualizarTabla, 10000);
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("chkActivo").addEventListener("change", function () {
+            document.getElementById("ActivoHidden").value = this.checked ? "SI" : "NO";
+        });
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        // Cuando cambie la selección
+        $('#Area').on('change', function () {
+            var selected = $(this).val().toUpperCase();
+
+            if (selected === 'ENVIOS' || selected === 'PT') {
+                // Oculta el checkbox y cambia el valor a NO
+                $('#checkboxContainer').hide();
+                $('#chkActivo').prop('checked', false);
+                $('#ActivoHidden').val('NO');
+            } else {
+                // Muestra el checkbox
+                $('#checkboxContainer').show();
+            }
+        });
+
+        // También actualiza el valor del hidden cuando se cambia el checkbox
+        $('#chkActivo').on('change', function () {
+            $('#ActivoHidden').val(this.checked ? 'SI' : 'NO');
+        });
+
+        // Ejecuta el cambio al cargar la página para aplicar la lógica inicial
+        $('#Area').trigger('change');
+    });
 </script>
 
 <p style="text-align: center;">&nbsp;</p>

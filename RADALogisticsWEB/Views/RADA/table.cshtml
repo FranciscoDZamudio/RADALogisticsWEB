@@ -9,8 +9,14 @@
     @(person.Comment == "Canceled by Rada" ? "#F9D0D0" :
       person.Comment == "Canceled by Hisense" ? "#F9D0D0" :
       person.Comment == "PENDING" ? "#F8E6E6" :
-      person.Comment == "Movement Completed" ? "#D0F9E5" :
-      person.Comment == "Movement in process" ? "#E5F8EC" : "black")">
+      person.Comment == "CHOFER TERMINA MOVIMIENTO" ? "#D0F9E5" :
+      person.Comment == "Movement in process" ? "#E5F8EC" : "white")">
+
+    <div class="col col-12" data-label="Options" style="text-align:center">
+
+        @Html.ActionLink("🔘 Comment ", "Comments", new { id = @person.Folio, Status = @person.Comment })
+
+    </div>
 
     <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
 
@@ -40,7 +46,7 @@
 
     <div class="col col-12" data-label="Options" style="text-align:center">
 
-        @Html.ActionLink("🎚️ View", "ViewConfirm", new { ID = @person.Folio })
+        @Html.ActionLink(" ✅ Confirmation ", "ViewConfirm", new { ID = @person.Folio })
 
     </div>
 </li>
