@@ -18,3 +18,9 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+
+<script>
+    setInterval(function () {
+        fetch('/Home/PingSession');
+    }, 5 * 60 * 1000); // cada 5 minutos
+</script>

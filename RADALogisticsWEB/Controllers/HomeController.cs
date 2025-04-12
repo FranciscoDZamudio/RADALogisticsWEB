@@ -18,6 +18,12 @@ namespace RADALogisticsWEB.Controllers
         SqlDataReader dr;
         public string Username { get; set; }
 
+        public ActionResult PingSession()
+        {
+            var username = Session["Username"]; // Toca la sesión para mantenerla viva
+            return new EmptyResult();
+        }
+
         public static string ConvertirFechaAlemanaAUsa(string fechaHora)
         {
             try
