@@ -1,86 +1,92 @@
-﻿@import url("https://fonts.googleapis.com/css?family=Raleway:400,400i,700");
+﻿@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Raleway", sans-serif;
+}
 
 body {
-    background-image: url('../pictures/4857390.jpg');
-    background-size: cover; /* Hace que la imagen cubra toda la pantalla */
-    background-position: center center; /* Centra la imagen */
-    background-attachment: fixed; /* Hace que la imagen no se desplace al hacer scroll */
-    height: 100vh; /* Asegura que el fondo cubra toda la altura de la ventana */
-    margin: 0; /* Elimina los márgenes predeterminados */
-  /*  overflow: hidden;*/
+    background-image: url('../pictures/3334687.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
 }
 
 .container {
-    align-items: center;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: start;
+    padding-top: 40px;
     height: 100vh;
-    z-index: 5;
+    backdrop-filter: blur(2px);
     position: relative;
-    .logo
+}
 
-{
-    margin: 0 auto;
-    margin-bottom: 10vw;
-    max-width: 100px;
-    background: rgba(255, 255, 255, 0.3);
+.logo-box {
+    background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
-    border-radius: 100%;
-
-{
-    width: 100%;
+    border-radius: 50%;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-}
-}
-
-
-* {
-    font-family: -apple-system, BlinkMacSystemFont, "San Francisco", Helvetica, Arial, sans-serif;
-    font-weight: 300;
-    margin: 0;
+.logo {
+    height: 100px;
+    width: auto;
 }
 
-.labelTittles {
-    font-family: Arial, Helvetica, sans-serif;
-    color: black;
+.labelTitle {
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
 
+.labelSub {
+    font-size: 16px;
+    color: #eee;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.divider {
+    width: 80%;
+    margin: 20px 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
 
 .menu {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    grid-area: 1/1/2/2;
-    position: relative;
-    a
-
-{
-    font-family: Raleway, serif;
-    color: #333;
-    cursor: pointer;
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1;
-    position: relative;
-    text-align: center;
-    margin: 1vh auto;
-    padding: 2.5vh 0;
+    align-items: center;
     width: 80%;
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(15px);
-    border-radius: 5px;
-    box-shadow: 1px 1px 0 0 rgba(255, 255, 255, 0.8) inset, 3px 5px 10px 0 rgba(0, 0, 0, 0.1);
-    text-decoration: none;
-    will-change: color, text-shadow, font-size;
-    transition: ease all 0.3s;
-    &:hover
-
-{
-    transform: scale(1.1);
-    background: rgba(255, 255, 255, 0.8);
 }
 
-}
-}
+    .menu a {
+        text-decoration: none;
+        color: #222;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 10px;
+        text-align: center;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px) scale(1.03);
+            color: #000;
+        }

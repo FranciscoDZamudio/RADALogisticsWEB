@@ -11,7 +11,7 @@
 
     <div style="text-align: center; min-width: 100%; ">
 
-        <h4> CONTAINER MOVEMENT HISTORY - Query View data containers </h4>
+        <h4> Container Movement History - Query View data containers </h4>
         <h5> View transaction information by date range </h5>
 
         <hr>
@@ -31,26 +31,29 @@
 
        @using (Html.BeginForm("Record", "History", FormMethod.Post))
         {
-            <div class="form-row">
+    <div class="form-row">
 
-                <div class="form-group col-md-6">
-                    <label for="inputEmail4" style="font-family: Century Gothic ">Date Start</label>
-                    <input id="TimeStart" style="max-width:100vh;" name="TimeStart" type="date" /> <br>
-                </div>
+        <div class="form-group col-md-6">
+            <label for="inputEmail4" style="font-family: Century Gothic ">Date Start</label>
+            <input id="TimeStart" style="max-width:100vh;" name="TimeStart" type="date" /> <br>
+        </div>
 
-                <div class="form-group col-md-6">
-                    <label for="inputEmail4" style="font-family: Century Gothic ">Date End</label>
-                    <input id="Timeend" style="max-width: 100vh;" name="Timeend" type="date" /> <br>
-                </div>
+        <div class="form-group col-md-6">
+            <label for="inputEmail4" style="font-family: Century Gothic ">Date End</label>
+            <input id="Timeend" style="max-width: 100vh;" name="Timeend" type="date" /> <br>
+        </div>
 
-                <p style="text-align: center;">&nbsp;</p>
+        <p style="text-align: center;">&nbsp;</p>
 
-                <button style="width:45vh" type="submit" class="Bto_saved">
-                    🪢 Query
-                </button>
+        <div class="form-row" style="width: 100%; text-align: center">
 
-                <p style="text-align: center;">&nbsp;</p>
-            </div>
+            <button id="Update" name="Update" type="submit" class="Bto_saved">
+                🔎 Query
+            </button>
+        </div>
+
+        <p style="text-align: center;">&nbsp;</p>
+    </div>
         }
     </div>
 </div>

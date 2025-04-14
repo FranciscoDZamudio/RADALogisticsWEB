@@ -28,7 +28,7 @@
         </div>
         <hr>
 
-        @using (Html.BeginForm("ProcessData", "HISENSE", FormMethod.Post))
+       @using (Html.BeginForm("ProcessData", "HISENSE", FormMethod.Post))
         {
             <p style="text-align: center;">&nbsp;</p>
             <h5 class="Tittlelabel"> Username Overview </h5>
@@ -47,7 +47,7 @@
 
             <h5 class="Tittlelabel">Status:</h5>
             <div class="group">
-                <select name="Type" id="Type" class="form-control" style="max-width: 30vh; color: black; text-align: center ">
+                <select name="Type" id="Type" class="form-control" style="max-width: 30vh; color: black;  text-align: center ">
 
                     <option value="CAR"> CAR </option>
                     <option value="VAC"> VAC </option>
@@ -78,21 +78,21 @@
             <p style="text-align: center;">&nbsp;</p>
 
             <div class="group">
-                <input style="font-size: 15px" type="text" id="Container" name="Container" required>
+                <input style="font-size: 15px; background-color: #F3F5F8; " type="text" id="Container" name="Container" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Enter your Container:</label>
             </div>
 
             <div class="group">
-                <input style="font-size:15px" type="text" id="Origins" name="Origins" required>
+                <input style="font-size: 15px; background-color: #F3F5F8; " type="text" id="Origins" name="Origins" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Origins Location:</label>
             </div>
 
             <div class="group">
-                <input style="font-size:15px" type="text" id="Destination" name="Destination" required>
+                <input style="font-size: 15px; background-color: #F3F5F8; " type="text" id="Destination" name="Destination" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Destination Location:</label>
@@ -104,19 +104,18 @@
             </button>
             <p style="text-align: center;">&nbsp;</p>
             <p style="text-align: center;">&nbsp;</p>
-            <p style="text-align: center;">&nbsp;</p>
         }
 
     </div>
 
 </div>
 
-
 <p style="text-align: center;">&nbsp;</p>
 <h4 style="text-align:center" class="Tittlelabel"> Request Recently Requested Containers </h4>
 <h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
 
 <ul class="responsive-table">
+
     <li class="table-header" id="tableData">
 
         <div class="col col-1" style="text-align:center">Folio</div>
@@ -159,8 +158,8 @@
         });
     }
 
-    // Llamar la función cada 10 segundos
-    setInterval(actualizarTabla, 10000);
+    // Llamar la función cada 1 minuto (60,000 milisegundos)
+    setInterval(actualizarTabla, 60000);
 </script>
 
 <script>
@@ -172,6 +171,7 @@
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     $(document).ready(function () {
 

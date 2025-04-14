@@ -32,19 +32,27 @@
 
 @using (Html.BeginForm("Query", "RADA", FormMethod.Post))
 {
-    <div class="form-row">
-        <input id="fecha" style="max-width: 100%; font-size: 13px" name="fecha" type="date" /> <br>
+    <div class="form-row" style="text-align: center; margin: 15px 0;">
+        <input id="fecha" name="fecha" type="date"
+               style="padding: 8px 12px;
+               font-size: 14px;
+               border: 1px solid #ccc;
+               border-radius: 8px;
+               max-width: 220px;
+               width: 100%;
+               box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+               transition: border-color 0.3s ease, box-shadow 0.3s ease;" />
     </div>
 
     <p style="text-align: center;">&nbsp;</p>
-    <div style="">
-        <button style=" text-align:center; padding: 5px 45px; font-size: 1.5rem; border-radius: 15px; border: 2px solid #E0D5DF; background: none; color: #1C34A2; cursor: pointer; width: 35vh; border-radius: 12px; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); position: absolute;">
+
+    <div style="display: flex; justify-content: center; margin: 10px 0;">
+        <button type="submit" class="Bto_saved" style="text-align: center;">
             ♻️ Query
         </button>
     </div>
 }
 
-<p style="text-align: center;">&nbsp;</p>
 <p style="text-align: center;">&nbsp;</p>
 
 <h4 style="text-align:center" class="Tittlelabel"> Latest requested records entered into the system </h4>
@@ -96,11 +104,12 @@
 <p style="text-align: center;">&nbsp;</p>
 
 <script>
+    var query = '@ViewBag.User';
     function actualizarTabla() {
         $.ajax({
             url: '/RADA/ActualizarTabla', // Llama al método en el controlador
             type: 'GET',
-            data: { name: user },
+            data: { name: query || "" },
             success: function (data) {
                 $("#tabla-container").html(data); // Reemplaza la tabla con la nueva versión
                 console.log("Tabla actualizada.");
@@ -110,6 +119,7 @@
             }
         });
     }
-    // Llamar la función cada 10 segundos
-    setInterval(actualizarTabla, 10000);
+
+    // Llamar la función cada 1 minuto (60,000 milisegundos)
+    setInterval(actualizarTabla, 60000);
 </script>

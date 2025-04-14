@@ -154,6 +154,8 @@
     <Content Include="Logo-RADA-1-300x212.ico" />
     <Content Include="Pictures\4857390.jpg" />
     <Content Include="Pictures\5026543.jpg" />
+    <Content Include="Pictures\5601713.jpg" />
+    <Content Include="Pictures\6069525.jpg" />
     <Content Include="Pictures\actualizar.png" />
     <Content Include="Pictures\add.png" />
     <Content Include="Pictures\base-de-datos.png" />
@@ -163,6 +165,7 @@
     <Content Include="Pictures\icono_choffuer.png" />
     <Content Include="Pictures\Logo-RADA-1-300x212.ico" />
     <Content Include="Pictures\logo_radas-removebg-preview.png" />
+    <Content Include="Pictures\sl_021821_40890_06.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\site20281-WebDeploy.pubxml" />
@@ -180,6 +183,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Pictures\3334687.jpg" />
+    <Content Include="Pictures\5621625.jpg" />
     <Content Include="Stylee\Cancellation.css" />
     <Content Include="Stylee\DashboardStylee.css" />
     <Content Include="Stylee\HisensePages.css" />

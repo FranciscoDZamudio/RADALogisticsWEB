@@ -180,20 +180,29 @@
 
 
 .Bto_saved {
-    padding: 5px 45px;
-    font-size: 1.5rem;
-    border-radius: 15px;
-    border: 2px solid #E0D5DF;
-    background: none;
-    color: #1C34A2;
+    background-color: #E8E8E8;
+    color: #000000;
+    border: none;
+    padding: 6px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
     cursor: pointer;
-    width: 80%;
-    border-radius: 12px;
-    left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    position: absolute;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    width: 30vh;
+    letter-spacing: 0.4px;
 }
+
+    .Bto_saved:hover {
+        background-color: #D6CFCF;
+        transform: translateY(-1px);
+    }
+
+    .Bto_saved:active {
+        transform: scale(0.97);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
 
 .responsive-table {
     li

@@ -786,7 +786,7 @@ namespace RADALogisticsWEB.Controllers
             {
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "Select top (1000) * from RADAEmpire_AUsers where Active = '1' order by ID desc";
+                con.CommandText = "Select top (100) * from RADAEmpire_AUsers where Active = '1' order by ID desc";
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {
@@ -816,7 +816,7 @@ namespace RADALogisticsWEB.Controllers
             {
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "Select top (1000) * from RADAEmpire_AAreas where Active = '1' order by ID desc";
+                con.CommandText = "Select top (100) * from RADAEmpire_AAreas where Active = '1' order by ID desc";
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {
@@ -842,7 +842,7 @@ namespace RADALogisticsWEB.Controllers
             {
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "Select top (1000) * from RADAEmpire_AChoffer where Active = '1' order by ID desc";
+                con.CommandText = "Select top (100) * from RADAEmpire_AChoffer where Active = '1' order by ID desc";
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {
