@@ -20,10 +20,9 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult PingSession()
         {
-            var username = Session["Username"]; // Toca la sesión para mantenerla viva
-            return new EmptyResult();
+            var user = Session["Username"]; // Solo accede a la sesión para que no expire
+            return new HttpStatusCodeResult(200); // OK
         }
-
         public static string ConvertirFechaAlemanaAUsa(string fechaHora)
         {
             try
@@ -52,6 +51,11 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult AdministratorHome()
         {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
             ViewBag.User = Session["Username"];
 
             if (Session.Count <= 0)
@@ -94,6 +98,11 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult RadaHome()
         {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
             ViewBag.User = Session["Username"];
 
             if (Session.Count <= 0)
@@ -136,6 +145,11 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult HisenseHome()
         {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
             ViewBag.User = Session["Username"];
 
             if (Session.Count <= 0)
@@ -178,6 +192,11 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Restore(string ID)
         {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
             ViewBag.User = Session["Username"];
 
             if (Session.Count <= 0)
@@ -239,6 +258,11 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Cancellation()
         {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
             ViewBag.User = Session["Username"];
 
             if (Session.Count <= 0)
@@ -257,6 +281,11 @@ namespace RADALogisticsWEB.Controllers
         [HttpPost]
         public ActionResult Cancellation(string Timeend, string TimeStart)
         {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
             ViewBag.User = Session["Username"];
 
             if (Session.Count <= 0)

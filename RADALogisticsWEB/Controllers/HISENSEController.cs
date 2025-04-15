@@ -29,6 +29,11 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Details(string ID)
         {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
             ViewBag.User = Session["Username"];
 
             if (Session.Count <= 0)
@@ -88,6 +93,11 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult RequestContainer()
         {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
             ViewBag.User = Session["Username"];
             if (Session.Count <= 0)
             {
@@ -210,6 +220,11 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult ProcessData(string User, string Type, string Container, string Origins, string Destination, string Area, string ActivoHidden)
         {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
             ViewBag.User = Session["Username"];
 
             if (Session.Count <= 0)
@@ -458,6 +473,11 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult CancelContainer(string ID)
         {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
             ViewBag.User = Session["Username"];
 
             if (Session.Count <= 0)
@@ -498,9 +518,13 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Delete(string Reason, string ID)
         {
-            ViewBag.User = Session["Username"];
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
 
-         
+            ViewBag.User = Session["Username"];
+  
             if (Session.Count <= 0)
             {
                 return RedirectToAction("LogIn", "Login");
