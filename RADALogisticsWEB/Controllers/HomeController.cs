@@ -381,5 +381,83 @@ namespace RADALogisticsWEB.Controllers
             }
         }
 
+        public ActionResult Details(string id)
+        {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            ViewBag.User = Session["Username"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                string container = null, origins = null, destination = null, status = null, solicitud = null, 
+                    confirmacion = null, entrega = null, request = null, choffer = null, comment = null, date = null;
+                //create generate randoms int value
+                SqlCommand conse = new SqlCommand("Select " +
+                    " a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date  " +
+                    " from " +
+                    " RADAEmpire_BRequestContainers as a " +
+                    " inner join " +
+                    " RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Folio = '" + id + "'", DBSPP);
+
+                DBSPP.Open();
+                SqlDataReader drconse = conse.ExecuteReader();
+                if (drconse.HasRows)
+                {
+                    while (drconse.Read())
+                    {
+                        container = drconse["Container"].ToString();
+                        origins = drconse["Origen"].ToString();
+                        destination = drconse["Destination"].ToString();
+                        status = drconse["Status"].ToString();
+                        solicitud = drconse["HSolicitud"].ToString();
+                        confirmacion = drconse["HConfirm"].ToString();
+                        entrega = drconse["HFinish"].ToString();
+                        request = drconse["WhoRequest"].ToString();
+                        choffer = drconse["Choffer"].ToString();
+                        comment = drconse["Comment"].ToString();
+                        date = Convert.ToDateTime(drconse["Date"]).ToString("d");
+                    }
+                }
+                DBSPP.Close();
+
+                //create generate randoms int value
+                string Reasons = null;
+                SqlCommand Reason = new SqlCommand("Select Reason from RADAEmpires_DRemoves where Active = '1' and Folio = '" + id + "'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drReason = Reason.ExecuteReader();
+                if (drReason.HasRows)
+                {
+                    while (drReason.Read())
+                    {
+                        Reasons = drReason["Reason"].ToString();
+                    }
+                }
+                DBSPP.Close();
+
+                ViewBag.Container = container;
+                ViewBag.Status = status;
+                ViewBag.Solicitud = solicitud;
+                ViewBag.Confirmacion = confirmacion;
+                ViewBag.entrega = entrega;
+                ViewBag.choffer = choffer;
+                ViewBag.origins = origins;
+                ViewBag.destination = destination;
+                ViewBag.comment = comment;
+                ViewBag.date = date;
+                ViewBag.Request = request;
+                ViewBag.reason = Reasons;
+                ViewBag.Id = id;
+
+                return View();
+            }
+        }
     }
 }

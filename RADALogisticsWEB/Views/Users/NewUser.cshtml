@@ -9,14 +9,32 @@
 
     <div style="text-align: center; min-width: 100%; ">
 
-        <h3>Rada Logistics system</h3>
+        <h3 style="font-weight: 700;">Rada Logistics system</h3>
 
         <p style="text-align: center;">&nbsp;</p>
         <img src="~/Pictures/add.png" height="90" />
         <p style="text-align: center;">&nbsp;</p>
 
-        <h4 class="labelTitt"> Generate new user to the system </h4>
-        <h5 style="text-align:center">Create New User</h5>
+        <style>
+            .page-title {
+                text-align: center;
+                font-size: 21px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 15px;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                font-size: 17px;
+                font-weight: 500;
+                color: #555;
+                margin-bottom: 25px;
+            }
+        </style>
+
+        <h2 class="page-title"> Generate new user to the system </h2>
+        <h4 class="section-subtitle"> Create New User </h4>
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -102,7 +120,7 @@
         }
 
         <p style="text-align: center;">&nbsp;</p>
-        <h4 class="Tittlelabel"> Users recently registered to the system </h4>
+        <h4 class="Tittlelabel" style="font-weight: 700;"> Users recently registered to the system </h4>
         <h5 class="Tittlelabel"> Total Records: @ViewBag.Count </h5>
     </div>
 

@@ -9,8 +9,26 @@
 
     <div style="text-align: center; min-width: 100%; height: 100% ">
 
-        <h3 class="labelTitt"> History of cancelled movements </h3>
-        <h5 style="text-align:center"> View history cancelled </h5>
+        <style>
+            .page-title {
+                text-align: center;
+                font-size: 18px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 15px;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                font-size: 17px;
+                font-weight: 500;
+                color: #555;
+                margin-bottom: 25px;
+            }
+        </style>
+
+        <h2 class="page-title"> History of cancelled movements </h2>
+        <h4 class="section-subtitle">  View history cancelled </h4>
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -29,10 +47,7 @@
 
         @using (Html.BeginForm("Cancellation", "Home", FormMethod.Post))
         {
-            <h5> Date range </h5>
             <div class="form-row">
-
-                <p style="text-align: center;">&nbsp;</p>
 
                 <div class="form-group col-md-6">
                     <label for="inputEmail4" style="font-family: Century Gothic ">Date Start</label>
@@ -61,38 +76,39 @@
 </div>
 
 <p style="text-align: center;">&nbsp;</p>
-<h4 style="text-align:center" class="Tittlelabel"> Latest cancelled movements entered into the system </h4>
+<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Latest cancelled movements entered into the system </h4>
 <h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
 
 <ul class="responsive-table">
     <li class="table-header" id="tableData">
 
-        <div class="col col-1">Folio</div>
+        <div class="col col-1" style="text-align:center">Folio</div>
 
-        <div class="col col-2">Reason</div>
+        <div class="col col-2" style="text-align:center">Reason</div>
 
-        <div class="col col-3">Company</div>
+        <div class="col col-3" style="text-align:center">Company</div>
 
-        <div class="col col-4">Date</div>
+        <div class="col col-4" style="text-align:center">Options</div>
 
-        @*<div class="col col-4">Options</div>*@
+        <div class="col col-4" style="text-align:center">Date</div>
 
     </li>
-   @foreach (var person in ViewBag.Records)
+    @foreach (var person in ViewBag.Records)
     {
         <li class="table-row" id="tblCustomers">
 
-            <div class="col col-1" data-label="Folio">@person.Folio</div>
+            <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
 
-            <div class="col col-2" data-label="Reason">@person.Reason</div>
+            <div class="col col-2" data-label="Reason" style="text-align:center">@person.Reason</div>
 
-            <div class="col col-3" data-label="Company">@person.Company</div>
+            <div class="col col-3" data-label="Company" style="text-align:center">@person.Company</div>
 
-            <div class="col col-4" data-label="Datetime"> @person.Datetime</div>
+            <div class="col col-4" data-label="Options" style="text-align:center">
+                @Html.ActionLink("View", "Details", new { id = @person.Folio })
+            </div>
 
-            @*<div class="col col-4" data-label="Options">
-                @Html.ActionLink("⚡ Restore movements", "Restore", new { ID = @person.Folio })
-            </div>*@
+
+            <div class="col col-4" data-label="Datetime" style="text-align:center"> @person.Datetime</div>
 
         </li>
     }

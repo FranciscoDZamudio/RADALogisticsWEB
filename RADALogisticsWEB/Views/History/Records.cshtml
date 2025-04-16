@@ -11,8 +11,26 @@
 
     <div style="text-align: center; min-width: 100%; ">
 
-        <h4> CONTAINER MOVEMENT HISTORY - Query View data containers </h4>
-        <h5> View transaction information by date range </h5>
+        <style>
+            .page-title {
+                text-align: center;
+                font-size: 18px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 15px;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                font-size: 17px;
+                font-weight: 500;
+                color: #555;
+                margin-bottom: 25px;
+            }
+        </style>
+
+        <h2 class="page-title">Container Movement History - Query View data containers</h2>
+        <h4 class="section-subtitle">View transaction information by date range</h4>
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -29,7 +47,7 @@
         </div>
         <hr>
 
-       @using (Html.BeginForm("Records", "History", FormMethod.Post))
+        @using (Html.BeginForm("Records", "History", FormMethod.Post))
         {
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -55,7 +73,7 @@
 </div>
 
 <p style="text-align: center;">&nbsp;</p>
-<h4 style="text-align:center" class="Tittlelabel"> Latest inventory records entered into the system </h4>
+<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Latest inventory records entered into the system </h4>
 <h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
 
 <ul class="responsive-table">

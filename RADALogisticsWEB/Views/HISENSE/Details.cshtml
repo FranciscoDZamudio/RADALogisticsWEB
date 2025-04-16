@@ -1,166 +1,194 @@
 ﻿
 @{
-    ViewBag.Title = "RADA Logistics - Details";
+    ViewBag.Title = "RADA Logistics - Container Details";
 }
 
-<link href="~/Stylee/HisensePages.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
 
-<div class="container" style="text-align: center; width: 100%; height: 100%">
+<style>
 
-    <div style="text-align: center; min-width: 100%; ">
+    body {
+        /*background-image: url('../pictures/4857390.jpg');
+        background-size: cover;*/ /* Hace que la imagen cubra toda la pantalla */
+        /*background-position: center center;*/ /* Centra la imagen */
+        /*background-attachment: fixed;*/ /* Hace que la imagen no se desplace al hacer scroll */
+        /*height: 100vh;*/ /* Asegura que el fondo cubra toda la altura de la ventana */
+        /*margin: 0;*/ /* Elimina los márgenes predeterminados */
+        font-size: 15px;
+    }
 
-        <h4 class="labelTitt" style="font: bold; font-size: 25px">
-            Movement Details
-        </h4>
-        <h5 style="text-align:center">Details Information</h5>
 
-        <hr>
-        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("RequestContainer", "HISENSE")'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-                <span class="text">Return to back</span>
-                <span class="circle"></span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-            </button>
-        </div>
-        <hr>
+    .responsive-table {
+        list-style-type: none;
+        padding: 0;
+        margin: 20px 0;
+        width: 100%;
+        font-size: 14px;
+    }
 
-        <h5 class="Tittlelabel" style="font: bold; font-size: 18px"> Information Request</h5>
-        <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
-        <p style="text-align: center;">&nbsp;</p>
+    .table-header, .table-row {
+        display: flex;
+        padding: 10px 15px;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        background-color: #f8f9fa;
+    }
 
-        <center>
-            <div class="row" style="text-align:center">
-                <div class="col-md-3" style="text-align:center">
+    .table-header {
+        font-weight: bold;
+        background-color: #132C49;
+        color: white;
+    }
 
-                    <p style="font-size: 18px; color: #021e57 ">Request by Container: </p>
-                    <h1 style="font-size:14px">@ViewBag.Request</h1>
+    .table-row:hover {
+        background-color: #f1f1f1;
+    }
 
-                </div>
-                <div class="col-md-3" style="text-align:center">
+    .table-row > div, .table-header > div {
+        flex: 1;
+        text-align: center;
+    }
 
-                    <p style="font-size: 18px; color: #021e57 ">Container Request:</p>
-                    <h1 style="font-size: 14px">@ViewBag.Container</h1>
+    .badge-status {
+        font-size: 0.95em;
+        padding: 0.4em 0.6em;
+        border-radius: 0.5rem;
+    }
 
-                </div>
+    .card-body, .card h6, .card p {
+        font-size: 14px;
+    }
 
-                <div class="col-md-3" style="text-align:center">
+    .col-md-6, .col-md-12 {
+        font-size: 14px;
+    }
 
-                    <p style="font-size: 18px; color: #021e57 ">Status Container:</p>
-                    <h1 style="font-size: 14px">@ViewBag.Status</h1>
+    .responsive-table {
+        list-style-type: none;
+        padding: 0;
+        margin: 20px 0;
+        width: 100%;
+    }
 
-                </div>
+    .table-header, .table-row {
+        display: flex;
+        padding: 10px 15px;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        background-color: #f8f9fa;
+        font-size: 0.95rem;
+    }
 
-                <div class="col-md-3" style="text-align:center">
+    .table-header {
+        font-weight: bold;
+        background-color: #363F4A;
+        color: white;
+    }
 
-                    <p style="font-size: 18px; color: #021e57 ">Origins Location:</p>
-                    <h1 style="font-size: 14px">@ViewBag.origins</h1>
+    .table-row:hover {
+        background-color: #f1f1f1;
+    }
 
-                </div>
-            </div>
-        </center>
+    .table-row > div, .table-header > div {
+        flex: 1;
+        text-align: center;
+    }
 
-        <center>
-            <div class="row" style="text-align:center">
-                <div class="col-md-6" style="text-align:center">
+    .badge-status {
+        font-size: 0.9em;
+        padding: 0.4em 0.6em;
+        border-radius: 0.5rem;
+    }
+</style>
 
-                    <p style="font-size: 18px; color: #021e57 ">Destionation Location: </p>
-                    <h1 style="font-size: 14px">@ViewBag.destination</h1>
+<input hidden="hidden" readonly="@true" value="@ViewBag.mot" />
 
-                </div>
-                <div class="col-md-6" style="text-align:center">
+<div class="container mt-5">
 
-                    <p style="font-size: 18px; color: #021e57 ">Comment Mov:</p>
-                    <h1 style="font-size: 14px">@ViewBag.comment</h1>
-
-                </div>
-            </div>
-        </center>
-
-        <h5 class="Tittlelabel" style="font: bold; font-size: 18px"> Movement in the process of a driver </h5>
-        <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
-        <p style="text-align: center;">&nbsp;</p>
-
-        <center>
-            <div class="row" style="text-align:center">
-                <div class="col-md-3" style="text-align:center">
-
-                    <p style="font-size: 18px; color: #021e57 ">Time Request: </p>
-                    <h1 style="font-size: 14px">@ViewBag.Solicitud</h1>
-
-                </div>
-                <div class="col-md-3" style="text-align:center">
-
-                    <p style="font-size: 18px; color: #021e57 ">Time Confirmation:</p>
-                    <h1 style="font-size: 14px">@ViewBag.Confirmacion</h1>
-
-                </div>
-
-                <div class="col-md-3" style="text-align:center">
-
-                    <p style="font-size: 18px; color: #021e57 ">
-                        Time Finish:</pstyle="font-size:>
-                        <h1 style="font-size: 14px">@ViewBag.entrega</h1>
-
-                </div>
-
-                <div class="col-md-3" style="text-align:center">
-
-                    <p style="font-size: 18px; color: #021e57 ">Choffer Mov:</p>
-                    <h1 style="font-size:14px">@ViewBag.choffer</h1>
-
-                </div>
-            </div>
-        </center>
-
-        <hr>
-        <p style="text-align: center;">&nbsp;</p>
-        <h5 class="Tittlelabel" style="font: bold; font-size: 18px"> Chauffeur Movement Process </h5>
-        <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
-        <p style="text-align: center;">&nbsp;</p>
-
-        <ul class="responsive-table">
-            <li class="table-header" id="tableData">
-
-                <div class="col col-10" style="text-align:center"> Movement Number </div>
-
-                <div class="col col-11" style="text-align:center"> Current process of movement </div>
-
-                <div class="col col-12" style="text-align:center"> End Date </div>
-
-                <div class="col col-13" style="text-align:center"> Status </div>
-
-                <div class="col col-14" style="text-align:center"> Coment </div>
-
-                <div class="col col-15" style="text-align:center"> Date of process </div>
-            </li>
-           @foreach (var person in ViewBag.Records)
-            {
-                <li class="table-row" id="tblCustomers" style="color:black ; background-color:
-                       @(person.Status == "PENDIENTE" ? "#f9e8e6" :
-                         person.Status == "COMPLETADO" ? "#E5F6DE": "white")">
-
-                    <div class="col col-10" data-label=" Movement Number " style="text-align:center">@person.Folio</div>
-
-                    <div class="col col-11" data-label=" Current process of movement " style="text-align:center">@person.ProcessMovement</div>
-
-                    <div class="col col-12" data-label=" End_date " style="text-align:center"> @person.End_date</div>
-
-                    <div class="col col-13" data-label=" Status " style="text-align:center"> @person.Status</div>
-
-                    <div class="col col-14" data-label=" Comment " style="text-align:center"> @person.Comment</div>
-
-                    <div class="col col-15" data-label=" Date_Process " style="text-align:center"> @person.Date_Process</div>
-                </li>
-            }
-        </ul>
+    @{
+        string motValue = ViewBag.mot as string;
+        string actionName = string.IsNullOrEmpty(motValue) ? "RequestContainer" : (motValue == "YES" ? "HRecord" : "RequestContainer");
+        string controllerName = string.IsNullOrEmpty(motValue) ? "HISENSE" : (motValue == "YES" ? "History" : "HISENSE");
+        var backUrl = Url.Action(actionName, controllerName);
+    }
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i data-lucide="truck"></i> Container Details</h2>
+        <a href="@backUrl" class="btn btn-outline-secondary">
+            <i data-lucide="arrow-left-circle"></i> Volver
+        </a>
     </div>
 
+    <div class="card shadow rounded-4 border-0 mb-4">
+        <div class="card-body px-4 py-3">
+            <div class="row g-3">
+                <div class="col-md-6"><strong>Container:</strong> @ViewBag.Container</div>
+                <div class="col-md-6">
+                    <strong>State:</strong>
+                    @if (ViewBag.Status == "Entregado")
+                    {
+                        <span class="badge bg-success">Entregado</span>
+                    }
+                    else if (ViewBag.Status == "Pendiente")
+                    {
+                        <span class="badge bg-warning text-dark">Pendiente</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">@ViewBag.Status</span>
+                    }
+                </div>
+                <div class="col-md-6"><strong>Request:</strong> @ViewBag.Solicitud</div>
+                <div class="col-md-6"><strong>Confirmation:</strong> @ViewBag.Confirmacion</div>
+                <div class="col-md-6"><strong>Delivery Date:</strong> @ViewBag.entrega</div>
+                <div class="col-md-6"><strong>Chauffeur:</strong> @ViewBag.choffer</div>
+                <div class="col-md-6"><strong>Origin:</strong> @ViewBag.origins</div>
+                <div class="col-md-6"><strong>Destiny:</strong> @ViewBag.destination</div>
+                <div class="col-md-12"><strong>Commentary:</strong> <span class="text-muted">@ViewBag.comment</span></div>
+                <div class="col-md-6"><strong>Request Date:</strong> @ViewBag.date</div>
+                <div class="col-md-6"><strong>Requested by:</strong> @ViewBag.Request</div>
+                <div class="col-md-6"><strong>Motion Reason Canceled:</strong> @ViewBag.ReasonMT </div>
+            </div>
+        </div>
+    </div>
+
+    <p style="text-align: center;">&nbsp;</p>
+
+    <h4 class="mb-3"><i data-lucide="list"></i> Movement History </h4>
+    <ul class="responsive-table">
+        <li class="table-header" id="tableData">
+            <div class="col col-10" style="font-size:13px">Movement Number</div>
+            <div class="col col-11" style="font-size:13px">Current Process</div>
+            <div class="col col-12" style="font-size:13px">End Date</div>
+            <div class="col col-13" style="font-size:13px">Status</div>
+            <div class="col col-14" style="font-size:13px">Comment</div>
+            <div class="col col-15" style="font-size:13px">Date of Process</div>
+        </li>
+
+        @foreach (var person in ViewBag.Records)
+        {
+            <li class="table-row" id="tblCustomers" style="font-size: 12px; background-color: @(person.Status == "PENDIENTE" ? "#fff3cd" :
+                  person.Status == "COMPLETADO" ? "#d1e7dd" : "white")">
+
+                <div class="col col-10" data-label="Movement Number" style="font-size:12px">@person.Folio</div>
+                <div class="col col-11" data-label="Current Process" style="font-size: 12px">@person.ProcessMovement</div>
+                <div class="col col-12" data-label="End Date" style="font-size: 12px">@person.End_date</div>
+                <div class="col col-13" data-label="Status" style="font-size: 12px">
+                    <span style="font-size:13px" class="badge-status badge
+                        @(person.Status == "PENDIENTE" ? "bg-warning text-dark" :
+                          person.Status == "COMPLETADO" ? "bg-success" : "bg-secondary")">
+                        @person.Status
+                    </span>
+                </div>
+                <div class="col col-14" data-label="Comment" style="font-size:13px">@person.Comment</div>
+                <div class="col col-15" data-label="Date of Process" style="font-size:13px">@person.Date_Process</div>
+            </li>
+        }
+    </ul>
 </div>
 
-<p style="text-align: center;">&nbsp;</p>
-<p style="text-align: center;">&nbsp;</p>
+<script>
+    lucide.createIcons();
+</script>

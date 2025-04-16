@@ -27,7 +27,7 @@ namespace RADALogisticsWEB.Controllers
             return View();
         }
 
-        public ActionResult Details(string ID)
+        public ActionResult Details(string ID, string Record)
         {
             if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
@@ -72,6 +72,24 @@ namespace RADALogisticsWEB.Controllers
                 }
                 DBSPP.Close();
 
+                //create generate randoms int value
+                string ReasonMT = null;
+                SqlCommand reason = new SqlCommand("Select * from RADAEmpires_DRemoves where Active = '1' and Folio = '" + ID.ToString() + "'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drreason = reason.ExecuteReader();
+                if (drreason.HasRows)
+                {
+                    while (drreason.Read())
+                    {
+                        ReasonMT = drreason["Reason"].ToString();
+                    }
+                }
+                else
+                {
+                    ReasonMT = "Report not canceled";
+                }
+                DBSPP.Close();
+
                 ViewBag.Container = container;
                 ViewBag.Status = status;
                 ViewBag.Solicitud = solicitud;
@@ -83,6 +101,8 @@ namespace RADALogisticsWEB.Controllers
                 ViewBag.comment = comment;
                 ViewBag.date = date;
                 ViewBag.Request = request;
+                ViewBag.ReasonMT = ReasonMT;
+                ViewBag.mot = Record;
 
                 GetDetailss(ID);
                 ViewBag.Records = GetDetails;

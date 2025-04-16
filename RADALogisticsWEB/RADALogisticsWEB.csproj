@@ -137,6 +137,7 @@
     <Compile Include="Models\DetailsTable.cs" />
     <Compile Include="Models\Historial.cs" />
     <Compile Include="Models\Inventario.cs" />
+    <Compile Include="Models\Movement.cs" />
     <Compile Include="Models\MovimientosEliminados.cs" />
     <Compile Include="Models\Solicitud_Contenedores.cs" />
     <Compile Include="Models\Usuarios.cs" />
@@ -187,6 +188,7 @@
     <Content Include="Pictures\5621625.jpg" />
     <Content Include="Stylee\Cancellation.css" />
     <Content Include="Stylee\DashboardStylee.css" />
+    <Content Include="Stylee\estyleeDetails.css" />
     <Content Include="Stylee\HisensePages.css" />
     <Content Include="Stylee\HomeStylee.css" />
     <Content Include="Stylee\LogIn_StyleePage.css" />
@@ -240,6 +242,7 @@
     <Content Include="Views\Users\Assignments.cshtml" />
     <Content Include="Views\RADA\Comments.cshtml" />
     <Content Include="Views\History\Dashboard.cshtml" />
+    <Content Include="Views\Home\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

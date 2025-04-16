@@ -141,14 +141,15 @@
 }
 
 input {
-    font-size: 12px;
-    width: 35vh;
-    padding: 10px 5px 5px 5px;
+    font-size: 14px;
+    max-width: 90vh;
+    padding: 10px 10px 10px 5px;
     border: none;
     border-bottom: 0px solid #757575;
     background-color: white;
     overflow: hidden;
     text-align: center;
+    width: 100%;
     height: 100%;
 }
 
@@ -179,9 +180,10 @@ label {
 }
 
 
+
 .Bto_saved {
-    background-color: #8E969D;
-    color: #ffffff;
+    background-color: #E8E8E8;
+    color: #000000;
     border: none;
     padding: 6px 18px;
     font-size: 14px;
@@ -190,11 +192,12 @@ label {
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    width: 30vh;
     letter-spacing: 0.4px;
 }
 
     .Bto_saved:hover {
-        background-color: #1A252F;
+        background-color: #D6CFCF;
         transform: translateY(-1px);
     }
 

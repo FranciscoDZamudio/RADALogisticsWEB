@@ -478,8 +478,8 @@ namespace RADALogisticsWEB.Controllers
                     //Guardar informacion a la base de datos del proyecto
                     DBSPP.Open();
                     SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_AChoffer" +
-                        "(Who_create, Username, Fastcard, Area, Active,Shift,Date,Datetime) values " +
-                        "(@Who_create, @Username, @Fastcard, @Area, @Active,@Shift,@Date,@Datetime) ", DBSPP);
+                        "(Who_create, Username, Fastcard, Area, Active,Shift,Date,Datetime, Status) values " +
+                        "(@Who_create, @Username, @Fastcard, @Area, @Active,@Shift,@Date,@Datetime, @Status) ", DBSPP);
                     //--------------------------------------------------------------------------------------------
                     PalletControl.Parameters.AddWithValue("@Who_create", User.ToString());
                     PalletControl.Parameters.AddWithValue("@Username", Username.ToString());
@@ -489,6 +489,7 @@ namespace RADALogisticsWEB.Controllers
                     PalletControl.Parameters.AddWithValue("@Active", true);
                     PalletControl.Parameters.AddWithValue("@Date", usTime.ToString());
                     PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString());
+                    PalletControl.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
                     PalletControl.ExecuteNonQuery();
                     DBSPP.Close();
                     //--------------------------------------------------------------------------------------------

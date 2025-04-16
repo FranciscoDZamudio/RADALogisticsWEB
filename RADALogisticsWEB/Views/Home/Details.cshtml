@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - Container Details";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i data-lucide="truck"></i> Container Details </h2>
+        <a href="@Url.Action("Cancellation", "Home")" class="btn btn-outline-secondary" style="font-size:14px">
+            <i data-lucide="arrow-left-circle"></i> Volver
+        </a>
+    </div>
+
+    <div class="card shadow rounded-4 border-0">
+        <div class="card-body px-4 py-3" >
+            <div class="row g-3" >
+                <div class="col-md-6">
+                    <h5><i data-lucide="hash"></i> ID:</h5>
+                    <p class="fw-semibold text-primary" style="font-size:16px">@ViewBag.Id</p>
+                </div>
+
+                <div class="col-md-6">
+                    <h5><i data-lucide="package"></i> Contenedor:</h5>
+                    <p style="font-size:16px">@ViewBag.Container</p>
+                </div>
+
+                <div class="col-md-6">
+                    <h6><i data-lucide="check-circle"style="font-size:16px"> </i> Estado:</h6>
+                    <p>
+                        @if (ViewBag.Status == "Entregado")
+                        {
+                            <span class="badge bg-success" >Entregado</span>
+                        }
+                        else if (ViewBag.Status == "Pendiente")
+                        {
+                            <span class="badge bg-warning text-dark">Pendiente</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary" style="font-size:16px">@ViewBag.Status</span>
+                        }
+                    </p>
+                </div>
+
+                <div class="col-md-6">
+                    <h5><i data-lucide="calendar-plus"></i> Solicitud:</h5>
+                    <p style="font-size:16px">@ViewBag.Solicitud</p>
+                </div>
+
+                <div class="col-md-6">
+                    <h5><i data-lucide="calendar-check"></i> Confirmación:</h5>
+                    <p style="font-size:16px">@ViewBag.Confirmacion</p>
+                </div>
+
+                <div class="col-md-6">
+                    <h5><i data-lucide="calendar-clock"></i> Fecha de Entrega:</h5>
+                    <p style="font-size:16px">@ViewBag.entrega</p>
+                </div>
+
+                <div class="col-md-6">
+                    <h5><i data-lucide="user"></i> Chofer:</h5>
+                    <p style="font-size:16px">@ViewBag.choffer</p>
+                </div>
+
+                <div class="col-md-6">
+                    <h5><i data-lucide="map-pin"></i> Origen:</h5>
+                    <p style="font-size:16px">@ViewBag.origins</p>
+                </div>
+
+                <div class="col-md-6">
+                    <h5><i data-lucide="map-pin"></i> Destino:</h5>
+                    <p style="font-size:16px">@ViewBag.destination</p>
+                </div>
+
+                <div class="col-md-12">
+                    <h5><i data-lucide="message-square"></i> Comentarios:</h5>
+                    <p class="text-muted" style="font-size:16px" >@ViewBag.reason</p>
+                </div>
+
+                <div class="col-md-6">
+                    <h5><i data-lucide="calendar"></i> Fecha de Solicitud:</h5>
+                    <p style="font-size:16px">@ViewBag.date</p>
+                </div>
+
+                <div class="col-md-6">
+                    <h5><i data-lucide="user-check"></i> Solicitado por:</h5>
+                    <p style="font-size:16px">@ViewBag.Request</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

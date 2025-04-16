@@ -9,8 +9,27 @@
 
     <div style="text-align: center; min-width: 100%; ">
 
-        <h3 class="labelTitt"> Motion Confirmation Input </h3>
-        <h5 style="text-align:center"> Container Movement </h5>
+        <style>
+            .page-title {
+                text-align: center;
+                font-size: 21px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 15px;
+                letter-spacing: 0px;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                font-size: 17px;
+                font-weight: 500;
+                color: #555;
+                margin-bottom: 25px;
+            }
+        </style>
+
+        <h2 class="page-title" style="font-weight: 700;"> Motion Confirmation Input </h2>
+        <h4 class="section-subtitle"> Container Movement </h4>
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -29,20 +48,13 @@
 
         @using (Html.BeginForm("UpdateConfirmContainer", "RADA", FormMethod.Post))
         {
-            @*<h5 class="Tittlelabel"> Username Overview </h5>
-            <hr style="border: 1px solid #CECECE; width: 40vh; margin: 5px auto">
-            <div class="group">
-                <input style="font-size:14px" readonly="@true" type="text" id="User" name="User" value="@ViewBag.Username" required>
-                <span class="highlight"></span>
-                <span class="bar"></span>
-            </div>*@
             <input hidden="hidden" value="@ViewBag.id" id="ID" name="ID" />
             <input hidden="hidden" value="@ViewBag.Username" id="Username" name="Username" />
             <input hidden="hidden" value="@ViewBag.area" id="area" name="area" />
 
-            <h1 style = "font-size:22px" > Container Movement Information</h1>
+            <h1 style="font-size:22px"> Container Movement Information</h1>
 
-            <p style = "text-align: center;" > &nbsp;</p>
+            <p style="text-align: center;"> &nbsp;</p>
 
             <center>
                 <div class="row" style="text-align:center">
@@ -56,6 +68,7 @@
 
                         <p>Container Request:</p>
                         <h1 style="font-size:18px">@ViewBag.Container</h1>
+                        <input hidden="hidden" value="@ViewBag.Container" id="Container" name="Container" />
 
                     </div>
 
@@ -110,11 +123,48 @@
                     }
                 </select>
             </div>
-            <p style="text-align: center;">&nbsp;</p>
 
             <button type="submit" class="Bto_saved">
                 ✅ Confirm Process
             </button>
+
+            <p style="text-align: center;">&nbsp;</p>
+            <p style="text-align: center;">&nbsp;</p>
+
+            <h4 class="Tittlelabel" style="font-weight: 700;"> Drivers currently on the move </h4>
+            <ul class="responsive-table">
+
+                <li class="table-header" id="tableData">
+
+                    <div class="col col-1" style="text-align:center">Folio</div>
+
+                    <div class="col col-8" style="text-align:center">Choffer</div>
+
+                    <div class="col col-1" style="text-align:center">Status</div>
+
+                    <div class="col col-1" style="text-align:center">Container</div>
+
+                    <div class="col col-8" style="text-align:center">Message</div>
+                </li>
+               @foreach (var person in ViewBag.Records)
+                {
+                    <li class="table-row" id="tblCustomers">
+
+                        <div class="col col-1" data-label="ID" style="text-align:center">@person.Foio</div>
+
+                        <div class="col col-8" data-label="Username" style="text-align:center">@person.Choffer</div>
+
+                        <div class="col col-1" data-label="Container" style="text-align:center"> @person.StatusNow</div>
+
+                        <div class="col col-1" data-label="Location" style="text-align:center"> @person.Container</div>
+
+                        <div class="col col-8" data-label="Location" style="text-align:center"> @person.Message</div>
+
+                    </li>
+                }
+
+            </ul>
+
             <p style="text-align: center;">&nbsp;</p>
             <p style="text-align: center;">&nbsp;</p>
 

@@ -11,8 +11,26 @@
 
     <div style="text-align: center; min-width: 100%; ">
 
-        <h4> CONTAINER MOVEMENT HISTORY - Query View data containers </h4>
-        <h5> View transaction information by date range </h5>
+        <style>
+            .page-title {
+                text-align: center;
+                font-size: 21px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 15px;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                font-size: 17px;
+                font-weight: 500;
+                color: #555;
+                margin-bottom: 25px;
+            }
+        </style>
+
+        <h2 class="page-title">Container Movement History - Query View data containers</h2>
+        <h4 class="section-subtitle">View transaction information by date range</h4>
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -56,7 +74,7 @@
 </div>
 
 <p style="text-align: center;">&nbsp;</p>
-<h4 style="text-align:center" class="Tittlelabel"> Latest inventory records entered into the system </h4>
+<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Latest inventory records entered into the system </h4>
 <h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
 
 <ul class="responsive-table">
@@ -76,7 +94,7 @@
 
         @*<div class="col col-6" style="text-align:center">HConfirm</div>
 
-        <div class="col col-7" style="text-align:center">HFinish</div>*@
+            <div class="col col-7" style="text-align:center">HFinish</div>*@
 
         <div class="col col-8" style="text-align:center">Who Request</div>
 
@@ -85,6 +103,8 @@
         <div class="col col-10" style="text-align:center">Comment</div>
 
         <div class="col col-11" style="text-align:center">Date</div>
+
+        <div class="col col-1" style="text-align:center">Options</div>
 
     </li>
     @foreach (var person in ViewBag.Records)
@@ -110,7 +130,7 @@
 
             @*<div class="col col-6" data-label="HConfirm" style="text-align:center"> @person.HConfirm</div>
 
-            <div class="col col-7" data-label="HFinish" style="text-align:center"> @person.HFinish</div>*@
+                <div class="col col-7" data-label="HFinish" style="text-align:center"> @person.HFinish</div>*@
 
             <div class="col col-8" data-label="Who Request" style="text-align:center"> @person.WhoRequest</div>
 
@@ -119,6 +139,13 @@
             <div class="col col-10" data-label="Comment" style="text-align:center"> @person.Comment</div>
 
             <div class="col col-11" data-label="Date" style="text-align:center"> @person.Date</div>
+
+            <div class="col col-1" data-label="Options" style="text-align:center">
+
+                @*@Html.ActionLink("❌ Delete", "CancelContainer", new { ID = @person.Folio }) /*@
+                @*@Html.ActionLink("🎴 Details", "Details", "HISENSE" new { ID = @person.Folio })*@
+                @Html.ActionLink("🎴 Details", "Details", "Hisense", new { ID = person.Folio , Record = "YES"}, null)
+            </div>
 
         </li>
     }

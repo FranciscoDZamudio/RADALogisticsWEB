@@ -1189,6 +1189,44 @@ namespace RADALogisticsWEB.Controllers
                         int rowsAffected = comdmand.ExecuteNonQuery();
                         DBSPP.Close();
                     }
+
+                    string Chofferss = null;
+                    SqlCommand log = new SqlCommand("Select Choffer from RADAEmpires_DZChofferMovement where Active = '1' and Foio = '" + ID.ToString() + "'", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drlog = log.ExecuteReader();
+                    if (drlog.HasRows)
+                    {
+                        while (drlog.Read())
+                        {
+                            Chofferss = drlog["Choffer"].ToString();
+                        }
+                    }
+                    DBSPP.Close();
+
+                    //------------------------------------------------------------------------------
+                    string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
+                        " Status = @Status WHERE Username = @Username";
+                    using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                    {
+                        DBSPP.Open();
+                        coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                        coms.Parameters.AddWithValue("@Username", Chofferss.ToString());
+                        int rowsAffected = coms.ExecuteNonQuery();
+                        DBSPP.Close();
+                    }
+
+                    //------------------------------------------------------------------------------
+                    string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
+                        " Active = @Active WHERE Foio = @Foio";
+                    using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
+                    {
+                        DBSPP.Open();
+                        coms.Parameters.AddWithValue("@Active", false);
+                        coms.Parameters.AddWithValue("@Foio", ID.ToString());
+                        int rowsAffected = coms.ExecuteNonQuery();
+                        DBSPP.Close();
+                    }
+
                     return RedirectToAction("Records", "History");
                 }
                 else
