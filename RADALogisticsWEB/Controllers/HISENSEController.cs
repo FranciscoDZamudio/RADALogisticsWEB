@@ -67,7 +67,7 @@ namespace RADALogisticsWEB.Controllers
                         request = drconse["WhoRequest"].ToString();
                         choffer = drconse["Choffer"].ToString();
                         comment = drconse["Comment"].ToString();
-                        date = drconse["Date"].ToString();
+                        date = Convert.ToDateTime(drconse["Date"]).ToString("d");
                     }
                 }
                 DBSPP.Close();

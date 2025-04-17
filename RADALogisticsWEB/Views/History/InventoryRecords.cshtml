@@ -78,51 +78,53 @@
 
 @using (Html.BeginForm("UpdateInventory", "RADA", FormMethod.Post))
 {
+    <div class="table-scroll">
+        <ul class="responsive-table">
+            <li class="table-header" id="tableData">
 
-    <ul class="responsive-table">
-        <li class="table-header" id="tableData">
+                <div class="col col-1" style="text-align:center">ID</div>
 
-            <div class="col col-1" style="text-align:center">ID</div>
+                <div class="col col-2" style="text-align:center">Username</div>
 
-            <div class="col col-2" style="text-align:center">Username</div>
+                <div class="col col-3" style="text-align:center">Container</div>
 
-            <div class="col col-3" style="text-align:center">Container</div>
+                <div class="col col-4" style="text-align:center">Location</div>
 
-            <div class="col col-4" style="text-align:center">Location</div>
+                <div class="col col-5" style="text-align:center">Status</div>
 
-            <div class="col col-5" style="text-align:center">Status</div>
+                <div class="col col-6" style="text-align:center">Date</div>
 
-            <div class="col col-6" style="text-align:center">Date</div>
-
-            <div class="col col-7" style="text-align:center">Options</div>
-        </li>
-       @foreach (var person in ViewBag.Records)
-        {
-
-            <li class="table-row" id="tblCustomers">
-
-                <div class="col col-1" data-label="ID" style="text-align:center">@person.ID</div>
-
-                <div class="col col-2" data-label="Username" style="text-align:center">@person.Username</div>
-
-                <div class="col col-3" data-label="Container" style="text-align:center"> @person.Container</div>
-
-                <div class="col col-4" data-label="Location" style="text-align:center"> @person.LocationCode</div>
-
-                <div class="col col-5" data-label="Status" style="text-align:center"> @person.Status</div>
-
-                <div class="col col-6" data-label="Date" style="text-align:center"> @person.Datetimes</div>
-
-                <div class="col col-7" data-label="Options" style="text-align:center">
-                    <a href="@Url.Action("RemoveInventary", "RADA" , new { ID = @person.ID })" class="link-label"> ❌ Delete </a> /
-                    <a href="@Url.Action("UpdateInventory", "RADA" ,  new { ID = @person.ID })" class="link-label"> ♻️ Update </a>
-                </div>
-
+                <div class="col col-7" style="text-align:center">Options</div>
             </li>
+            @foreach (var person in ViewBag.Records)
+            {
 
-        }
-    </ul>
+                <li class="table-row" id="tblCustomers">
+
+                    <div class="col col-1" data-label="ID" style="text-align:center">@person.ID</div>
+
+                    <div class="col col-2" data-label="Username" style="text-align:center">@person.Username</div>
+
+                    <div class="col col-3" data-label="Container" style="text-align:center"> @person.Container</div>
+
+                    <div class="col col-4" data-label="Location" style="text-align:center"> @person.LocationCode</div>
+
+                    <div class="col col-5" data-label="Status" style="text-align:center"> @person.Status</div>
+
+                    <div class="col col-6" data-label="Date" style="text-align:center"> @person.Datetimes</div>
+
+                    <div class="col col-7" data-label="Options" style="text-align:center">
+                        <a href="@Url.Action("RemoveInventary", "RADA" , new { ID = @person.ID })" class="link-label"> ❌ Delete </a> /
+                        <a href="@Url.Action("UpdateInventory", "RADA" ,  new { ID = @person.ID })" class="link-label"> ♻️ Update </a>
+                    </div>
+
+                </li>
+
+            }
+        </ul>
+    </div>
 }
+
 
 <table id="myTable" class="table2excel" class="table table-striped table-responsive-xl table-hover" hidden="hidden">
     <tr>

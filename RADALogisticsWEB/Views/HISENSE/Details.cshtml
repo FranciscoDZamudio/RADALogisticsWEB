@@ -114,6 +114,7 @@
         string controllerName = string.IsNullOrEmpty(motValue) ? "HISENSE" : (motValue == "YES" ? "History" : "HISENSE");
         var backUrl = Url.Action(actionName, controllerName);
     }
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i data-lucide="truck"></i> Container Details</h2>
         <a href="@backUrl" class="btn btn-outline-secondary">

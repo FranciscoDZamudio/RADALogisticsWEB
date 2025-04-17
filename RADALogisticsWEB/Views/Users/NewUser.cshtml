@@ -128,62 +128,63 @@
 
 </div>
 
+<div class="table-scroll">
+    <ul class="responsive-table">
+        <li class="table-header" id="tableData">
 
-<ul class="responsive-table">
-    <li class="table-header" id="tableData">
+            <div class="col col-1" style="text-align: center; flex-basis: 10%;">ID</div>
 
-        <div class="col col-1" style="text-align: center; flex-basis: 10%;">ID</div>
+            <div class="col col-2" style="text-align: center; flex-basis: 30%">Username</div>
 
-        <div class="col col-2" style="text-align: center; flex-basis: 30%">Username</div>
+            <div class="col col-1" style="text-align: center; flex-basis: 10%">Credentials</div>
 
-        <div class="col col-1" style="text-align: center; flex-basis: 10%">Credentials</div>
+            <div class="col col-3" style="text-align: center; flex-basis: 20%">Log In</div>
 
-        <div class="col col-3" style="text-align: center; flex-basis: 20%">Log In</div>
+            <div class="col col-4" style="text-align: center; flex-basis: 10%">Type User</div>
 
-        <div class="col col-4" style="text-align: center; flex-basis: 10%">Type User</div>
+            <div class="col col-5" style="text-align: center; flex-basis: 10%">Date</div>
 
-        <div class="col col-5" style="text-align: center; flex-basis: 10%">Date</div>
-
-        <div class="col col-8" style="text-align: center; flex-basis: 20%">Options</div>
-
-    </li>
-    @foreach (var person in ViewBag.Records)
-    {
-        <li class="table-row" id="tblCustomers">
-
-            <div class="col col-1" data-label="ID" style="text-align: center; flex-basis: 10%">@person.ID</div>
-
-            <div class="col col-2" data-label="Username" style="text-align: center; flex-basis: 30%">@person.Username</div>
-
-            <div class="col col-1" data-label="Credentials" style="text-align: center; flex-basis: 10%"> @person.Employee_Number</div>
-
-            <div class="col col-3" data-label="Log In" style="text-align: center; flex-basis: 20%"> @person.Login_session</div>
-
-            <div class="col col-4" data-label="Type User" style="text-align: center; flex-basis: 10%"> @person.Type_user</div>
-
-            <div class="col col-5" data-label="Date" style="text-align: center; flex-basis: 10%"> @person.DateAdded</div>
-
-            <div class="col col-8" data-label="Options" style="text-align: center; flex-basis: 20%">
-
-                @if (person.Type_user == "HISENSE")
-                {
-                    @: @Html.ActionLink("🪢 Area Assignment", "Assignment", new { id = @person.ID }) /
-                }
-
-                @if (person.Type_user == "RADA")
-                {
-                    @: @Html.ActionLink("🪢 Area Assignment", "Assignments", new { id = @person.ID }) /
-                }
-
-                @Html.ActionLink("♻️ Update", "UpdateProcess", new { ID = @person.ID }) /
-                @Html.ActionLink("❌ Delete", "RemoveUser", new { ID = @person.ID })
-
-            </div>
+            <div class="col col-8" style="text-align: center; flex-basis: 20%">Options</div>
 
         </li>
+        @foreach (var person in ViewBag.Records)
+        {
+            <li class="table-row" id="tblCustomers">
 
-    }
-</ul>
+                <div class="col col-1" data-label="ID" style="text-align: center; flex-basis: 10%">@person.ID</div>
 
-<p style="text-align: center;">&nbsp;</p>
-<p style="text-align: center;">&nbsp;</p>
+                <div class="col col-2" data-label="Username" style="text-align: center; flex-basis: 30%">@person.Username</div>
+
+                <div class="col col-1" data-label="Credentials" style="text-align: center; flex-basis: 10%"> @person.Employee_Number</div>
+
+                <div class="col col-3" data-label="Log In" style="text-align: center; flex-basis: 20%"> @person.Login_session</div>
+
+                <div class="col col-4" data-label="Type User" style="text-align: center; flex-basis: 10%"> @person.Type_user</div>
+
+                <div class="col col-5" data-label="Date" style="text-align: center; flex-basis: 10%"> @person.DateAdded</div>
+
+                <div class="col col-8" data-label="Options" style="text-align: center; flex-basis: 20%">
+
+                    @if (person.Type_user == "HISENSE")
+                    {
+                        @: @Html.ActionLink("🪢 Area Assignment", "Assignment", new { id = @person.ID }) /
+                    }
+
+                    @if (person.Type_user == "RADA")
+                    {
+                        @: @Html.ActionLink("🪢 Area Assignment", "Assignments", new { id = @person.ID }) /
+                    }
+
+                    @Html.ActionLink("♻️ Update", "UpdateProcess", new { ID = @person.ID }) /
+                    @Html.ActionLink("❌ Delete", "RemoveUser", new { ID = @person.ID })
+
+                </div>
+
+            </li>
+
+        }
+    </ul>
+</div>
+
+    <p style="text-align: center;">&nbsp;</p>
+    <p style="text-align: center;">&nbsp;</p>

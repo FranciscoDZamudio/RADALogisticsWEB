@@ -190,11 +190,13 @@
     <Content Include="Stylee\DashboardStylee.css" />
     <Content Include="Stylee\estyleeDetails.css" />
     <Content Include="Stylee\HisensePages.css" />
+    <Content Include="Stylee\HisenseRecordsExcel.css" />
     <Content Include="Stylee\HomeStylee.css" />
     <Content Include="Stylee\LogIn_StyleePage.css" />
     <Content Include="Stylee\NewUsersStylee.css" />
     <Content Include="Stylee\PageRADAEntry.css" />
     <Content Include="Stylee\PagesRADAStylee.css" />
+    <Content Include="Stylee\RADAREntryRecordsmail.css" />
     <Content Include="Stylee\RecordsStylee.css" />
     <Content Include="Stylee\PagesRADAConfirms.css" />
     <Content Include="Web.config" />

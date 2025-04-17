@@ -12,11 +12,11 @@
       person.message == "CHOFER TERMINA MOVIMIENTO" ? "#D0F9E5" :
       person.message == "Movement in process" ? "#E5F8EC" : "white")">
 
-        <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
+        <div class="col col-4" data-label="Folio" style="text-align:center">@person.Folio</div>
 
-        <div class="col col-2" data-label="Username" style="text-align:center">@person.Who_Send</div>
+        @*<div class="col col-2" data-label="Username" style="text-align:center">@person.Who_Send</div>*@
 
-        <div class="col col-1" data-label="Container" style="text-align:center"> @person.Container</div>
+        <div class="col col-4" data-label="Container" style="text-align:center"> @person.Container</div>
 
         <div class="col col-4" data-label="Destination Location" style="text-align:center"> @person.Destination_Location</div>
 
@@ -28,7 +28,7 @@
 
         <div class="col col-8" data-label="Date" style="text-align:center"> @person.Datetime</div>
 
-        <div class="col col-9" data-label="Options" style="text-align:center">
+        <div class="col col-4" data-label="Options" style="text-align:center">
 
             @*@Html.ActionLink("❌ Delete", "CancelContainer", new { ID = @person.Folio }) /*@
             @Html.ActionLink("🎴 Details", "Details", new { ID = @person.Folio })

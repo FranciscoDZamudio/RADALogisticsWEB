@@ -12,7 +12,7 @@
       person.Comment == "CHOFER TERMINA MOVIMIENTO" ? "#D0F9E5" :
       person.Comment == "Movement in process" ? "#E5F8EC" : "white")">
 
-    <div class="col col-12" data-label="Options" style="text-align:center">
+    <div class="col col-15" data-label="Options" style="text-align:center">
 
         @Html.ActionLink("🔘 Comment ", "Comments", new { id = @person.Folio, Status = @person.Comment })
 
@@ -20,31 +20,31 @@
 
     <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
 
-    <div class="col col-1" data-label="Container" style="text-align:center">@person.Container</div>
+    <div class="col col-2" data-label="Container" style="text-align:center">@person.Container</div>
 
-    <div class="col col-2" data-label="Origins" style="text-align:center">@person.Origen</div>
+    <div class="col col-3" data-label="Origins" style="text-align:center">@person.Origen</div>
 
-    <div class="col col-3" data-label="Destination" style="text-align:center"> @person.Destination</div>
+    <div class="col col-4" data-label="Destination" style="text-align:center"> @person.Destination</div>
 
-    <div class="col col-4" data-label="Status" style="text-align:center"> @person.Status</div>
+    <div class="col col-5" data-label="Status" style="text-align:center"> @person.Status</div>
 
-    <div class="col col-5" data-label="HRequest" style="text-align:center"> @person.HSolicitud</div>
+    <div class="col col-6" data-label="HRequest" style="text-align:center"> @person.HSolicitud</div>
 
-    <div class="col col-6" data-label="HConfirm" style="text-align:center"> @person.HConfirm</div>
+    <div class="col col-7" data-label="HConfirm" style="text-align:center"> @person.HConfirm</div>
 
-    <div class="col col-7" data-label="HFinish" style="text-align:center"> @person.HFinish</div>
+    <div class="col col-8" data-label="HFinish" style="text-align:center"> @person.HFinish</div>
 
-    <div class="col col-8" data-label="Who Request" style="text-align:center"> @person.WhoRequest</div>
+    <div class="col col-9" data-label="Who Request" style="text-align:center"> @person.WhoRequest</div>
 
-    <div class="col col-9" data-label="Choffer" style="text-align:center"> @person.Choffer</div>
+    <div class="col col-10" data-label="Choffer" style="text-align:center"> @person.Choffer</div>
 
-    <div class="col col-10" data-label="Comment" style="text-align:center"> @person.Comment</div>
+    <div class="col col-11" data-label="Comment" style="text-align:center"> @person.Comment</div>
 
-    <div class="col col-10" data-label="Area" style="text-align:center"> @person.Area</div>
+    <div class="col col-12" data-label="Area" style="text-align:center"> @person.Area</div>
 
-    <div class="col col-11" data-label="Date" style="text-align:center"> @person.Date</div>
+    <div class="col col-13" data-label="Date" style="text-align:center"> @person.Date</div>
 
-    <div class="col col-12" data-label="Options" style="text-align:center">
+    <div class="col col-14" data-label="Options" style="text-align:center">
 
         @Html.ActionLink(" ✅ Confirmation ", "ViewConfirm", new { ID = @person.Folio, choffer = @person.Choffer })
 

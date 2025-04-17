@@ -404,3 +404,34 @@ label {
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .responsive-table {
+        min-width: 1600px; /* más espacio para columnas */
+    }
+}
+
+[class^="col-"] {
+    padding: 6px 10px;
+    word-break: break-word;
+}
+
+.responsive-table li {
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+@media (min-width: 1025px) {
+    .responsive-table {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .table-scroll {
+        overflow-x: unset;
+    }

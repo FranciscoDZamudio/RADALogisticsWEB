@@ -7,6 +7,71 @@
     margin: 0; /* Elimina los márgenes predeterminados */
 }
 
+.small-table-wrapper {
+    position: absolute;
+    top: 10px; /* Ajusta si es necesario */
+    left: 20px; /* Tabla a la izquierda */
+    max-width: 390px;
+    padding: 10px;
+    z-index: 10;
+}
+
+.small-table-container-scroll {
+    max-height: 350px; /* Establece la altura máxima de la tabla */
+    overflow: auto; /* Habilita el scroll cuando el contenido excede la altura */
+    background-color: #95A5A6;
+    border: 1px solid #c9d6e3;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.small-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+}
+
+    .small-info-table thead {
+        background-color: #819090;
+        color: white;
+    }
+
+    .small-info-table th,
+    .small-info-table td {
+        border: 1px solid #dee2e6;
+        padding: 10px 12px;
+    }
+
+    .small-info-table tbody tr:nth-child(odd) {
+        background-color: #eaf3fb;
+    }
+
+    .small-info-table tbody tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+@media (max-width: 768px) {
+    .small-table-wrapper {
+        position: static;
+        margin: 0 auto;
+        max-width: 90%;
+    }
+
+    .small-info-table {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .small-info-table th,
+    .small-info-table td {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+}
+
 .container {
     align-items: center;
     display: flex;
@@ -150,18 +215,18 @@
     overflow: hidden;
     text-align: center;
     height: 100%;
-}*/
+}
 
     input:focus {
         outline: none;
-    }
+    }*/
 
-        /* active state */
-        input:focus ~ label, input:valid ~ label {
+/* active state */
+/*input:focus ~ label, input:valid ~ label {
             top: -25px;
             font-size: 14px;
             color: #5264AE;
-        }
+        }*/
 
 
 /* LABEL ======================================= */
@@ -225,7 +290,7 @@
 .table-row {
     background-color: #ffffff;
     box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .col-1 {
@@ -244,7 +309,7 @@
 }
 
 .col-4 {
-    flex-basis: 15%;
+    flex-basis: 25%;
     text-align: left;
 }
 
@@ -264,25 +329,44 @@
 }
 
 .col-8 {
-    flex-basis: 45%;
+    flex-basis: 25%;
     text-align: left;
 }
 
 .col-9 {
-    flex-basis: 35%;
+    flex-basis: 45%;
     text-align: left;
 }
 
 .col-10 {
-    flex-basis: 35%;
+    flex-basis: 45%;
     text-align: left;
 }
 
 .col-11 {
-    flex-basis: 32%;
+    flex-basis: 35%;
     text-align: left;
 }
 
+.col-12 {
+    flex-basis: 30%;
+    text-align: left;
+}
+
+.col-13 {
+    flex-basis: 30%;
+    text-align: left;
+}
+
+.col-14 {
+    flex-basis: 35%;
+    text-align: left;
+}
+
+.col-15 {
+    flex-basis: 35%;
+    text-align: left;
+}
 
 @media all and (max-width: 767px) {
     .table-header {
@@ -294,7 +378,7 @@
 
     li {
         display: block;
-        width: auto;
+        width: 900vh;
     }
 
     .col {
@@ -381,3 +465,4 @@ input {
     .table-scroll {
         overflow-x: unset;
     }
+}

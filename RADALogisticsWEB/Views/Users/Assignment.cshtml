@@ -68,48 +68,53 @@
 
         <h4 class="Tittlelabel"> User Assigned Areas in the System </h4>
         <h5 class="Tittlelabel"> Total Records: @ViewBag.Count </h5>
-        <ul class="responsive-table">
 
-            <li class="table-header" id="tableData">
-
-                <div class="col col-2" style="text-align:center">Who Asign</div>
-
-                <div class="col col-2" style="text-align:center">Username</div>
-
-                <div class="col col-1" style="text-align:center">Enterprise</div>
-
-                <div class="col col-3" style="text-align:center">Area</div>
-
-                <div class="col col-3" style="text-align:center">Date</div>
-
-                <div class="col col-3" style="text-align:center">Options</div>
-
-            </li>
-            @foreach (var person in ViewBag.Recordstable)
-            {
-                <li class="table-row" id="tblCustomers">
-
-                    <div class="col col-2" data-label="Who_create" style="text-align:center">@person.Who_create</div>
-
-                    <div class="col col-2" data-label="Username" style="text-align:center">@person.Username</div>
-
-                    <div class="col col-1" data-label="Enterprise" style="text-align:center">@person.Enterprise</div>
-
-                    <div class="col col-3" data-label="Area" style="text-align:center"> @person.Areas</div>
-
-                    <div class="col col-3" data-label="Date" style="text-align:center"> @person.Datetime</div>
-
-                    <div class="col col-3" data-label="Options" style="text-align:center">
-
-                        @Html.ActionLink("❌ Delete", "AssignmentDelete", new { name = @person.Username, area = person.Areas })
-
-                    </div>
-
-                </li>
-            }
-        </ul>
+        
 
     </div>
+</div>
+
+<div class="table-scroll">
+    <ul class="responsive-table">
+
+        <li class="table-header" id="tableData">
+
+            <div class="col col-2" style="text-align:center">Who Asign</div>
+
+            <div class="col col-2" style="text-align:center">Username</div>
+
+            <div class="col col-1" style="text-align:center">Enterprise</div>
+
+            <div class="col col-3" style="text-align:center">Area</div>
+
+            <div class="col col-3" style="text-align:center">Date</div>
+
+            <div class="col col-3" style="text-align:center">Options</div>
+
+        </li>
+        @foreach (var person in ViewBag.Recordstable)
+        {
+            <li class="table-row" id="tblCustomers">
+
+                <div class="col col-2" data-label="Who_create" style="text-align:center">@person.Who_create</div>
+
+                <div class="col col-2" data-label="Username" style="text-align:center">@person.Username</div>
+
+                <div class="col col-1" data-label="Enterprise" style="text-align:center">@person.Enterprise</div>
+
+                <div class="col col-3" data-label="Area" style="text-align:center"> @person.Areas</div>
+
+                <div class="col col-3" data-label="Date" style="text-align:center"> @person.Datetime</div>
+
+                <div class="col col-3" data-label="Options" style="text-align:center">
+
+                    @Html.ActionLink("❌ Delete", "AssignmentDelete", new { name = @person.Username, area = person.Areas })
+
+                </div>
+
+            </li>
+        }
+    </ul>
 
 </div>
 
