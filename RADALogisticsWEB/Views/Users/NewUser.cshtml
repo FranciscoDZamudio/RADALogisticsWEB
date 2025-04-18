@@ -9,11 +9,11 @@
 
     <div style="text-align: center; min-width: 100%; ">
 
-        <h3 style="font-weight: 700;">Rada Logistics system</h3>
+        @*<h3 style="font-weight: 700;">Rada Logistics system</h3>
 
         <p style="text-align: center;">&nbsp;</p>
         <img src="~/Pictures/add.png" height="90" />
-        <p style="text-align: center;">&nbsp;</p>
+        <p style="text-align: center;">&nbsp;</p>*@
 
         <style>
             .page-title {
@@ -167,12 +167,12 @@
 
                     @if (person.Type_user == "HISENSE")
                     {
-                        @: @Html.ActionLink("🪢 Area Assignment", "Assignment", new { id = @person.ID }) /
+                        @: @Html.ActionLink("🪢 Area Assignment", "Assignments", new { id = @person.ID, ETP = "HISENSE" }) /
                     }
 
                     @if (person.Type_user == "RADA")
                     {
-                        @: @Html.ActionLink("🪢 Area Assignment", "Assignments", new { id = @person.ID }) /
+                        @: @Html.ActionLink("🪢 Area Assignment", "Assignments", new { id = @person.ID, ETP = "RADA" }) /
                     }
 
                     @Html.ActionLink("♻️ Update", "UpdateProcess", new { ID = @person.ID }) /

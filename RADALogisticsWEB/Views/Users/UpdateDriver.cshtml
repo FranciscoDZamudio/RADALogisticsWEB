@@ -29,7 +29,7 @@
         </div>
         <hr>
 
-        @using (Html.BeginForm("updatenewChoffer", "Users", FormMethod.Post))
+       @using (Html.BeginForm("updatenewChoffer", "Users", FormMethod.Post))
         {
             <input type="text" id="id" name="id" value="@ViewBag.id" hidden="hidden" required>
 
@@ -57,7 +57,7 @@
                 <label>Enter your Shift:</label>
             </div>
 
-            <h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Assigned work Area:</h5>
+            @*<h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Assigned work Area:</h5>
             <div class="group">
                 <select name="Area" id="Area" class="form-control" style="max-width: 30vh; color: black; text-align: center">
                     <option value="@ViewBag.Area">@ViewBag.Area</option>
@@ -67,7 +67,7 @@
                     }
                 </select>
             </div>
-            <p style="text-align: center;">&nbsp;</p>
+            <p style="text-align: center;">&nbsp;</p>*@
 
             <h5 class="Tittlelabel"> Date of entry </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">

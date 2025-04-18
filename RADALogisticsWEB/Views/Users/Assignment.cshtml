@@ -9,12 +9,31 @@
 
     <div style="text-align: center; min-width: 100%; ">
 
-        <h3 class="labelTitt"> Assignment of Application Areas </h3>
-        <h4 class="labelTitt"> It is important to assign the areas to hisense users in order to make requests </h4>
+        <style>
+            .page-title {
+                text-align: center;
+                font-size: 21px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 15px;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                font-size: 17px;
+                font-weight: 500;
+                color: #555;
+                margin-bottom: 25px;
+            }
+        </style>
+
+        <h2 class="page-title"> Assignment of Application Areas </h2>
+        <h4 class="section-subtitle"> It is important to assign the areas to hisense users in order to make requests </h4>
+
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("NewUser","Users")'">
+            <button class="animated-button" onclick="location.href='@Url.Action("NewChoffer","Users")'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
                     <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
                 </svg>
@@ -27,7 +46,7 @@
         </div>
         <hr>
 
-        @using (Html.BeginForm("AsignacionHisense", "Users", FormMethod.Post))
+        @using (Html.BeginForm("AsignacionChofees", "Users", FormMethod.Post))
         {
             <h5 class="Tittlelabel"> General Information </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
@@ -66,10 +85,10 @@
         <p style="text-align: center;">&nbsp;</p>
         <p style="text-align: center;">&nbsp;</p>
 
-        <h4 class="Tittlelabel"> User Assigned Areas in the System </h4>
+        <h4 class="Tittlelabel" style="font-weight: 700;"> User Assigned Areas in the System </h4>
         <h5 class="Tittlelabel"> Total Records: @ViewBag.Count </h5>
 
-        
+
 
     </div>
 </div>
@@ -108,7 +127,7 @@
 
                 <div class="col col-3" data-label="Options" style="text-align:center">
 
-                    @Html.ActionLink("❌ Delete", "AssignmentDelete", new { name = @person.Username, area = person.Areas })
+                    @Html.ActionLink("❌ Delete", "Removess", new { name = @person.Username, area = person.Areas })
 
                 </div>
 

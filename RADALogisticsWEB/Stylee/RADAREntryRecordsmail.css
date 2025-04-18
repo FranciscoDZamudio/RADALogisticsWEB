@@ -7,6 +7,64 @@
     margin: 0; /* Elimina los márgenes predeterminados */
 }
 
+.choffer-float {
+    position: absolute;
+    top: 43px;
+    right: 40px;
+    z-index: 10;
+}
+
+.choffer-box {
+    width: 330px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    font-size: 10px;
+}
+
+.choffer-title {
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.choffer-scroll {
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.choffer-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+}
+
+    .choffer-table th,
+    .choffer-table td {
+        padding: 4px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .choffer-table thead tr {
+        background-color: #e0e0e0;
+    }
+
+@media (max-width: 768px) {
+    .choffer-float {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 0 auto;
+    }
+
+    .choffer-box {
+        width: 95%;
+    }
+}
+
 .small-table-wrapper {
     position: absolute;
     top: 10px; /* Ajusta si es necesario */
@@ -288,10 +346,18 @@
 }
 
 .table-row {
-    background-color: #ffffff;
     box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
-    font-size: 11px;
+    font-size: 12px;
 }
+
+    /* Agregado para filas alternadas */
+    .table-row:nth-child(even) {
+        background-color: #E8E8E8;
+    }
+
+    .table-row:nth-child(odd) {
+        background-color: #ffffff;
+    }
 
 .col-1 {
     flex-basis: 25%;
@@ -378,7 +444,7 @@
 
     li {
         display: block;
-        width: 900vh;
+        width: auto;
     }
 
     .col {
@@ -401,6 +467,7 @@
 }
 }
 }
+
 
 * {
     margin: 0;

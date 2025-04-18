@@ -15,6 +15,7 @@ namespace RADALogisticsWEB.Controllers
         List<Usuarios> GetUsers = new List<Usuarios>();
         List<Areas> GetArea = new List<Areas>();
         List<AsignacionDeAreas> Asignacion = new List<AsignacionDeAreas>();
+        List<AsignacionDeAreas> Asignacions = new List<AsignacionDeAreas>();
         List<Choferes> GetChofers = new List<Choferes>();
         //connection SQL server (database)
         SqlConnection DBSPP = new SqlConnection("Data Source=RADAEmpire.mssql.somee.com ;Initial Catalog=RADAEmpire ;User ID=RooRada; password=rada1311");
@@ -89,7 +90,7 @@ namespace RADALogisticsWEB.Controllers
             }
         }
 
-        public ActionResult Assignments(string id, string star)
+        public ActionResult Assignments(string id, string star, string ETP)
         {
             if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
@@ -104,28 +105,56 @@ namespace RADALogisticsWEB.Controllers
             }
             else
             {
-                string name = null;
-                SqlCommand log = new SqlCommand("Select * from RADAEmpire_AUsers where ID = '" + id + "' and Active = '1'", DBSPP);
-                DBSPP.Open();
-                SqlDataReader drlog = log.ExecuteReader();
-                if (drlog.HasRows)
+                if (ETP == "RADA")
                 {
-                    while (drlog.Read())
+                    string name = null;
+                    SqlCommand log = new SqlCommand("Select * from RADAEmpire_AUsers where ID = '" + id + "' and Active = '1'", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drlog = log.ExecuteReader();
+                    if (drlog.HasRows)
                     {
-                        name = drlog["Username"].ToString();
-                        ViewBag.Username = drlog["Username"].ToString();
+                        while (drlog.Read())
+                        {
+                            name = drlog["Username"].ToString();
+                            ViewBag.Username = drlog["Username"].ToString();
+                        }
                     }
+
+                    DBSPP.Close();
+                    GetAreas();
+                    ViewBag.Records = GetArea;
+                    getAsignacion(name);
+                    ViewBag.Count = Asignacion.Count.ToString();
+                    ViewBag.Recordstable = Asignacion;
+
+                    ViewBag.id = id;
+                    return View();
                 }
+                else
+                {
+                    string name = null;
+                    SqlCommand log = new SqlCommand("Select * from RADAEmpire_AUsers where ID = '" + id + "' and Active = '1'", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drlog = log.ExecuteReader();
+                    if (drlog.HasRows)
+                    {
+                        while (drlog.Read())
+                        {
+                            name = drlog["Username"].ToString();
+                            ViewBag.Username = drlog["Username"].ToString();
+                        }
+                    }
 
-                DBSPP.Close();
-                GetAreas();
-                ViewBag.Records = GetArea;
-                getAsignacion(name);
-                ViewBag.Count = Asignacion.Count.ToString();
-                ViewBag.Recordstable = Asignacion;
+                    DBSPP.Close();
+                    GetAreas();
+                    ViewBag.Records = GetArea;
+                    getAsignacion(name);
+                    ViewBag.Count = Asignacion.Count.ToString();
+                    ViewBag.Recordstable = Asignacion;
 
-                ViewBag.id = id;
-                return View();
+                    ViewBag.id = id;
+                    return View();
+                }
             }
         }
 
@@ -145,7 +174,7 @@ namespace RADALogisticsWEB.Controllers
             else
             {
                 string name = null;
-                SqlCommand log = new SqlCommand("Select * from RADAEmpire_AUsers where ID = '" + id + "' and Active = '1'", DBSPP);
+                SqlCommand log = new SqlCommand("Select * from RADAEmpire_AChoffer where ID = '" + id + "' and Active = '1'", DBSPP);
                 DBSPP.Open();
                 SqlDataReader drlog = log.ExecuteReader();
                 if (drlog.HasRows)
@@ -160,12 +189,124 @@ namespace RADALogisticsWEB.Controllers
                 DBSPP.Close();
                 GetAreas();
                 ViewBag.Records = GetArea;
-                getAsignacion(name);
-                ViewBag.Count = Asignacion.Count.ToString();
-                ViewBag.Recordstable = Asignacion;
-
+                getAsignacions(name);
+                ViewBag.Count = Asignacions.Count.ToString();
+                ViewBag.Recordstable = Asignacions;
                 ViewBag.id = id;
                 return View();
+            }
+        }
+
+        public ActionResult AsignacionChofees(string id, string Area, string username, string user, string status)
+        {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            ViewBag.User = Session["Username"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            { 
+                string vl = null;
+                SqlCommand log = new SqlCommand("Select * from RADAEmpire_ARolesChoffer where Active = '1' and Areas = '" + Area + "' and Username = '" + username + "'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drlog = log.ExecuteReader();
+                if (drlog.HasRows)
+                {
+                    while (drlog.Read())
+                    {
+                        vl = drlog[0].ToString();
+                    }
+                }
+                else
+                {
+                    vl = null;
+                }
+                DBSPP.Close();
+
+                if (vl == null)
+                {
+                    // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                    DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                    // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                    TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                    // Formatear la fecha para que sea adecuada para la base de datos
+                    string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                    //Guardar informacion a la base de datos del proyecto
+                    DBSPP.Open();
+                    SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_ARolesChoffer" +
+                        "(Who_Create, Username, Enterprise, Areas, Date, Datetime, Active) values " +
+                        "(@Who_Create, @Username, @Enterprise, @Areas, @Date, @Datetime, @Active) ", DBSPP);
+                    //--------------------------------------------------------------------------------------------------------------------------------
+                    PalletControl.Parameters.AddWithValue("@Who_Create", user.ToString());
+                    PalletControl.Parameters.AddWithValue("@Username", username.ToString());
+                    PalletControl.Parameters.AddWithValue("@Enterprise", status.ToString());
+                    PalletControl.Parameters.AddWithValue("@Areas", Area.ToString());
+                    PalletControl.Parameters.AddWithValue("@Date", usTime.ToString());
+                    PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString());
+                    PalletControl.Parameters.AddWithValue("@Active", true);
+                    PalletControl.ExecuteNonQuery();
+                    DBSPP.Close();
+                    //--------------------------------------------------------------------------------------------------------------------------------
+
+                    return RedirectToAction("Assignment", "Users", new { id = id });
+                }
+                else
+                {
+                    return RedirectToAction("Assignment", "Users", new { id = id });
+                }
+            }
+        }
+
+        public ActionResult Removess(string name, string area)
+        {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            ViewBag.User = Session["Username"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                string id = null;
+                SqlCommand logs = new SqlCommand("Select * from RADAEmpire_AChoffer where Username = '" + name + "' and Active = '1'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drlogs = logs.ExecuteReader();
+                if (drlogs.HasRows)
+                {
+                    while (drlogs.Read())
+                    {
+                        id = drlogs["ID"].ToString();
+                    }
+                }
+                DBSPP.Close();
+
+                string updateQuery = "UPDATE RADAEmpire_ARolesChoffer SET Active = @Active WHERE Areas = @Areas and Username = @Username";
+                using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
+                {
+                    DBSPP.Open();
+                    command.Parameters.AddWithValue("@Active", false);
+                    command.Parameters.AddWithValue("@Areas", area);
+                    command.Parameters.AddWithValue("@Username", name);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                return RedirectToAction("Assignment", "Users", new { id = id });
             }
         }
 
@@ -251,7 +392,7 @@ namespace RADALogisticsWEB.Controllers
                     //--------------------------------------------------------------------------------------------------------------------------------
                     if (status == "HISENSE")
                     {
-                        return RedirectToAction("Assignment", "Users", new { id = id });
+                        return RedirectToAction("Assignments", "Users", new { id = id });
                     }
                     else
                     {
@@ -262,7 +403,7 @@ namespace RADALogisticsWEB.Controllers
                 {
                     if (status == "HISENSE")
                     {
-                        return RedirectToAction("Assignment", "Users", new { id = id });
+                        return RedirectToAction("Assignments", "Users", new { id = id });
                     }
                     else
                     {
@@ -485,7 +626,7 @@ namespace RADALogisticsWEB.Controllers
                     PalletControl.Parameters.AddWithValue("@Username", Username.ToString());
                     PalletControl.Parameters.AddWithValue("@Fastcard",FastCard.ToString());
                     PalletControl.Parameters.AddWithValue("@Area", Area.ToString());
-                    PalletControl.Parameters.AddWithValue("@Shift", Shift.ToString());
+                    PalletControl.Parameters.AddWithValue("@Shift", "Assignments");
                     PalletControl.Parameters.AddWithValue("@Active", true);
                     PalletControl.Parameters.AddWithValue("@Date", usTime.ToString());
                     PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString());
@@ -577,7 +718,7 @@ namespace RADALogisticsWEB.Controllers
             }
         }
 
-        public ActionResult updatenewChoffer(string Username, string Fastcard, string Area, string Shift, string id)
+        public ActionResult updatenewChoffer(string Username, string Fastcard, string Shift, string id)
         {
             if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
@@ -593,14 +734,12 @@ namespace RADALogisticsWEB.Controllers
             else
             {
                 string updateQuery = "UPDATE RADAEmpire_AChoffer SET Username = @Username, " +
-                " Fastcard = @Fastcard, Area = @Area, " +
-                " Shift = @Shift  WHERE ID = @ID";
+                " Fastcard = @Fastcard, Shift = @Shift  WHERE ID = @ID";
                 using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
                 {
                     DBSPP.Open();
                     command.Parameters.AddWithValue("@Username", Username);
                     command.Parameters.AddWithValue("@Fastcard", Fastcard);
-                    command.Parameters.AddWithValue("@Area", Area);
                     command.Parameters.AddWithValue("@Shift", Shift);
                     command.Parameters.AddWithValue("@ID", id);
                     int rowsAffected = command.ExecuteNonQuery();
@@ -854,6 +993,37 @@ namespace RADALogisticsWEB.Controllers
                             ID = int.Parse(dr["ID"].ToString()),
                             Username = (dr["Username"].ToString()),
                             Who_create = (dr["Who_create"].ToString()),
+                            Enterprise = (dr["Enterprise"].ToString()),
+                            Areas = (dr["Areas"].ToString()),
+                            Datetime = (dr["Datetime"].ToString()),
+                        });
+                    }
+                }
+                DBSPP.Close();
+            }
+        }
+
+        private void getAsignacions(string name)
+        {
+            if (Asignacions.Count > 0)
+            {
+                Asignacions.Clear();
+            }
+            else
+            {
+                DBSPP.Open();
+                con.Connection = DBSPP;
+                con.CommandText = "Select * from RADAEmpire_ARolesChoffer where Active = '1' order by ID desc";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {// Filtrar usando la variable filtroArea
+                    if (dr["Username"].ToString() == name)
+                    {
+                        Asignacions.Add(new AsignacionDeAreas()
+                        {
+                            ID = int.Parse(dr["ID"].ToString()),
+                            Username = (dr["Username"].ToString()),
+                            Who_create = (dr["Who_Create"].ToString()),
                             Enterprise = (dr["Enterprise"].ToString()),
                             Areas = (dr["Areas"].ToString()),
                             Datetime = (dr["Datetime"].ToString()),

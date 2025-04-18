@@ -140,6 +140,7 @@
     <Compile Include="Models\Movement.cs" />
     <Compile Include="Models\MovimientosEliminados.cs" />
     <Compile Include="Models\Solicitud_Contenedores.cs" />
+    <Compile Include="Models\UsuarioRada.cs" />
     <Compile Include="Models\Usuarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

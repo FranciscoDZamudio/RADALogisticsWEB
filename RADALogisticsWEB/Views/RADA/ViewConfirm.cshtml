@@ -113,13 +113,23 @@
                 </div>
             </center>
 
-            <p style="text-align: center;">&nbsp;</p>
+            @*<p style="text-align: center;">&nbsp;</p>
             <div class="group">
-                <p class="subttitle"> Select Choffer:</p>
-                <select name="Choffer" id="Choffer" class="form-control">
-                    @foreach (var concepts in ViewBag.RadaUsers)
+                <p class="subttitle"></p>
+                <select name="Choffer" id="Choffer" class="form-control" multiple size="6">
+                    @foreach (var user in ViewBag.RadaUsers)
                     {
-                        <option value="@concepts.Username"> @concepts.Username </option>
+                        <option value="@user.Username">@user.Username</option>
+                    }
+                </select>
+            </div>*@
+
+            <h5 class="Tittlelabel" style=" font-weight: 700; color: #5264AE">Select Choffer(s):</h5>
+            <div class="group" style="padding: 5px 0px 0px 0px">
+                <select name="Choffer" id="Choffer" class="form-control" style="max-width: 40vh; color: black; text-align: center">
+                    @foreach (var person in ViewBag.RadaUsers)
+                    {
+                        <option value="@person.Username">@person.Username</option>
                     }
                 </select>
             </div>
@@ -136,7 +146,7 @@
 
                 <li class="table-header" id="tableData">
 
-                    <div class="col col-1" style="text-align:center">Folio</div>
+                    <div class="col col-1" style="text-align:center">MOV.</div>
 
                     <div class="col col-8" style="text-align:center">Choffer</div>
 
@@ -146,7 +156,7 @@
 
                     <div class="col col-8" style="text-align:center">Message</div>
                 </li>
-               @foreach (var person in ViewBag.Records)
+                @foreach (var person in ViewBag.Records)
                 {
                     <li class="table-row" id="tblCustomers">
 

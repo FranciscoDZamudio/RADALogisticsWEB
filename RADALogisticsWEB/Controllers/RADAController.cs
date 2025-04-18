@@ -17,6 +17,8 @@ namespace RADALogisticsWEB.Controllers
         List<Inventario> GetInventary = new List<Inventario>();
         List<Movement> Movements = new List<Movement>();
 
+        List<UsuarioRada> UsuarioRadasss = new List<UsuarioRada>();
+
         List<string> filtroAreas = new List<string>();
 
         //connection SQL server (database)
@@ -137,6 +139,116 @@ namespace RADALogisticsWEB.Controllers
                 if (query == "1")
                 {
 
+                    string UsuarioRada = Session["Username"]?.ToString();
+                    //create generate randoms int value
+                    string rol = null;
+                    SqlCommand asiggne = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + UsuarioRada.ToString() + "'", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drasiggne = asiggne.ExecuteReader();
+                    if (drasiggne.HasRows)
+                    {
+                        while (drasiggne.Read())
+                        {
+                            rol = drasiggne["Type_user"].ToString();
+                        }
+                    }
+                    DBSPP.Close();
+
+                    if (rol == "ADMINISTRATOR")
+                    {
+                        if (UsuarioRadasss.Count > 0)
+                        {
+                            UsuarioRadasss.Clear();
+                        }
+                        else
+                        {
+                            DBSPP.Open();
+                            con.Connection = DBSPP;
+                            con.CommandText = "SELECT DISTINCT r.Username AS Choffer,a.Status,m.Foio AS Folio,m.Message FROM RADAEmpire_ARolesChoffer r LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1' LEFT JOIN ( SELECT Choffer, Foio, Message, ROW_NUMBER() OVER (PARTITION BY Choffer ORDER BY Datetime DESC) AS rn FROM RADAEmpires_DZChofferMovement WHERE Active = 1 ) m ON r.Username = m.Choffer AND m.rn = 1 WHERE r.Active = '1' AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
+                            dr = con.ExecuteReader();
+                            while (dr.Read())
+                            {
+                                UsuarioRadasss.Add(new UsuarioRada()
+                                {
+                                    Username = dr["Choffer"].ToString(),
+                                    message = dr["Status"].ToString(),
+                                    Mov = dr["Folio"].ToString()
+                                });
+                            }
+                            DBSPP.Close();
+                        }
+
+                        ViewBag.RadaUsers = UsuarioRadasss;
+                    }
+                    else
+                    {
+                        List<string> Areas = new List<string>();
+
+                        // Paso 1: Obtener áreas del usuario
+                        string queryAreas = "SELECT Areas FROM RADAEmpire_ARoles WHERE Active = '1' AND Username = @username";
+                        using (SqlCommand RadaAreas = new SqlCommand(queryAreas, DBSPP))
+                        {
+                            RadaAreas.Parameters.AddWithValue("@username", UsuarioRada);
+                            DBSPP.Open();
+                            using (SqlDataReader drRadaAreas = RadaAreas.ExecuteReader())
+                            {
+                                while (drRadaAreas.Read())
+                                {
+                                    Areas.Add(drRadaAreas["Areas"].ToString());
+                                }
+                            }
+                            DBSPP.Close();
+                        }
+
+                        // Paso 2: Obtener usuarios por áreas
+                        List<UsuarioRada> usuarios = new List<UsuarioRada>();
+
+                        if (Areas.Any())
+                        {
+                            string queryUsers = "  SELECT DISTINCT r.Username AS Choffer,a.Status,m.Foio AS Folio,m.Message " +
+                                " FROM RADAEmpire_ARolesChoffer r  " +
+                                "" +
+                                " LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1' " +
+                                " LEFT JOIN ( SELECT Choffer, Foio, Message, ROW_NUMBER() OVER (PARTITION BY Choffer ORDER BY Datetime DESC)  " +
+                                " AS rn FROM RADAEmpires_DZChofferMovement WHERE Active = 1 ) m ON r.Username = m.Choffer AND m.rn = 1 WHERE r.Active = '1' " +
+                                " AND r.Areas IN ({0}) AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
+
+                            List<string> parametros = new List<string>();
+                            for (int i = 0; i < Areas.Count; i++)
+                            {
+                                parametros.Add("@area" + i);
+                            }
+
+                            string inClause = string.Join(", ", parametros);
+                            queryUsers = string.Format(queryUsers, inClause);
+
+                            using (SqlCommand cmd = new SqlCommand(queryUsers, DBSPP))
+                            {
+                                for (int i = 0; i < Areas.Count; i++)
+                                {
+                                    cmd.Parameters.AddWithValue(parametros[i], Areas[i]);
+                                }
+
+                                DBSPP.Open();
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        usuarios.Add(new UsuarioRada
+                                        {
+                                            Username = reader["Choffer"].ToString(),
+                                            message = reader["Status"].ToString(),
+                                            Mov = reader["Folio"].ToString()
+                                        });
+                                    }
+                                }
+                                DBSPP.Close();
+                            }
+                        }
+
+                        ViewBag.RadaUsers = usuarios;
+                    }
+
                     string validation = null;
                     //create generate randoms int value
                     SqlCommand conse = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + name + "'", DBSPP);
@@ -186,6 +298,20 @@ namespace RADALogisticsWEB.Controllers
                     }
                     else
                     {
+                        string UsuarioRada2 = Session["Username"]?.ToString();
+                        //create generate randoms int value
+                        string rols = null;
+                        SqlCommand asiggnes = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + UsuarioRada2.ToString() + "'", DBSPP);
+                        DBSPP.Open();
+                        SqlDataReader drasiggnes = asiggnes.ExecuteReader();
+                        if (drasiggnes.HasRows)
+                        {
+                            while (drasiggnes.Read())
+                            {
+                                rols = drasiggnes["Type_user"].ToString();
+                            }
+                        }
+                        DBSPP.Close();
 
                         DBSPP.Open();
                         con.Connection = DBSPP;
@@ -239,6 +365,116 @@ namespace RADALogisticsWEB.Controllers
                 }
                 else
                 {
+                    string UsuarioRada = Session["Username"]?.ToString();
+                    //create generate randoms int value
+                    string rol = null;
+                    SqlCommand asiggne = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + UsuarioRada.ToString() + "'", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drasiggne = asiggne.ExecuteReader();
+                    if (drasiggne.HasRows)
+                    {
+                        while (drasiggne.Read())
+                        {
+                            rol = drasiggne["Type_user"].ToString();
+                        }
+                    }
+                    DBSPP.Close();
+
+                    if (rol == "ADMINISTRATOR")
+                    {
+                        if (UsuarioRadasss.Count > 0)
+                        {
+                            UsuarioRadasss.Clear();
+                        }
+                        else
+                        {
+                            DBSPP.Open();
+                            con.Connection = DBSPP;
+                            con.CommandText = "SELECT DISTINCT r.Username AS Choffer,a.Status,m.Foio AS Folio,m.Message FROM RADAEmpire_ARolesChoffer r LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1' LEFT JOIN ( SELECT Choffer, Foio, Message, ROW_NUMBER() OVER (PARTITION BY Choffer ORDER BY Datetime DESC) AS rn FROM RADAEmpires_DZChofferMovement WHERE Active = 1 ) m ON r.Username = m.Choffer AND m.rn = 1 WHERE r.Active = '1' AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
+                            dr = con.ExecuteReader();
+                            while (dr.Read())
+                            {
+                                UsuarioRadasss.Add(new UsuarioRada()
+                                {
+                                    Username = dr["Choffer"].ToString(),
+                                    message = dr["Status"].ToString(),
+                                    Mov = dr["Folio"].ToString()
+                                });
+                            }
+                            DBSPP.Close();
+                        }
+
+                        ViewBag.RadaUsers = UsuarioRadasss;
+                    }
+                    else
+                    {
+                        List<string> Areas = new List<string>();
+
+                        // Paso 1: Obtener áreas del usuario
+                        string queryAreas = "SELECT Areas FROM RADAEmpire_ARoles WHERE Active = '1' AND Username = @username";
+                        using (SqlCommand RadaAreas = new SqlCommand(queryAreas, DBSPP))
+                        {
+                            RadaAreas.Parameters.AddWithValue("@username", UsuarioRada);
+                            DBSPP.Open();
+                            using (SqlDataReader drRadaAreas = RadaAreas.ExecuteReader())
+                            {
+                                while (drRadaAreas.Read())
+                                {
+                                    Areas.Add(drRadaAreas["Areas"].ToString());
+                                }
+                            }
+                            DBSPP.Close();
+                        }
+
+                        // Paso 2: Obtener usuarios por áreas
+                        List<UsuarioRada> usuarios = new List<UsuarioRada>();
+
+                        if (Areas.Any())
+                        {
+                            string queryUsers = "  SELECT DISTINCT r.Username AS Choffer,a.Status,m.Foio AS Folio,m.Message " +
+                                " FROM RADAEmpire_ARolesChoffer r  " +
+                                "" +
+                                " LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1' " +
+                                " LEFT JOIN ( SELECT Choffer, Foio, Message, ROW_NUMBER() OVER (PARTITION BY Choffer ORDER BY Datetime DESC)  " +
+                                " AS rn FROM RADAEmpires_DZChofferMovement WHERE Active = 1 ) m ON r.Username = m.Choffer AND m.rn = 1 WHERE r.Active = '1' " +
+                                " AND r.Areas IN ({0}) AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
+
+                            List<string> parametros = new List<string>();
+                            for (int i = 0; i < Areas.Count; i++)
+                            {
+                                parametros.Add("@area" + i);
+                            }
+
+                            string inClause = string.Join(", ", parametros);
+                            queryUsers = string.Format(queryUsers, inClause);
+
+                            using (SqlCommand cmd = new SqlCommand(queryUsers, DBSPP))
+                            {
+                                for (int i = 0; i < Areas.Count; i++)
+                                {
+                                    cmd.Parameters.AddWithValue(parametros[i], Areas[i]);
+                                }
+
+                                DBSPP.Open();
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        usuarios.Add(new UsuarioRada
+                                        {
+                                            Username = reader["Choffer"].ToString(),
+                                            message = reader["Status"].ToString(),
+                                            Mov = reader["Folio"].ToString()
+                                        });
+                                    }
+                                }
+                                DBSPP.Close();
+                            }
+                        }
+
+                        ViewBag.RadaUsers = usuarios;
+                    }
+
                     string validation = null;
                     //create generate randoms int value
                     SqlCommand conse = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + name + "'", DBSPP);
@@ -320,6 +556,88 @@ namespace RADALogisticsWEB.Controllers
             } 
             else
             {
+
+                string UsuarioRada = Session["Username"]?.ToString();
+                //create generate randoms int value
+                string rol = null;
+                SqlCommand asiggne = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + UsuarioRada.ToString() + "'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drasiggne = asiggne.ExecuteReader();
+                if (drasiggne.HasRows)
+                {
+                    while (drasiggne.Read())
+                    {
+                        rol = drasiggne["Type_user"].ToString();
+                    }
+                }
+                DBSPP.Close();
+
+                if (rol == "ADMINISTRATOR")
+                {
+                    GetUsers();
+                    ViewBag.RadaUsers = GetChoffer;
+                }
+                else
+                {
+                    List<string> Areas = new List<string>();
+
+                    // Paso 1: Obtener áreas del usuario
+                    string queryAreas = "SELECT Areas FROM RADAEmpire_ARoles WHERE Active = '1' AND Username = @username";
+                    using (SqlCommand RadaAreas = new SqlCommand(queryAreas, DBSPP))
+                    {
+                        RadaAreas.Parameters.AddWithValue("@username", UsuarioRada);
+                        DBSPP.Open();
+                        using (SqlDataReader drRadaAreas = RadaAreas.ExecuteReader())
+                        {
+                            while (drRadaAreas.Read())
+                            {
+                                Areas.Add(drRadaAreas["Areas"].ToString());
+                            }
+                        }
+                        DBSPP.Close();
+                    }
+
+                    // Paso 2: Obtener usuarios por áreas
+                    List<UsuarioRada> usuarios = new List<UsuarioRada>();
+
+                    if (Areas.Any())
+                    {
+                        string queryUsers = "SELECT DISTINCT   r.Username,  r.Areas,  a.Status,  a.Fastcard, a.Shift, a.Date, a.Datetime " +
+                            " FROM RADAEmpire_ARolesChoffer r LEFT JOIN RADAEmpire_AChoffer a  ON r.Username = a.Username AND a.Active = '1' " +
+                            " WHERE r.Active = '1' AND r.Areas IN ({0}) AND (a.Status = 'SIN MOVIMIENTO' OR a.Status IS NULL)" +
+                            " ORDER BY r.Username ASC";
+
+                        List<string> parametros = new List<string>();
+                        for (int i = 0; i < Areas.Count; i++)
+                        {
+                            parametros.Add("@area" + i);
+                        }
+
+                        string inClause = string.Join(", ", parametros);
+                        queryUsers = string.Format(queryUsers, inClause);
+
+                        using (SqlCommand cmd = new SqlCommand(queryUsers, DBSPP))
+                        {
+                            for (int i = 0; i < Areas.Count; i++)
+                            {
+                                cmd.Parameters.AddWithValue(parametros[i], Areas[i]);
+                            }
+
+                            DBSPP.Open();
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    usuarios.Add(new UsuarioRada { Username = reader["Username"].ToString() });
+                                }
+                            }
+                            DBSPP.Close();
+                        }
+                    }
+
+                    ViewBag.RadaUsers = usuarios;
+                }
+
                 string area = null,messages = null, WhoSend = null, Container = null, Destination = null, Origins = null, Status = null, DateTime = null, Date = null;
                 //create generate randoms int value
                 SqlCommand conse = new SqlCommand("Select * from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + ID + "'", DBSPP);
@@ -371,8 +689,8 @@ namespace RADALogisticsWEB.Controllers
                             ViewBag.id = ID.ToString();
                             ViewBag.area = area.ToString();
 
-                            GetUsers();
-                            ViewBag.RadaUsers = GetChoffer;
+                            // Pasar al ViewBag
+
                             GetMovement();
                             ViewBag.Records = Movements;
                             return View();

@@ -30,6 +30,45 @@
             }
         </style>
 
+        <div class="choffer-float">
+            <div class="choffer-box">
+                <h4 class="choffer-title">Drivers Without Movement</h4>
+
+                <div class="choffer-scroll">
+                    <table class="choffer-table">
+                        <thead>
+                            <tr>
+                                <th>Choffer</th>
+                                <th>Message</th>
+                                <th>MOV.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.RadaUsers != null)
+                            {
+                                foreach (var choffer in ViewBag.RadaUsers)
+                                {
+                                    <tr>
+                                        <td>@choffer.Username</td>
+                                        <td>@choffer.message</td>
+                                        <td>@choffer.Mov</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td style="padding: 6px; text-align: center;"> - </td>
+                                    <td style="padding: 6px; text-align: center;"> - </td>
+                                    <td style="padding: 6px; text-align: center;"> - </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <h2 class="page-title" style="font-weight: 700;">Entry of requested container movements</h2>
         <h4 class="section-subtitle">Container inbound and request</h4>
 
