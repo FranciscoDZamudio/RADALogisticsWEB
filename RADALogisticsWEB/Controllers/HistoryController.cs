@@ -956,10 +956,42 @@ namespace RADALogisticsWEB.Controllers
 
                     if (validation == "ADMINISTRATOR")
                     {
-                        GetRecord();
-                        ViewBag.Records = GetRecords;
-                        ViewBag.Count = GetRecords.Count.ToString();
+                        //GetRecord();
+                        //ViewBag.Records = GetRecords;
+                        //ViewBag.Count = GetRecords.Count.ToString();
+                        //return View();
+
+                        DBSPP.Open();
+                        con.Connection = DBSPP;
+                        con.CommandText = "  Select top (100) " +
+                            " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                            " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date " +
+                            " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
+                        dr = con.ExecuteReader();
+                        while (dr.Read())
+                        {
+                            GetRecordsQeury.Add(new Historial()
+                            {
+                                Folio = (dr["Folio"].ToString()),
+                                Container = (dr["Container"].ToString()),
+                                Origen = (dr["Origen"].ToString()),
+                                Destination = (dr["Destination"].ToString()),
+                                Status = (dr["Status"].ToString()),
+                                HSolicitud = (dr["HSolicitud"].ToString()),
+                                HConfirm = (dr["HConfirm"].ToString()),
+                                HFinish = (dr["HFinish"].ToString()),
+                                WhoRequest = (dr["WhoRequest"].ToString()),
+                                Choffer = (dr["Choffer"].ToString()),
+                                Comment = (dr["Comment"].ToString()),
+                                Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                            });
+                        }
+                        DBSPP.Close();
+
+                        ViewBag.Records = GetRecordsQeury;
+                        ViewBag.Count = GetRecordsQeury.Count.ToString();
                         return View();
+
                     }
                     else
                     {
@@ -1201,32 +1233,39 @@ namespace RADALogisticsWEB.Controllers
                             Chofferss = drlog["Choffer"].ToString();
                         }
                     }
+                    else
+                    {
+                        Chofferss = "CHOFER LIBRE";
+                    }
                     DBSPP.Close();
 
-                    //------------------------------------------------------------------------------
-                    string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
-                        " Status = @Status WHERE Username = @Username";
-                    using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                    if (Chofferss != "CHOFER LIBRE")
                     {
-                        DBSPP.Open();
-                        coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
-                        coms.Parameters.AddWithValue("@Username", Chofferss.ToString());
-                        int rowsAffected = coms.ExecuteNonQuery();
-                        DBSPP.Close();
-                    }
+                        //------------------------------------------------------------------------------
+                        string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
+                            " Status = @Status WHERE Username = @Username";
+                        using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                        {
+                            DBSPP.Open();
+                            coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                            coms.Parameters.AddWithValue("@Username", Chofferss.ToString());
+                            int rowsAffected = coms.ExecuteNonQuery();
+                            DBSPP.Close();
+                        }
 
-                    //------------------------------------------------------------------------------
-                    string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
-                        " Active = @Active WHERE Foio = @Foio";
-                    using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
-                    {
-                        DBSPP.Open();
-                        coms.Parameters.AddWithValue("@Active", false);
-                        coms.Parameters.AddWithValue("@Foio", ID.ToString());
-                        int rowsAffected = coms.ExecuteNonQuery();
-                        DBSPP.Close();
+                        //------------------------------------------------------------------------------
+                        string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
+                            " Active = @Active WHERE Foio = @Foio";
+                        using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
+                        {
+                            DBSPP.Open();
+                            coms.Parameters.AddWithValue("@Active", false);
+                            coms.Parameters.AddWithValue("@Foio", ID.ToString());
+                            int rowsAffected = coms.ExecuteNonQuery();
+                            DBSPP.Close();
+                        }
                     }
-
+      
                     return RedirectToAction("Records", "History");
                 }
                 else

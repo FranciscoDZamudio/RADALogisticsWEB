@@ -176,8 +176,8 @@
                     }
 
                     @Html.ActionLink("♻️ Update", "UpdateProcess", new { ID = @person.ID }) /
-                    @Html.ActionLink("❌ Delete", "RemoveUser", new { ID = @person.ID })
-
+                    @*@Html.ActionLink("❌ Delete", "RemoveUser", new { ID = @person.ID })*@
+                    <a href="#" class="delete-user" data-id="@person.ID">❌ Delete</a>
                 </div>
 
             </li>
@@ -188,3 +188,30 @@
 
     <p style="text-align: center;">&nbsp;</p>
     <p style="text-align: center;">&nbsp;</p>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".delete-user").click(function (e) {
+            e.preventDefault();
+            var userId = $(this).data("id");
+
+            if (confirm("¿You are sure you want to delete this user?")) {
+                $.ajax({
+                    url: '@Url.Action("RemoveUser", "Users")',
+                    type: 'POST',
+                    data: { ID: userId },
+                    success: function (response) {
+                        // Aquí puedes actualizar la interfaz sin recargar
+                        alert("User successfully eliminated.");
+                        // Por ejemplo, puedes quitar la fila del usuario
+                        location.reload(); // O mejor: remover el elemento directamente con jQuery
+                    },
+                    error: function () {
+                        alert("An error occurred when trying to eliminate the driver.");
+                    }
+                });
+            }
+        });
+    });
+</script>

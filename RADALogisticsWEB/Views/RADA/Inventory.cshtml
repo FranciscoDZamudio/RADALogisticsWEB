@@ -69,7 +69,7 @@
                 <input type="text" id="Container" name="Container" style="background-color: #F3F5F8;" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label >Enter your Container:</label>
+                <label>Enter your Container:</label>
             </div>
 
             <div class="group">
@@ -143,7 +143,8 @@
 
                 <div class="col col-7" data-label="Options" style="text-align:center">
 
-                    @Html.ActionLink("❌ Delete", "RemoveInventary", new { ID = @person.ID }) /
+                    @*@Html.ActionLink("❌ Delete", "RemoveInventary", new { ID = @person.ID })*@
+                    <a href="#" class="delete-inventary" data-id="@person.ID">❌ Delete</a> /
                     @Html.ActionLink("♻️ Update", "UpdateInventory", new { ID = @person.ID })
 
                 </div>
@@ -203,24 +204,53 @@
 <p style="text-align: center;">&nbsp;</p>
 <p style="text-align: center;">&nbsp;</p>
 
-@*<p style="text-align: center;">&nbsp;</p>
-<div style="text-align:center">
-    <button id="Bton_Export" class="btn btn-success" style="text-align:left"> Export xls. <i class="fa fa-file-text"></i></button>
-</div>
-<p style="text-align: center;">&nbsp;</p>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    var datenow = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    // Function export grid to excel
-    $("#Bton_Export").click(function () {
-        $("#myTable").table2excel({
-            name: "Backup file for HTML content",
+    $(document).ready(function () {
+        $(".delete-inventary").click(function (e) {
+            e.preventDefault();
+            var inventaryId = $(this).data("id");
 
-            //  include extension also
-            filename: "Inventary Control Container " + datenow + ".xls",
-
-            // 'True' is set if background and font colors preserved
-            preserveColors: false
+            if (confirm("¿Estás seguro de que deseas eliminar este inventario?")) {
+                $.ajax({
+                    url: '@Url.Action("RemoveInventary", "RADA")',
+                    type: 'POST',
+                    data: { ID: inventaryId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Inventario eliminado correctamente.");
+                            location.reload(); // Opcional: quitar fila sin recargar
+                        } else if (response.redirectUrl) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    },
+                    error: function () {
+                        alert("Ocurrió un error al eliminar el inventario.");
+                    }
+                });
+            }
         });
     });
-</script>*@
+</script>
+
+@*<p style="text-align: center;">&nbsp;</p>
+    <div style="text-align:center">
+        <button id="Bton_Export" class="btn btn-success" style="text-align:left"> Export xls. <i class="fa fa-file-text"></i></button>
+    </div>
+    <p style="text-align: center;">&nbsp;</p>
+
+    <script>
+        var datenow = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        // Function export grid to excel
+        $("#Bton_Export").click(function () {
+            $("#myTable").table2excel({
+                name: "Backup file for HTML content",
+
+                //  include extension also
+                filename: "Inventary Control Container " + datenow + ".xls",
+
+                // 'True' is set if background and font colors preserved
+                preserveColors: false
+            });
+        });
+    </script>*@

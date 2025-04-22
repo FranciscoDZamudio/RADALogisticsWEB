@@ -382,6 +382,106 @@ namespace RADALogisticsWEB.Controllers
                         }
                     }
 
+                    //AREA DE EMPAQUE
+                    if (Area == "EMPAQUE" && Type == "CAR" && ActivoHidden == "NO")
+                    {
+                        lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                        lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                        lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
+                        lista.Add("CHOFER SOLTANDO CAJA");
+                        lista.Add("CHOFER TERMINA MOVIMIENTO");
+                    }
+                    else
+                    {
+                        if (Area == "EMPAQUE" && Type == "VAC" && ActivoHidden == "NO")
+                        {
+                            lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                            lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            lista.Add("CHOFER EN ESPERA DE SELLO");
+                            lista.Add("CHOFER EN ESPERA DE AREA DE VACIO");
+                            lista.Add("CHOFER TERMINA MOVIMIENTO");
+                        }
+                        else
+                        {
+                            if (Area == "EMPAQUE" && Type == "CAR" && ActivoHidden == "SI")
+                            {
+                                lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                                lista.Add("CHOFER ENGANCHANDO CHASIS");
+                                lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
+                                lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
+                                lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
+                                lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
+                                lista.Add("CHOFER SOLTANDO CAJA");
+                                lista.Add("CHOFER TERMINA MOVIMIENTO");
+                            }
+                            else
+                            {
+                                if (Area == "EMPAQUE" && Type == "VAC" && ActivoHidden == "SI")
+                                {
+                                    lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                                    lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                    lista.Add("CHOFER EN ESPERA DE SELLO");
+                                    lista.Add("CHOFER EN ESPERA DE ACCESO DE GRÚA");
+                                    lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                    lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
+                                    lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
+                                    lista.Add("CHOFER SOLTANDO CHASIS");
+                                    lista.Add("CHOFER TERMINA MOVIMIENTO");
+                                }
+                            }
+                        }
+                    }
+
+                    //AREA DE GENERALES
+                    if (Area == "GENERALES" && Type == "CAR" && ActivoHidden == "NO")
+                    {
+                        lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                        lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                        lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
+                        lista.Add("CHOFER SOLTANDO CAJA");
+                        lista.Add("CHOFER TERMINA MOVIMIENTO");
+                    }
+                    else
+                    {
+                        if (Area == "GENERALES" && Type == "VAC" && ActivoHidden == "NO")
+                        {
+                            lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                            lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            lista.Add("CHOFER EN ESPERA DE SELLO");
+                            lista.Add("CHOFER EN ESPERA DE AREA DE VACIO");
+                            lista.Add("CHOFER TERMINA MOVIMIENTO");
+                        }
+                        else
+                        {
+                            if (Area == "GENERALES" && Type == "CAR" && ActivoHidden == "SI")
+                            {
+                                lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                                lista.Add("CHOFER ENGANCHANDO CHASIS");
+                                lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
+                                lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
+                                lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
+                                lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
+                                lista.Add("CHOFER SOLTANDO CAJA");
+                                lista.Add("CHOFER TERMINA MOVIMIENTO");
+                            }
+                            else
+                            {
+                                if (Area == "GENERALES" && Type == "VAC" && ActivoHidden == "SI")
+                                {
+                                    lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                                    lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                    lista.Add("CHOFER EN ESPERA DE SELLO");
+                                    lista.Add("CHOFER EN ESPERA DE ACCESO DE GRÚA");
+                                    lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                    lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
+                                    lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
+                                    lista.Add("CHOFER SOLTANDO CHASIS");
+                                    lista.Add("CHOFER TERMINA MOVIMIENTO");
+                                }
+                            }
+                        }
+                    }
+
                     // Guardar información de cada paso en la base de datos
                     DBSPP.Open();
                     foreach (string paso in lista)

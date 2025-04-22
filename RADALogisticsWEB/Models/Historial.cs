@@ -7,6 +7,7 @@ namespace RADALogisticsWEB.Models
 {
     public class Historial
     {
+        public string RequestGrua { get; set; }
         public string Folio { get; set; }
         public string Container { get; set; }
         public string Origen { get; set; }

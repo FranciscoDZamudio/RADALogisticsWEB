@@ -88,9 +88,9 @@
 
         <div class="col col-3" style="text-align:center">Company</div>
 
-        <div class="col col-4" style="text-align:center">Options</div>
-
         <div class="col col-4" style="text-align:center">Date</div>
+
+        <div class="col col-4" style="text-align:center">Options</div>
 
     </li>
     @foreach (var person in ViewBag.Records)
@@ -103,12 +103,11 @@
 
             <div class="col col-3" data-label="Company" style="text-align:center">@person.Company</div>
 
-            <div class="col col-4" data-label="Options" style="text-align:center">
-                @Html.ActionLink("View", "Details", new { id = @person.Folio })
-            </div>
-
-
             <div class="col col-4" data-label="Datetime" style="text-align:center"> @person.Datetime</div>
+
+            <div class="col col-4" data-label="Options" style="text-align:center">
+                @Html.ActionLink("🔸View", "Details", new { id = @person.Folio })
+            </div>
 
         </li>
     }

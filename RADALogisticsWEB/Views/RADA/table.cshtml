@@ -18,6 +18,8 @@
 
     </div>
 
+    <div class="col col-1" data-label="Folio" style="text-align:center">@person.RequestGrua</div>
+
     <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
 
     <div class="col col-2" data-label="Container" style="text-align:center">@person.Container</div>
@@ -46,7 +48,13 @@
 
     <div class="col col-14" data-label="Options" style="text-align:center">
 
-        @Html.ActionLink(" ✅ Confirmation ", "ViewConfirm", new { ID = @person.Folio, choffer = @person.Choffer })
+        @*@Html.ActionLink(" ✅ Confirmation ", "ViewConfirm", new { ID = @person.Folio, choffer = @person.Choffer, RequestGrua = @person.RequestGrua })*@
+
+        <a href="#" class="view-confirm"
+           data-id="@person.Folio"
+           data-choffer="@person.Choffer"
+           data-requestgrua="@person.RequestGrua"
+           data-comment="@person.Comment">✅ Confirmation</a>
 
     </div>
 </li>

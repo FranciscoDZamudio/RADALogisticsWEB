@@ -90,6 +90,10 @@
     </div>
 </div>
 
+<div style="text-align: center; font-size: 14px; font-weight: 700;">
+    Next updated on: <span id="countdown">60</span> s
+</div>
+
 @using (Html.BeginForm("Query", "RADA", FormMethod.Post))
 {
     <div class="form-row" style="text-align: center; margin: 15px 0;">
@@ -125,6 +129,8 @@
         <li class="table-header" id="tableData">
 
             <div class="col col-15" style="text-align:center">Comment</div>
+
+            <div class="col col-1" style="text-align:center">Grua Mov.</div>
 
             <div class="col col-1" style="text-align:center">Folio</div>
 
@@ -164,26 +170,115 @@
 
 </div>
 
-    <p style="text-align: center;">&nbsp;</p>
-    <p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
 
-    <script>
-    var query = '@ViewBag.User';
-    function actualizarTabla() {
-        $.ajax({
-            url: '/RADA/ActualizarTabla', // Llama al método en el controlador
-            type: 'GET',
-            data: { name: query || "" },
-            success: function (data) {
-                $("#tabla-container").html(data); // Reemplaza la tabla con la nueva versión
-                console.log("Tabla actualizada.");
-            },
-            error: function () {
-                console.log("Error al actualizar la tabla.");
-            }
-        });
+<script>
+  var query = '@ViewBag.User';
+  var countdown = 60;               // Duración del contador en segundos
+  var $countEl = $('#countdown');
+
+
+  function actualizarTabla() {
+    $.ajax({
+      url: '/RADA/ActualizarTabla',
+      type: 'GET',
+      data: { name: query || "" },
+      success: function (data) {
+        $("#tabla-container").html(data);
+        console.log("Tabla actualizada.");
+      },
+      error: function () {
+        console.log("Error al actualizar la tabla.");
+      }
+    });
+  }
+
+  function tick() {
+    countdown--;
+    if (countdown <= 0) {
+      actualizarTabla();            // Dispara la actualización AJAX
+      countdown = 60;                // Reinicia el contador
     }
+    $countEl.text(countdown);       // Refresca el número en pantalla
+  }
 
-    // Llamar la función cada 1 minuto (60,000 milisegundos)
-    setInterval(actualizarTabla, 60000);
-    </script>
+  // Inicializar y arrancar el temporizador de 1 s
+  $countEl.text(countdown);
+  setInterval(tick, 1000);
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".view-confirm").click(function (e) {
+            e.preventDefault();
+
+            const id = $(this).data("id");
+            const choffer = $(this).data("choffer");
+            const requestGrua = $(this).data("requestgrua");
+            const comment = $(this).data("comment");
+
+            $.ajax({
+                url: '@Url.Action("ConfirmProcess", "RADA")',  // Llamada a la acción en el servidor
+                type: 'POST',
+                data: {
+                    ID: id,
+                    choffer: choffer,
+                    requestGrua: requestGrua,
+                    comment: comment
+                },
+                success: function (response) {
+                    if (response.success) {
+                        if (response.redirectUrl) {
+                            // Redirigir a la URL que el servidor devolvió (en caso de "PENDING")
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            // Si no hay redirección, puedes manejar otro comportamiento aquí
+                            /*alert("Confirmación exitosa");*/
+                            location.reload();
+                        }
+                    }
+                },
+                error: function () {
+                    alert("Hubo un error al confirmar");
+                }
+            });
+        });
+    });
+</script>
+
+
+@*<script>
+        $(document).ready(function () {
+            $(this).text("✅ Confirmado").addClass("text-success").off('click');
+            e.preventDefault();
+
+            const id = $(this).data("id");
+            const choffer = $(this).data("choffer");
+            const requestGrua = $(this).data("requestgrua");
+            const comment = $(this).data("comment");
+
+            $.ajax({
+                url: '@Url.Action("ConfirmProcess", "RADA")', // reemplaza con el controlador correcto
+                type: 'POST',
+                data: {
+                    ID: id,
+                    choffer: choffer,
+                    requestGrua: requestGrua,
+                    comment: comment,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert("Confirmación exitosa");
+                        // Aquí puedes hacer algo visual, como desactivar el botón, cambiar el color, etc.
+                        // Ejemplo: $(this).text("✅ Confirmado").addClass("text-success");
+                        // NOTA: si usas arrow function puedes mantener el contexto con `.bind(this)`
+                    }
+                },
+                error: function () {
+                    alert("Hubo un error al confirmar");
+                }
+            });
+        });
+    </script>*@

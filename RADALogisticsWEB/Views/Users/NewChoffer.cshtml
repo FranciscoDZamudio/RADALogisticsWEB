@@ -11,9 +11,9 @@
 
         @*<h3 style="font-weight: 700;">Rada Logistics system</h3>
 
-        <p style="text-align: center;">&nbsp;</p>
-        <img src="~/Pictures/icono_choffuer.png" height="100" />
-        <p style="text-align: center;">&nbsp;</p>*@
+            <p style="text-align: center;">&nbsp;</p>
+            <img src="~/Pictures/icono_choffuer.png" height="100" />
+            <p style="text-align: center;">&nbsp;</p>*@
 
         <style>
             .page-title {
@@ -73,14 +73,14 @@
             <!--<h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Assigned work Area:</h5>
             <div class="group">-->
 
-                @*<select name="Area" id="Area" class="form-control" style="max-width: 30vh; color: black; text-align: center">
+            @*<select name="Area" id="Area" class="form-control" style="max-width: 30vh; color: black; text-align: center">
                     @foreach (var person in ViewBag.Records)
                     {
                         <option value="@person.Name">@person.Name</option>
                     }
                 </select>*@
 
-                <!--<p style="padding:10px 0px 0px 0px">@Html.ActionLink("New Area", "Area")</p>
+            <!--<p style="padding:10px 0px 0px 0px">@Html.ActionLink("New Area", "Area")</p>
             </div>-->
 
             <h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Assigned work shift:</h5>
@@ -148,10 +148,10 @@
 
                 <div class="col col-2" data-label="Options" style="text-align:center">
 
-                    @Html.ActionLink("🪢 Area Assignment", "Assignment", new { id = @person.ID}) /
+                    @Html.ActionLink("🪢 Area Assignment", "Assignment", new { id = @person.ID }) /
                     @Html.ActionLink("♻️ Update", "UpdateDriver", new { id = @person.ID }) /
-                    @Html.ActionLink("❌ Delete", "RemoverChoffer", new { id = @person.ID })
-
+                    @*@Html.ActionLink("❌ Delete", "RemoverChoffer", new { id = @person.ID })*@
+                    <a href="#" class="delete-choffer" data-id="@person.ID">❌ Eliminar</a>
                 </div>
 
             </li>
@@ -160,3 +160,33 @@
 </div>
 <p style="text-align: center;">&nbsp;</p>
 <p style="text-align: center;">&nbsp;</p>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".delete-choffer").click(function (e) {
+            e.preventDefault();
+            var chofferId = $(this).data("id");
+
+            if (confirm("¿You're sure you want to remove this chauffeur?")) {
+                $.ajax({
+                    url: '@Url.Action("RemoverChoffer", "Users")',
+                    type: 'POST',
+                    data: { id: chofferId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Driver successfully eliminated.");
+                            // Aquí puedes quitar la fila del chofer o recargar
+                            location.reload();
+                        } else if (response.redirectUrl) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred when trying to eliminate the driver.");
+                    }
+                });
+            }
+        });
+    });
+</script>

@@ -96,7 +96,7 @@
 
                 <div class="col col-7" style="text-align:center">Options</div>
             </li>
-            @foreach (var person in ViewBag.Records)
+           @foreach (var person in ViewBag.Records)
             {
 
                 <li class="table-row" id="tblCustomers">
@@ -114,17 +114,16 @@
                     <div class="col col-6" data-label="Date" style="text-align:center"> @person.Datetimes</div>
 
                     <div class="col col-7" data-label="Options" style="text-align:center">
-                        <a href="@Url.Action("RemoveInventary", "RADA" , new { ID = @person.ID })" class="link-label"> ❌ Delete </a> /
+                        @*<a href="@Url.Action("RemoveInventary", "RADA" , new { ID = @person.ID })" class="link-label"> ❌ Delete </a>*@ 
+                        <a href="#" class="delete-inventary" data-id="@person.ID">❌ Delete </a>/
                         <a href="@Url.Action("UpdateInventory", "RADA" ,  new { ID = @person.ID })" class="link-label"> ♻️ Update </a>
                     </div>
 
                 </li>
-
             }
         </ul>
     </div>
 }
-
 
 <table id="myTable" class="table2excel" class="table table-striped table-responsive-xl table-hover" hidden="hidden">
     <tr>
@@ -190,6 +189,35 @@
 
             // 'True' is set if background and font colors preserved
             preserveColors: false
+        });
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".delete-inventary").click(function (e) {
+            e.preventDefault();
+            var inventaryId = $(this).data("id");
+
+            if (confirm("¿Estás seguro de que deseas eliminar este inventario?")) {
+                $.ajax({
+                    url: '@Url.Action("RemoveInventary", "RADA")',
+                    type: 'POST',
+                    data: { ID: inventaryId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Inventario eliminado correctamente.");
+                            location.reload(); // Opcional: quitar fila sin recargar
+                        } else if (response.redirectUrl) {
+                            window.location.href = response.redirectUrl;
+                        }
+                    },
+                    error: function () {
+                        alert("Ocurrió un error al eliminar el inventario.");
+                    }
+                });
+            }
         });
     });
 </script>
