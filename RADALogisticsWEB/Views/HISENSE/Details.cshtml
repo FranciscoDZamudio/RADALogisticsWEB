@@ -125,6 +125,7 @@
     <div class="card shadow rounded-4 border-0 mb-4">
         <div class="card-body px-4 py-3">
             <div class="row g-3">
+
                 <div class="col-md-6"><strong>Container:</strong> @ViewBag.Container</div>
                 <div class="col-md-6">
                     <strong>State:</strong>
@@ -149,8 +150,14 @@
                 <div class="col-md-6"><strong>Destiny:</strong> @ViewBag.destination</div>
                 <div class="col-md-12"><strong>Commentary:</strong> <span class="text-muted">@ViewBag.comment</span></div>
                 <div class="col-md-6"><strong>Request Date:</strong> @ViewBag.date</div>
-                <div class="col-md-6"><strong>Requested by:</strong> @ViewBag.Request</div>
+                <div class="col-md-6"><strong>Area:</strong> @ViewBag.Areas </div>
                 <div class="col-md-6"><strong>Motion Reason Canceled:</strong> @ViewBag.ReasonMT </div>
+                <div class="col-md-6"><strong>Requested by:</strong> @ViewBag.Request</div>
+
+                <button id="exportPDF" class="btn btn-danger mb-3">
+                    <i data-lucide="download"></i> Export to PDF
+                </button>
+
             </div>
         </div>
     </div>
@@ -192,4 +199,46 @@
 
 <script>
     lucide.createIcons();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+    var datenow = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    document.getElementById("exportPDF").addEventListener("click", function () {
+        const container = document.querySelector(".container"); // todo lo que está dentro de tu vista
+
+        html2canvas(container, { scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL("image/png");
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+
+            // Calcular el tamaño en el PDF
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+
+            const imgWidth = pageWidth;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+
+            let position = 0;
+
+            if (imgHeight < pageHeight) {
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            } else {
+                // Si la imagen es más alta que una página
+                let heightLeft = imgHeight;
+                while (heightLeft > 0) {
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                    if (heightLeft > 0) {
+                        pdf.addPage();
+                        position = 0;
+                    }
+                }
+            }
+
+            pdf.save("Container Details " + datenow + ".pdf");
+        });
+    });
 </script>

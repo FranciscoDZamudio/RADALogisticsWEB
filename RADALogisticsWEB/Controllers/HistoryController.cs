@@ -611,7 +611,7 @@ namespace RADALogisticsWEB.Controllers
                 con.Connection = DBSPP;
                 con.CommandText = "  Select top (100) " +
                     " b.FastCard as FastCard, a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date " +
+                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area " +
                     " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
                 dr = con.ExecuteReader();
                 while (dr.Read())
@@ -630,12 +630,12 @@ namespace RADALogisticsWEB.Controllers
                         Choffer = (dr["Choffer"].ToString()),
                         fastcard = dr["FastCard"].ToString(),
                         Comment = (dr["Comment"].ToString()),
+                        Area = (dr["Area"].ToString()),
                         Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
                     });
                 }
                 DBSPP.Close();
 
-                GetRecord();
                 ViewBag.Records = GetRecordsQeury;
                 ViewBag.Count = GetRecordsQeury.Count.ToString();
                 return View();

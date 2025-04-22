@@ -42,11 +42,11 @@ namespace RADALogisticsWEB.Controllers
             }
             else
             {
-                string container = null, origins = null, destination = null, status = null, solicitud = null, confirmacion = null, entrega = null, request = null, choffer = null, comment = null, date = null;
+                string Area = null,container = null, origins = null, destination = null, status = null, solicitud = null, confirmacion = null, entrega = null, request = null, choffer = null, comment = null, date = null;
                 //create generate randoms int value
                 SqlCommand conse = new SqlCommand("Select " +
                     " a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date  " +
+                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.shift as Area, a.Date as Date  " +
                     " from " +
                     " RADAEmpire_BRequestContainers as a " +
                     " inner join " +
@@ -66,6 +66,7 @@ namespace RADALogisticsWEB.Controllers
                         entrega = drconse["HFinish"].ToString();
                         request = drconse["WhoRequest"].ToString();
                         choffer = drconse["Choffer"].ToString();
+                        Area = drconse["Area"].ToString();
                         comment = drconse["Comment"].ToString();
                         date = Convert.ToDateTime(drconse["Date"]).ToString("d");
                     }
@@ -103,6 +104,7 @@ namespace RADALogisticsWEB.Controllers
                 ViewBag.Request = request;
                 ViewBag.ReasonMT = ReasonMT;
                 ViewBag.mot = Record;
+                ViewBag.Areas = Area;
 
                 GetDetailss(ID);
                 ViewBag.Records = GetDetails;
