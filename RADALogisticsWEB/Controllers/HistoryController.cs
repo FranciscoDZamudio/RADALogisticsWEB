@@ -196,7 +196,7 @@ namespace RADALogisticsWEB.Controllers
 
                     DBSPP.Open();
                     con.Connection = DBSPP;
-                    con.CommandText = "  Select top (100) " +
+                    con.CommandText = "  Select " +
                         " b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                         " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
                         " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + Convert.ToDateTime(TimeStart).ToString("yyyy-MM-dd") + "' ORDER by a.Folio desc";
@@ -479,7 +479,7 @@ namespace RADALogisticsWEB.Controllers
             {
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "Select top (100) * from RADAEmpire_CInventoryControl where Active = '1' " + sqlTimeStart + sqlTimeend + " order by ID desc";
+                con.CommandText = "Select * from RADAEmpire_CInventoryControl where Active = '1' " + sqlTimeStart + sqlTimeend + " order by ID desc";
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {
@@ -511,7 +511,7 @@ namespace RADALogisticsWEB.Controllers
             {
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "Select top (100) * from RADAEmpire_CInventoryControl where Active = '1' order by ID desc";
+                con.CommandText = "Select top (1000) * from RADAEmpire_CInventoryControl where Active = '1' order by ID desc";
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {
@@ -609,7 +609,7 @@ namespace RADALogisticsWEB.Controllers
             {
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "  Select top (100) " +
+                con.CommandText = "  Select " +
                     " b.FastCard as FastCard, a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area " +
                     " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
@@ -749,7 +749,7 @@ namespace RADALogisticsWEB.Controllers
 
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "  Select top (100) " +
+                con.CommandText = "  Select " +
                     " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area " +
                     " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
@@ -963,9 +963,9 @@ namespace RADALogisticsWEB.Controllers
 
                         DBSPP.Open();
                         con.Connection = DBSPP;
-                        con.CommandText = "  Select top (100) " +
+                        con.CommandText = "  Select " +
                             " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                            " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date " +
+                            " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area " +
                             " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
                         dr = con.ExecuteReader();
                         while (dr.Read())
@@ -984,6 +984,7 @@ namespace RADALogisticsWEB.Controllers
                                 Choffer = (dr["Choffer"].ToString()),
                                 Comment = (dr["Comment"].ToString()),
                                 Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                                Area = (dr["Area"].ToString()),
                             });
                         }
                         DBSPP.Close();
@@ -997,7 +998,7 @@ namespace RADALogisticsWEB.Controllers
                     {
                         DBSPP.Open();
                         con.Connection = DBSPP;
-                        con.CommandText = "  Select top (100) " +
+                        con.CommandText = "  Select " +
                             " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                             " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date " +
                             " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
@@ -1329,7 +1330,7 @@ namespace RADALogisticsWEB.Controllers
             {
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "  Select top (100) " +
+                con.CommandText = "  Select top (500) " +
                     " b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
                     " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio ORDER by a.Folio desc";
@@ -1449,7 +1450,7 @@ namespace RADALogisticsWEB.Controllers
             {
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "  Select top (100) " +
+                con.CommandText = "  Select top (500) " +
                     " b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
                     " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio ORDER by a.Folio desc";

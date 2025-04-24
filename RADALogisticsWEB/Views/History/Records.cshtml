@@ -102,12 +102,14 @@
 
             <div class="col col-10" style="text-align:center">Comment</div>
 
+            <div class="col col-10" style="text-align:center">Area</div>
+
             <div class="col col-11" style="text-align:center">Date</div>
 
             <div class="col col-1" style="text-align:center">Options</div>
 
         </li>
-        @foreach (var person in ViewBag.Records)
+       @foreach (var person in ViewBag.Records)
         {
             <li class="table-row" id="tblCustomers" style="color:black ; background-color:
     @(person.Comment == "Canceled by Rada" ? "#F9D0D0" :
@@ -137,6 +139,8 @@
                 <div class="col col-9" data-label="Choffer" style="text-align:center"> @person.Choffer</div>
 
                 <div class="col col-10" data-label="Comment" style="text-align:center"> @person.Comment</div>
+
+                <div class="col col-10" data-label="Area" style="text-align:center"> @person.Area</div>
 
                 <div class="col col-11" data-label="Date" style="text-align:center"> @person.Date</div>
 
@@ -190,6 +194,9 @@
                 <p>Comment</p>
             </th>
             <th style="text-align:center">
+                <p>Area</p>
+            </th>
+            <th style="text-align:center">
                 <p>Date</p>
             </th>
 
@@ -197,42 +204,45 @@
         <tbody id="Table01">
             @foreach (var person in ViewBag.Records)
             {
-                <tr>
+            <tr>
 
-                    <td>
-                        @person.Container
-                    </td>
-                    <td>
-                        @person.Origen
-                    </td>
-                    <td>
-                        @person.Destination
-                    </td>
-                    <td>
-                        @person.Status
-                    </td>
-                    <td>
-                        @person.HSolicitud
-                    </td>
-                    <td>
-                        @person.HConfirm
-                    </td>
-                    <td>
-                        @person.HFinish
-                    </td>
-                    <td>
-                        @person.WhoRequest
-                    </td>
-                    <td>
-                        @person.Choffer
-                    </td>
-                    <td>
-                        @person.Comment
-                    </td>
-                    <td>
-                        @person.Date
-                    </td>
-                </tr>
+                <td>
+                    @person.Container
+                </td>
+                <td>
+                    @person.Origen
+                </td>
+                <td>
+                    @person.Destination
+                </td>
+                <td>
+                    @person.Status
+                </td>
+                <td>
+                    @person.HSolicitud
+                </td>
+                <td>
+                    @person.HConfirm
+                </td>
+                <td>
+                    @person.HFinish
+                </td>
+                <td>
+                    @person.WhoRequest
+                </td>
+                <td>
+                    @person.Choffer
+                </td>
+                <td>
+                    @person.Comment
+                </td>
+                <td>
+                    @person.Area
+                </td>
+                <td>
+                    @person.Date
+                </td>
+            </tr>
             }
         </tbody>
     </table>

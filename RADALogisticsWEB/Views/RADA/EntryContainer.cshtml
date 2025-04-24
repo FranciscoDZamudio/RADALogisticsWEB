@@ -51,7 +51,9 @@
                                     <tr>
                                         <td>@choffer.Username</td>
                                         <td>@choffer.message</td>
-                                        <td>@choffer.Mov</td>
+                                        <td>
+                                            <a href="#" class="folio-link" data-folio="@choffer.Mov">@choffer.Mov</a>
+                                        </td>
                                     </tr>
                                 }
                             }
@@ -211,42 +213,67 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        $(".view-confirm").click(function (e) {
+        $(document).on('click', '.folio-link', function (e) {
             e.preventDefault();
-
-            const id = $(this).data("id");
-            const choffer = $(this).data("choffer");
-            const requestGrua = $(this).data("requestgrua");
-            const comment = $(this).data("comment");
+            const folio = $(this).data('folio');
 
             $.ajax({
-                url: '@Url.Action("ConfirmProcess", "RADA")',  // Llamada a la acción en el servidor
-                type: 'POST',
-                data: {
-                    ID: id,
-                    choffer: choffer,
-                    requestGrua: requestGrua,
-                    comment: comment
-                },
-                success: function (response) {
-                    if (response.success) {
-                        if (response.redirectUrl) {
-                            // Redirigir a la URL que el servidor devolvió (en caso de "PENDING")
-                            window.location.href = response.redirectUrl;
-                        } else {
-                            // Si no hay redirección, puedes manejar otro comportamiento aquí
-                            /*alert("Confirmación exitosa");*/
-                            location.reload();
-                        }
-                    }
+                url: '/RADA/mov',
+                type: 'GET',
+                data: { Folio: folio },
+                success: function (data) {
+                    $('#tabla-container').html(data);
                 },
                 error: function () {
-                    alert("Hubo un error al confirmar");
+                    alert('Error al cargar los detalles del movimiento.');
                 }
             });
         });
     });
+
+    $(document).on("click", ".view-confirm", function (e) {
+    e.preventDefault();
+
+    const id = $(this).data("id");
+    const choffer = $(this).data("choffer");
+    const requestGrua = $(this).data("requestgrua");
+    const comment = $(this).data("comment");
+
+    $.ajax({
+        url: '@Url.Action("ConfirmProcess", "RADA")',
+        type: 'POST',
+        data: {
+            ID: id,
+            choffer: choffer,
+            requestGrua: requestGrua,
+            comment: comment
+        },
+        success: function (response) {
+            if (response.success) {
+                if (response.redirectUrl) {
+                    window.location.href = response.redirectUrl;
+                } else {
+                    $.ajax({
+                        url: '/RADA/mov',
+                        type: 'GET',
+                        data: { Folio: id }, // o guarda el folio original si no es igual al ID
+                        success: function (data) {
+                            $('#tabla-container').html(data);
+                        },
+                        error: function () {
+                            alert('Error al recargar los detalles después de confirmar.');
+                        }
+                    });
+                }
+            }
+        },
+        error: function () {
+            alert("Hubo un error al confirmar");
+        }
+    });
+});
 </script>
+
 
 
 @*<script>

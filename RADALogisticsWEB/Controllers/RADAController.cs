@@ -27,9 +27,47 @@ namespace RADALogisticsWEB.Controllers
         SqlDataReader dr;
         // GET: RADA
 
-        public ActionResult Index()
+        public PartialViewResult mov(string Folio)
         {
-            return View();
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            ViewBag.User = Session["Username"];
+
+            DBSPP.Open();
+            con.Connection = DBSPP;
+            con.CommandText = "  Select top (100) " +
+                " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area,a.GruaRequest as Grua " +
+                " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Folio = '" + Folio.ToString() + "' ORDER by a.Folio desc";
+            dr = con.ExecuteReader();
+            while (dr.Read())
+            {
+                GetRecords.Add(new Historial()
+                {
+                    RequestGrua = (dr["Grua"].ToString()),
+                    Folio = (dr["Folio"].ToString()),
+                    Container = (dr["Container"].ToString()),
+                    Origen = (dr["Origen"].ToString()),
+                    Destination = (dr["Destination"].ToString()),
+                    Status = (dr["Status"].ToString()),
+                    HSolicitud = (dr["HSolicitud"].ToString()),
+                    HConfirm = (dr["HConfirm"].ToString()),
+                    HFinish = (dr["HFinish"].ToString()),
+                    WhoRequest = (dr["WhoRequest"].ToString()),
+                    Choffer = (dr["Choffer"].ToString()),
+                    Comment = (dr["Comment"].ToString()),
+                    Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                    Area = (dr["Area"].ToString()),
+                });
+            }
+            DBSPP.Close();
+
+            ViewBag.Records = GetRecords; // Obtener nuevamente los datos
+            ViewBag.Count = GetRecords.Count.ToString();
+            return PartialView("table", ViewBag.Records);
         }
 
         public ActionResult Comments(string id, string Status)
@@ -164,14 +202,18 @@ namespace RADALogisticsWEB.Controllers
                         {
                             DBSPP.Open();
                             con.Connection = DBSPP;
-                            con.CommandText = "SELECT DISTINCT r.Username AS Choffer,a.Status,m.Foio AS Folio,m.Message FROM RADAEmpire_ARolesChoffer r LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1' LEFT JOIN ( SELECT Choffer, Foio, Message, ROW_NUMBER() OVER (PARTITION BY Choffer ORDER BY Datetime DESC) AS rn FROM RADAEmpires_DZChofferMovement WHERE Active = 1 ) m ON r.Username = m.Choffer AND m.rn = 1 WHERE r.Active = '1' AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
+                            con.CommandText = "SELECT A.[Foio] AS Folio, A.[Choffer] AS Chofer,B.[message] " +
+                                " FROM [RADAEmpire].[dbo].[RADAEmpires_DZChofferMovement] " +
+                                " A LEFT JOIN [RADAEmpire].[dbo].[RADAEmpire_BRequestContainers] " +
+                                " B ON A.[Foio] = B.[Folio]" +
+                                " WHERE A.[Active] = '1' ORDER BY  A.[Foio] DESC;";
                             dr = con.ExecuteReader();
                             while (dr.Read())
                             {
                                 UsuarioRadasss.Add(new UsuarioRada()
                                 {
-                                    Username = dr["Choffer"].ToString(),
-                                    message = dr["Status"].ToString(),
+                                    Username = dr["Chofer"].ToString(),
+                                    message = dr["message"].ToString(),
                                     Mov = dr["Folio"].ToString()
                                 });
                             }
@@ -205,13 +247,33 @@ namespace RADALogisticsWEB.Controllers
 
                         if (Areas.Any())
                         {
-                            string queryUsers = "  SELECT DISTINCT r.Username AS Choffer,a.Status,m.Foio AS Folio,m.Message " +
-                                " FROM RADAEmpire_ARolesChoffer r  " +
-                                "" +
-                                " LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1' " +
-                                " LEFT JOIN ( SELECT Choffer, Foio, Message, ROW_NUMBER() OVER (PARTITION BY Choffer ORDER BY Datetime DESC)  " +
-                                " AS rn FROM RADAEmpires_DZChofferMovement WHERE Active = 1 ) m ON r.Username = m.Choffer AND m.rn = 1 WHERE r.Active = '1' " +
-                                " AND r.Areas IN ({0}) AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
+                            //string queryUsers = "SELECT DISTINCT r.Username AS Choffer,a.Status,m.Foio AS Folio,m.Message " +
+                            //    " FROM RADAEmpire_ARolesChoffer r  " +
+                            //    "" +
+                            //    " LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1' " +
+                            //    " LEFT JOIN ( SELECT Choffer, Foio, Message, ROW_NUMBER() OVER (PARTITION BY Choffer ORDER BY Datetime DESC)  " +
+                            //    " AS rn FROM RADAEmpires_DZChofferMovement WHERE Active = 1 ) m ON r.Username = m.Choffer AND m.rn = 1 WHERE r.Active = '1' " +
+                            //    " AND r.Areas IN ({0}) AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
+
+                            string queryUsers = @"
+                                SELECT 
+                                  A.[Foio] AS Folio,
+                                  A.[Choffer] AS Chofer,
+                                  B.[message]
+                                FROM 
+                                [RADAEmpire].[dbo].[RADAEmpires_DZChofferMovement] A
+                                LEFT JOIN 
+                                [RADAEmpire].[dbo].[RADAEmpire_BRequestContainers] B 
+                                ON A.[Foio] = B.[Folio]
+                                INNER JOIN 
+                                [RADAEmpire].[dbo].[RADAEmpire_ARolesChoffer] R 
+                                ON A.[Choffer] = R.[Username]
+                                WHERE 
+                                A.[Active] = '1'
+                                AND R.[Areas] IN ({0})  -- Reemplazar dinámicamente por parámetros
+                                ORDER BY  
+                                 A.[Foio] DESC;"
+                            ;
 
                             List<string> parametros = new List<string>();
                             for (int i = 0; i < Areas.Count; i++)
@@ -236,8 +298,8 @@ namespace RADALogisticsWEB.Controllers
                                     {
                                         usuarios.Add(new UsuarioRada
                                         {
-                                            Username = reader["Choffer"].ToString(),
-                                            message = reader["Status"].ToString(),
+                                            Username = reader["Chofer"].ToString(),
+                                            message = reader["message"].ToString(),
                                             Mov = reader["Folio"].ToString()
                                         });
                                     }
@@ -392,14 +454,14 @@ namespace RADALogisticsWEB.Controllers
                         {
                             DBSPP.Open();
                             con.Connection = DBSPP;
-                            con.CommandText = "SELECT DISTINCT r.Username AS Choffer,a.Status,m.Foio AS Folio,m.Message FROM RADAEmpire_ARolesChoffer r LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1' LEFT JOIN ( SELECT Choffer, Foio, Message, ROW_NUMBER() OVER (PARTITION BY Choffer ORDER BY Datetime DESC) AS rn FROM RADAEmpires_DZChofferMovement WHERE Active = 1 ) m ON r.Username = m.Choffer AND m.rn = 1 WHERE r.Active = '1' AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
+                            con.CommandText = "SELECT A.[Foio] AS Folio, A.[Choffer] AS Chofer,B.[message] FROM [RADAEmpire].[dbo].[RADAEmpires_DZChofferMovement] A LEFT JOIN [RADAEmpire].[dbo].[RADAEmpire_BRequestContainers] B ON A.[Foio] = B.[Folio] WHERE A.[Active] = '1' ORDER BY  A.[Foio] DESC;";
                             dr = con.ExecuteReader();
                             while (dr.Read())
                             {
                                 UsuarioRadasss.Add(new UsuarioRada()
                                 {
-                                    Username = dr["Choffer"].ToString(),
-                                    message = dr["Status"].ToString(),
+                                    Username = dr["Chofer"].ToString(),
+                                    message = dr["message"].ToString(),
                                     Mov = dr["Folio"].ToString()
                                 });
                             }
@@ -433,13 +495,33 @@ namespace RADALogisticsWEB.Controllers
 
                         if (Areas.Any())
                         {
-                            string queryUsers = "  SELECT DISTINCT r.Username AS Choffer,a.Status,m.Foio AS Folio,m.Message " +
-                                " FROM RADAEmpire_ARolesChoffer r  " +
-                                "" +
-                                " LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1' " +
-                                " LEFT JOIN ( SELECT Choffer, Foio, Message, ROW_NUMBER() OVER (PARTITION BY Choffer ORDER BY Datetime DESC)  " +
-                                " AS rn FROM RADAEmpires_DZChofferMovement WHERE Active = 1 ) m ON r.Username = m.Choffer AND m.rn = 1 WHERE r.Active = '1' " +
-                                " AND r.Areas IN ({0}) AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
+                            //string queryUsers = "SELECT DISTINCT r.Username AS Choffer,a.Status,m.Foio AS Folio,m.Message " +
+                            //    " FROM RADAEmpire_ARolesChoffer r  " +
+                            //    "" +
+                            //    " LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1' " +
+                            //    " LEFT JOIN ( SELECT Choffer, Foio, Message, ROW_NUMBER() OVER (PARTITION BY Choffer ORDER BY Datetime DESC)  " +
+                            //    " AS rn FROM RADAEmpires_DZChofferMovement WHERE Active = 1 ) m ON r.Username = m.Choffer AND m.rn = 1 WHERE r.Active = '1' " +
+                            //    " AND r.Areas IN ({0}) AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
+
+                            string queryUsers = @"
+                                SELECT 
+                                  A.[Foio] AS Folio,
+                                  A.[Choffer] AS Chofer,
+                                  B.[message]
+                                FROM 
+                                [RADAEmpire].[dbo].[RADAEmpires_DZChofferMovement] A
+                                LEFT JOIN 
+                                [RADAEmpire].[dbo].[RADAEmpire_BRequestContainers] B 
+                                ON A.[Foio] = B.[Folio]
+                                INNER JOIN 
+                                [RADAEmpire].[dbo].[RADAEmpire_ARolesChoffer] R 
+                                ON A.[Choffer] = R.[Username]
+                                WHERE 
+                                A.[Active] = '1'
+                                AND R.[Areas] IN ({0})  -- Reemplazar dinámicamente por parámetros
+                                ORDER BY  
+                                 A.[Foio] DESC;"
+                            ;
 
                             List<string> parametros = new List<string>();
                             for (int i = 0; i < Areas.Count; i++)
@@ -464,8 +546,8 @@ namespace RADALogisticsWEB.Controllers
                                     {
                                         usuarios.Add(new UsuarioRada
                                         {
-                                            Username = reader["Choffer"].ToString(),
-                                            message = reader["Status"].ToString(),
+                                            Username = reader["Chofer"].ToString(),
+                                            message = reader["message"].ToString(),
                                             Mov = reader["Folio"].ToString()
                                         });
                                     }
@@ -645,6 +727,9 @@ namespace RADALogisticsWEB.Controllers
                             DBSPP.Close();
                         }
                         //------------------------------------------------------------------------------
+
+                        //query message ------------------------------------------------------------------------------------------------------------------
+
                     }
                     else
                     {
@@ -675,6 +760,8 @@ namespace RADALogisticsWEB.Controllers
                                 DBSPP.Close();
                             }
                             //------------------------------------------------------------------------------
+                            //query message ------------------------------------------------------------------------------------------------------------------
+
                         }
                         else
                         {
@@ -704,7 +791,7 @@ namespace RADALogisticsWEB.Controllers
                                     int rowsAffected = coms.ExecuteNonQuery();
                                     DBSPP.Close();
                                 }
-                                //------------------------------------------------------------------------------
+                                //query message ------------------------------------------------------------------------------------------------------------------
                             }
                             else
                             {
@@ -872,7 +959,6 @@ namespace RADALogisticsWEB.Controllers
                                         int rowsAffected = coms.ExecuteNonQuery();
                                         DBSPP.Close();
                                     }
-                                    //------------------------------------------------------------------------------
                                 }
                                 else
                                 {
@@ -969,6 +1055,7 @@ namespace RADALogisticsWEB.Controllers
                             int rowsAffected = coms.ExecuteNonQuery();
                             DBSPP.Close();
                         }
+
                         //------------------------------------------------------------------------------
                         string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
                             " message = @message WHERE Folio = @ID";
@@ -999,6 +1086,7 @@ namespace RADALogisticsWEB.Controllers
                                 int rowsAffected = coms.ExecuteNonQuery();
                                 DBSPP.Close();
                             }
+
                             //------------------------------------------------------------------------------
                             string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
                                 " message = @message WHERE Folio = @ID";
