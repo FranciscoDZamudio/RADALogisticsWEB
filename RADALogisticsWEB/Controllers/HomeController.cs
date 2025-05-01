@@ -10,12 +10,14 @@ using System.Globalization;
 namespace RADALogisticsWEB.Controllers
 {
     public class HomeController : Controller
-    {    //connection SQL server (database)
+    {   
+        //connection SQL server (database)
         List<MovimientosEliminados> GetDelleted = new List<MovimientosEliminados>();
         List<MovimientosEliminados> GetDelletedquery = new List<MovimientosEliminados>();
         SqlConnection DBSPP = new SqlConnection("Data Source=RADAEmpire.mssql.somee.com ;Initial Catalog=RADAEmpire ;User ID=RooRada; password=rada1311");
         SqlCommand con = new SqlCommand();
         SqlDataReader dr;
+
         public string Username { get; set; }
 
         public ActionResult PingSession()
@@ -23,6 +25,7 @@ namespace RADALogisticsWEB.Controllers
             var user = Session["Username"]; // Solo accede a la sesión para que no expire
             return new HttpStatusCodeResult(200); // OK
         }
+
         public static string ConvertirFechaAlemanaAUsa(string fechaHora)
         {
             try
