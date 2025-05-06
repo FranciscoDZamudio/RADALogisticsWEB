@@ -4,6 +4,7 @@
 }
 
 <link href="~/Stylee/Cancellation.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
 <div class="container" style="text-align: center; width: 100%; height: 100%">
 
@@ -45,18 +46,18 @@
         </div>
         <hr>
 
-        @using (Html.BeginForm("Cancellation", "Home", FormMethod.Post))
+       @using (Html.BeginForm("Cancellation", "Home", FormMethod.Post))
         {
             <div class="form-row">
 
-                <div class="form-group col-md-6">
-                    <label for="inputEmail4" style="font-family: Century Gothic ">Date Start</label>
-                    <input id="TimeStart" style="max-width:100vh;" name="TimeStart" type="date" /> <br>
+                <div class="form-group col-md-6 text-center">
+                    <label for="TimeStart" style="font-family: 'Century Gothic'; display: block">Date Start</label>
+                    <input id="TimeStart" name="TimeStart" type="date"  class="form-control mx-auto" style="max-width: 100%; display: block;" />
                 </div>
 
-                <div class="form-group col-md-6">
-                    <label for="inputEmail4" style="font-family: Century Gothic ">Date End</label>
-                    <input id="Timeend" style="max-width: 100vh;" name="Timeend" type="date" /> <br>
+                <div class="form-group col-md-6 text-center">
+                    <label for="Timeend" style="font-family: 'Century Gothic'; display: block">Date End</label>
+                    <input id="Timeend" name="Timeend" type="date" class="form-control mx-auto" style="max-width: 100%; display: block;" />
                 </div>
 
                 <p style="text-align: center;">&nbsp;</p>

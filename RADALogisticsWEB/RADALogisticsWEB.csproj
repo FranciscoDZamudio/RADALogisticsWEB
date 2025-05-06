@@ -194,6 +194,7 @@
     <Content Include="Stylee\HisenseRecordsExcel.css" />
     <Content Include="Stylee\HomeStylee.css" />
     <Content Include="Stylee\LogIn_StyleePage.css" />
+    <Content Include="Stylee\mainStylee.css" />
     <Content Include="Stylee\NewUsersStylee.css" />
     <Content Include="Stylee\PageRADAEntry.css" />
     <Content Include="Stylee\PagesRADAStylee.css" />
