@@ -8,20 +8,34 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
-<body style="height:100%">
 
-    @RenderBody()
+<body style="margin: 0; height: 100%;">
+
+
+    @{
+        var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+        var action = ViewContext.RouteData.Values["action"]?.ToString();
+        var showTopBar = !(controller == "Login" && action == "LogIn");
+    }
+
+    @if (showTopBar)
+    {
+        @RenderBody()
+    }
+    else
+    {
+        @RenderBody()
+    }
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/table2excel")
     @RenderSection("scripts", required: false)
-
 </body>
 </html>
 
 @*<script src="~/scripts/folio-handler.js"></script>
-<script src="~/scripts/confirm-handler.js"></script>*@
+    <script src="~/scripts/confirm-handler.js"></script>*@
 
 <script>
     function toggleMenu() {
@@ -33,3 +47,4 @@
         fetch('/Home/PingSession');
     }, 10 * 1000); // cada 10 segundos
 </script>
+

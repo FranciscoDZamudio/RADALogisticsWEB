@@ -1,6 +1,7 @@
 ﻿body {
     /*  background-color: #EEEFF0;*/
     background-image: url('../pictures/4857390.jpg');
+  /*  background-image: url('../pictures/5621625.jpg');*/
     background-size: cover; /* Hace que la imagen cubra toda la pantalla */
     background-position: center center; /* Centra la imagen */
     background-attachment: fixed; /* Hace que la imagen no se desplace al hacer scroll */
@@ -120,7 +121,7 @@ button {
     text-align: center;
     padding: 8px 38px;
     margin-top: 5px;
-    background-color: #07AEBB;
+    background-color: #12919B;
     color: white;
     font-size: 14px;
     margin-left: auto;
@@ -277,7 +278,10 @@ $displacement: 3px;
     height: auto;
     margin: 90px auto;
     border-radius: 4px;
-    box-shadow: 0px 2px 6px -1px rgba(0,0,0,.12);
+    /*box-shadow: 0px 2px 6px -1px rgba(0,0,0,.12);*/
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    background-color: white; /* Asegura contraste */
 }
 
 .left {
