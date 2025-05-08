@@ -11,6 +11,7 @@
 
 <body style="margin: 0; height: 100%;">
 
+    <link href="~/Stylee/mainStylee.css" rel="stylesheet" />
 
     @{
         var controller = ViewContext.RouteData.Values["controller"]?.ToString();
@@ -18,14 +19,95 @@
         var showTopBar = !(controller == "Login" && action == "LogIn");
     }
 
-    @if (showTopBar)
+   @if (showTopBar)
     {
-        @RenderBody()
+        <div id="sidebar" class="sidebar">
+            <div class="sidebar-header" style="text-align: center; padding: 15px;">
+                <img src="~/Pictures/logo_radas-removebg-preview.png" class="logo-img" alt="Logo" />
+
+                <p class="description" style="font-size: 13px; font-weight: 700; margin-top: 10px; color: #555;">
+                    User Role: <span style="color: #007bff;">@ViewBag.Type</span>
+                </p>
+
+                <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()" style="position: absolute; top: 10px; right: 15px; font-size: 24px;">&times;</a>
+            </div>
+
+            @if (ViewBag.Type == "HISENSE")
+            {
+                <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+                <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">User Permissions</p>
+                <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+
+                @Html.ActionLink("📤 Request Container", "RequestContainer", "HISENSE")
+                @Html.ActionLink("🗂️ View Records", "HRecord", "History")
+            }
+            else if (ViewBag.Type == "RADA")
+            {
+                <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+                <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">User Permissions</p>
+                <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+
+                @Html.ActionLink("📥 Entry Container", "EntryContainer", "RADA")
+                @Html.ActionLink("🏗️ Inventory Control", "Inventory", "RADA")
+                @Html.ActionLink("🗂️ View Records", "Record", "History")
+                @Html.ActionLink("‍📊 Dashboard", "Dashboard", "History")
+            }
+            else if (ViewBag.Type == "ADMINISTRATOR")
+            {
+                <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+                <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Administrator Options</p>
+                <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+
+                @Html.ActionLink("👷 Users Control", "Home", "Users")
+                @Html.ActionLink("‍🗳️ Area Control", "Area", "Users")
+                @Html.ActionLink("🗂️ View Records", "Records", "History")
+                @Html.ActionLink("‍🔴 Cancellation history", "Cancellation", "Home")
+
+                <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+                <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Hisense User Options</p>
+                <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+
+                @Html.ActionLink("📤 Request Container", "RequestContainer", "HISENSE")
+
+                <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+                <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Rada User Options</p>
+                <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+
+                @Html.ActionLink("📊 Dashboard", "Dashboard", "History")
+                @Html.ActionLink("📥 Entry Container", "EntryContainer", "RADA")
+                @Html.ActionLink("🏗️ Inventory Control", "Inventory", "RADA")
+            }
+
+            <!-- Logout Link Always at the Bottom -->
+            <div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">
+                @Html.ActionLink(
+                    "⛔ Logout",
+                    "LogIn",
+                    "Login",
+                    null,
+                    new
+                        {
+                        @style = "display: block; font-weight: bold; color: black; padding: 10px 0; border-radius: 6px; width: 80%; margin: 0 auto; text-decoration: none;"
+                    }
+                )
+            </div>
+
+        </div>
+
+        <div class="topbar">
+            <span class="menu-icon" onclick="openMenu()">&#9776;</span>
+            <span class="title" style="color: #130300 "> 🟢 Online User: ¡ @ViewBag.User !</span>
+        </div>
+
+        <div id="main-content" class="main-content">
+            @RenderBody()
+        </div>
     }
     else
     {
         @RenderBody()
     }
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
@@ -34,8 +116,23 @@
 </body>
 </html>
 
-@*<script src="~/scripts/folio-handler.js"></script>
-    <script src="~/scripts/confirm-handler.js"></script>*@
+<script>
+    function openMenu() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.style.width = "250px";
+    }
+
+    function closeMenu() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.style.width = "0";
+    }
+
+    setInterval(function () {
+        fetch('/Home/PingSession');
+    }, 10 * 1000);
+</script>
+
+
 
 <script>
     function toggleMenu() {
@@ -47,4 +144,5 @@
         fetch('/Home/PingSession');
     }, 10 * 1000); // cada 10 segundos
 </script>
+
 

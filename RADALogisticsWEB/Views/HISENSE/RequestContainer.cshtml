@@ -33,8 +33,7 @@
         <h2 class="page-title">Request for Container Movements</h2>
         <h4 class="section-subtitle">Movement Request Overview</h4>
 
-        <hr>
-     
+        @*<hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
             <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
@@ -47,14 +46,14 @@
                 </svg>
             </button>
         </div>
-        <hr>
+        <hr>*@
 
         @using (Html.BeginForm("ProcessData", "HISENSE", FormMethod.Post))
         {
 
 
             <p style="text-align: center;">&nbsp;</p>
-            <h5 class="Tittlelabel" style=" font-weight: 700; color: #5264AE"> Username Overview </h5>
+            <h5 class="Tittlelabel" style=" font-weight: 700;"> Username Overview </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
@@ -64,11 +63,11 @@
                 <span class="bar"></span>
             </div>
 
-            <h5 class="Tittlelabel" style=" font-weight: 700; color: #5264AE"> Container Overview </h5>
+            <h5 class="Tittlelabel" style=" font-weight: 700;"> Container Overview </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
-            <h5 class="Tittlelabel" style=" font-weight: 700; color: #5264AE">Status:</h5>
+            <h5 class="Tittlelabel" style=" font-weight: 700; ">Status:</h5>
             <div class="group">
                 <select name="Type" id="Type" class="form-control" style="max-width: 30vh; color: black;  text-align: center ">
 
@@ -76,9 +75,9 @@
                     <option value="VAC"> VAC </option>
 
                 </select>
-</div>
+            </div>
 
-            <h5 class="Tittlelabel" style=" font-weight: 700; color: #5264AE">Area:</h5>
+            <h5 class="Tittlelabel" style=" font-weight: 700;">Area:</h5>
             <div class="group" style="padding: 5px 0px 0px 0px">
                 <select name="Area" id="Area" class="form-control" style="max-width: 30vh; color: black; text-align: center">
                     @foreach (var person in ViewBag.listed)
@@ -95,7 +94,7 @@
                 @Html.CheckBox("Activo", new { id = "chkActivo" })
                 <label for="chkActivo">Activo</label>
             </div>
-            <input type="hidden" name="ActivoHidden" id="ActivoHidden"  value="NO" />
+            <input type="hidden" name="ActivoHidden" id="ActivoHidden" value="NO" />
 
             <p style="text-align: center;">&nbsp;</p>
             <p style="text-align: center;">&nbsp;</p>

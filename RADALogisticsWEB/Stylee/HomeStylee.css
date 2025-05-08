@@ -1,5 +1,4 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap");
-
+﻿
 * {
     margin: 0;
     padding: 0;
@@ -10,11 +9,12 @@
 body {
     background-image: url('../pictures/3334687.jpg');
     background-size: cover;
+
     background-position: center;
     background-attachment: fixed;
     height: 100vh;
     margin: 0;
-/*    overflow: hidden;*/
+    overflow: hidden;
 }
 
 .container {
@@ -73,7 +73,8 @@ body {
     .menu a {
         text-decoration: none;
         color: #222;
-        font-weight: 600;
+        font-weight: 700;
+        color: #2c3e50;
         background: rgba(255, 255, 255, 0.25);
         backdrop-filter: blur(10px);
         width: 100%;
@@ -88,5 +89,5 @@ body {
         .menu a:hover {
             background: rgba(255, 255, 255, 0.9);
             transform: translateY(-2px) scale(1.03);
-            color: #000;
+            color: #291901;
         }

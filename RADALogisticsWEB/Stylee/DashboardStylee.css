@@ -1,4 +1,4 @@
-﻿@import url("https://fonts.googleapis.com/css?family=Raleway:400,400i,700");
+﻿
 
 body {
     background-image: url('../pictures/4857390.jpg');
@@ -338,7 +338,6 @@ label {
     flex-basis: 32%;
     text-align: left;
 }
-
 @media all and (max-width: 767px) {
     .table-header {
         display: none;
@@ -379,3 +378,50 @@ label {
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
+
+.form-control {
+    font-size: 14px;
+    max-width: 90vh;
+    padding: 10px 10px 10px 5px;
+    display: flex;
+    height: 100%;
+    border: none;
+    border-bottom: 0px solid #757575;
+    background-color: white;
+    overflow: hidden;
+    text-align: center;
+}
+
+
+
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .responsive-table {
+        min-width: 1600px; /* más espacio para columnas */
+    }
+}
+
+[class^="col-"] {
+    padding: 6px 10px;
+    word-break: break-word;
+}
+
+.responsive-table li {
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+@media (min-width: 1025px) {
+    .responsive-table {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .table-scroll {
+        overflow-x: unset;
+    }

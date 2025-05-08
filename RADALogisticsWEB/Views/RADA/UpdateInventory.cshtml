@@ -9,15 +9,28 @@
 
     <div style="text-align: center; min-width: 100%; ">
 
+        <style>
+            .page-title {
+                text-align: center;
+                font-size: 21px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 15px;
+            }
 
-        <p style="text-align: center;">&nbsp;</p>
-        <img src="~/Pictures/actualizar.png" height="90" />
-        <p style="text-align: center;">&nbsp;</p>
+            .section-subtitle {
+                text-align: center;
+                font-size: 17px;
+                font-weight: 500;
+                color: #555;
+                margin-bottom: 25px;
+            }
+        </style>
 
-        <h4 class="labelTitt">
-            Updating Inventory Data - Inventory Control View
+        <h2 class="page-title">Updating Inventory Data - Inventory Control View </h2>
+        <h4 class="section-subtitle">
+            Update Information
         </h4>
-        <h5 style="text-align:center">Update Information</h5>
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -34,7 +47,7 @@
         </div>
         <hr>
 
-       @using (Html.BeginForm("Update", "RADA", FormMethod.Post))
+        @using (Html.BeginForm("Update", "RADA", FormMethod.Post))
         {
 
             <input value="@ViewBag.ID" name="id" id="id" hidden="hidden" />
@@ -42,7 +55,7 @@
 
             <p style="text-align: center;">&nbsp;</p>
 
-            <h5 class="Tittlelabel"> Information Container Inventory</h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Information Container Inventory</h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
             <div class="group">

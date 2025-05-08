@@ -28,10 +28,11 @@
             }
         </style>
 
-        <h2 class="page-title"> History of cancelled movements </h2>
-        <h4 class="section-subtitle">  View history cancelled </h4>
+        <h2 class="page-title">History of Cancelled Movements</h2>
+        <h4 class="section-subtitle">View Cancelled Records</h4>
+        <p style="text-align: center;">&nbsp;</p>
 
-        <hr>
+        @*<hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
             <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
@@ -44,15 +45,15 @@
                 </svg>
             </button>
         </div>
-        <hr>
+        <hr>*@
 
-       @using (Html.BeginForm("Cancellation", "Home", FormMethod.Post))
+        @using (Html.BeginForm("Cancellation", "Home", FormMethod.Post))
         {
             <div class="form-row">
 
                 <div class="form-group col-md-6 text-center">
                     <label for="TimeStart" style="font-family: 'Century Gothic'; display: block">Date Start</label>
-                    <input id="TimeStart" name="TimeStart" type="date"  class="form-control mx-auto" style="max-width: 100%; display: block;" />
+                    <input id="TimeStart" name="TimeStart" type="date" class="form-control mx-auto" style="max-width: 100%; display: block;" />
                 </div>
 
                 <div class="form-group col-md-6 text-center">

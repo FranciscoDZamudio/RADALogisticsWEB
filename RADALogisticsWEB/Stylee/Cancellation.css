@@ -1,4 +1,5 @@
-﻿body {
+﻿
+body {
     background-image: url('../pictures/4857390.jpg');
     background-size: cover; /* Hace que la imagen cubra toda la pantalla */
     background-position: center center; /* Centra la imagen */
@@ -245,7 +246,7 @@ label {
 }
 
 .col-2 {
-    flex-basis: 40%;
+    flex-basis: 25%;
     text-align: left;
 }
 

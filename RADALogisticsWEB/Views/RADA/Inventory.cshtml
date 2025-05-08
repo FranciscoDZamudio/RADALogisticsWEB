@@ -32,8 +32,9 @@
 
         <h2 class="page-title" style="font-weight: 700;"> Inventory Control - View Inventory Systems </h2>
         <h4 class="section-subtitle">Create Inventary and update control</h4>
+        <p style="text-align: center;">&nbsp;</p>
 
-        <hr>
+        @*<hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
             <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
@@ -46,12 +47,12 @@
                 </svg>
             </button>
         </div>
-        <hr>
+        <hr>*@
 
         @using (Html.BeginForm("ProcessData", "RADA", FormMethod.Post))
         {
             <p style="text-align: center;">&nbsp;</p>
-            <h5 class="Tittlelabel" style="font-weight: 700; color: #5264AE"> Username Overview </h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Username Overview </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
@@ -61,7 +62,7 @@
                 <span class="bar"></span>
             </div>
 
-            <h5 class="Tittlelabel" style="font-weight: 700; color: #5264AE"> Container Overview </h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Container Overview </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 

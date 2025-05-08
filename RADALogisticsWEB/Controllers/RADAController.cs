@@ -219,6 +219,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             DBSPP.Open();
             con.Connection = DBSPP;
@@ -262,6 +263,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -283,6 +285,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -321,6 +324,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -349,6 +353,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -4302,6 +4307,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -4469,6 +4475,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -7102,6 +7109,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -7180,6 +7188,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -7201,6 +7210,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -7252,6 +7262,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -7299,6 +7310,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -7338,6 +7350,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {

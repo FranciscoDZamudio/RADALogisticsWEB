@@ -34,7 +34,7 @@
         <h2 class="page-title">Container Movement History - Query View data containers</h2>
         <h4 class="section-subtitle">View transaction information by date range</h4>
 
-        <hr>
+        @*<hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
             <button class="animated-button" onclick="location.href='@Url.Action("HisenseHome", "Home")'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
@@ -47,7 +47,7 @@
                 </svg>
             </button>
         </div>
-        <hr>
+        <hr>*@
 
         @using (Html.BeginForm("HRecord", "History", FormMethod.Post))
         {
@@ -62,8 +62,6 @@
                     <label for="Timeend" style="font-family: 'Century Gothic'; display: block">Date End</label>
                     <input id="Timeend" name="Timeend" type="date" class="form-control mx-auto" style="max-width: 100%; display: block;" />
                 </div>
-
-                <p style="text-align: center;">&nbsp;</p>
 
                 <p style="text-align: center;">&nbsp;</p>
 

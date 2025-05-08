@@ -23,6 +23,7 @@ namespace RADALogisticsWEB.Controllers
         public ActionResult PingSession()
         {
             var user = Session["Username"]; // Solo accede a la sesión para que no expire
+            var type = Session["Type"];
             return new HttpStatusCodeResult(200); // OK
         }
 
@@ -60,6 +61,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -107,6 +109,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -154,6 +157,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -201,6 +205,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -267,6 +272,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -290,6 +296,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {
@@ -392,6 +399,7 @@ namespace RADALogisticsWEB.Controllers
             }
 
             ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
             if (Session.Count <= 0)
             {

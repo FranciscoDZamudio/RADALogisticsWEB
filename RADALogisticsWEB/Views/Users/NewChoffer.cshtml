@@ -11,9 +11,9 @@
 
         @*<h3 style="font-weight: 700;">Rada Logistics system</h3>
 
-            <p style="text-align: center;">&nbsp;</p>
-            <img src="~/Pictures/icono_choffuer.png" height="100" />
-            <p style="text-align: center;">&nbsp;</p>*@
+        <p style="text-align: center;">&nbsp;</p>
+        <img src="~/Pictures/icono_choffuer.png" height="100" />
+        <p style="text-align: center;">&nbsp;</p>*@
 
         <style>
             .page-title {
@@ -33,8 +33,9 @@
             }
         </style>
 
-        <h2 class="page-title">Generate new drivers in the system </h2>
-        <h4 class="section-subtitle"> Create New User </h4>
+        <h2 class="page-title">Add New Drivers to the System</h2>
+        <h4 class="section-subtitle">Create New Driver Profile</h4>
+
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -71,19 +72,18 @@
             </div>
 
             <!--<h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Assigned work Area:</h5>
-            <div class="group">-->
+        <div class="group">-->
 
             @*<select name="Area" id="Area" class="form-control" style="max-width: 30vh; color: black; text-align: center">
-                    @foreach (var person in ViewBag.Records)
-                    {
-                        <option value="@person.Name">@person.Name</option>
-                    }
-                </select>*@
+                @foreach (var person in ViewBag.Records)
+                {
+                    <option value="@person.Name">@person.Name</option>
+                }
+            </select>*@
 
-            <p style="padding:10px 0px 0px 0px">@Html.ActionLink("New Area", "Area")</p>
-            
+            @*<p style="padding:10px 0px 0px 0px">@Html.ActionLink("New Area", "Area")</p>*@
 
-            <h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Assigned work shift:</h5>
+            <h5 class="typelbl" style="text-align: center; font-size: 15px; font-weight: 700 ">Assigned work shift:</h5>
             <div class="group">
                 <select name="Shift" id="Shift" class="form-control" style="max-width: 30vh; color: black; text-align: center">
                     <option value="1">1</option>

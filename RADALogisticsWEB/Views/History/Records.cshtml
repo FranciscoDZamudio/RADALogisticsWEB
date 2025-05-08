@@ -31,8 +31,9 @@
 
         <h2 class="page-title">Container Movement History - Query View data containers</h2>
         <h4 class="section-subtitle">View transaction information by date range</h4>
+        <p style="text-align: center;">&nbsp;</p>
 
-        <hr>
+        @*<hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
             <button class="animated-button" onclick="location.href='@Url.Action("HisenseHome", "Home")'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
@@ -45,7 +46,7 @@
                 </svg>
             </button>
         </div>
-        <hr>
+        <hr>*@
 
         @using (Html.BeginForm("Records", "History", FormMethod.Post))
         {

@@ -30,7 +30,7 @@
         <h2 class="page-title"> Generate new work area for the driver </h2>
         <h4 class="section-subtitle"> Create New Area </h4>
 
-        <hr>
+        @*<hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
             <button class="animated-button" onclick="location.href='@Url.Action("NewChoffer","Users")'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
@@ -43,7 +43,7 @@
                 </svg>
             </button>
         </div>
-        <hr>
+        <hr>*@
 
        @using (Html.BeginForm("Insert", "Users", FormMethod.Post))
         {
@@ -51,7 +51,7 @@
 
             <input style="font-size:12px" readonly="@true" type="text" id="User" name="User" value="@ViewBag.User" hidden="hidden" required>
 
-            <h5 class="Tittlelabel"> New Area Overview </h5>
+            <h5 class="Tittlelabel"  style="font-weight: 700;"> New Area Overview </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 

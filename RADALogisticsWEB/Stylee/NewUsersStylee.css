@@ -1,5 +1,4 @@
-﻿@import url("https://fonts.googleapis.com/css?family=Raleway:400,400i,700");
-
+﻿
 body {
     background-image: url('../pictures/4857390.jpg');
     background-size: cover; /* Hace que la imagen cubra toda la pantalla */
@@ -404,6 +403,19 @@ label {
 
 }
 }
+}
+
+.form-control {
+    font-size: 14px;
+    max-width: 90vh;
+    padding: 10px 10px 10px 5px;
+    display: flex;
+    height: 100%;
+    border: none;
+    border-bottom: 0px solid #757575;
+    background-color: white;
+    overflow: hidden;
+    text-align: center;
 }
 
 * {

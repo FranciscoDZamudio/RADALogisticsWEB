@@ -33,8 +33,8 @@
             }
         </style>
 
-        <h2 class="page-title"> Generate new user to the system </h2>
-        <h4 class="section-subtitle"> Create New User </h4>
+        <h2 class="page-title">Add a New User to the System</h2>
+        <h4 class="section-subtitle">Create a New User Account</h4>
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -53,7 +53,7 @@
 
         @using (Html.BeginForm("GetUser", "Users", FormMethod.Post))
         {
-            <h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Type:</h5>
+            <h5 class="typelbl" style="text-align: center; font-size: 15px; font-weight: 700; ">Type:</h5>
             <div class="group">
                 <select name="TypeUsers" id="TypeUsers" class="form-control" style="max-width: 30vh; color: black; text-align: center">
                     <option value="ADMINISTRATOR">ADMINISTRATOR</option>
@@ -65,7 +65,7 @@
 
             <input id="UserCreate" name="UserCreate" value="@ViewBag.Create" hidden="hidden" />
 
-            <h5 class="Tittlelabel"> Information Personal</h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Information Personal</h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
             <div class="group">
@@ -82,7 +82,7 @@
                 <label>Employee Number:</label>
             </div>
 
-            <h5 class="Tittlelabel"> Email and Log In </h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Email and Log In </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
@@ -134,17 +134,17 @@
 
             <div class="col col-1" style="text-align: center; flex-basis: 10%;">ID</div>
 
-            <div class="col col-2" style="text-align: center; flex-basis: 30%">Username</div>
+            <div class="col col-2" style="text-align: center; flex-basis: 25%">Username</div>
 
-            <div class="col col-1" style="text-align: center; flex-basis: 10%">Credentials</div>
+            <div class="col col-3" style="text-align: center; flex-basis: 5%">Credentials</div>
 
-            <div class="col col-3" style="text-align: center; flex-basis: 20%">Log In</div>
+            <div class="col col-4" style="text-align: center; flex-basis: 20%">Log In</div>
 
-            <div class="col col-4" style="text-align: center; flex-basis: 10%">Type User</div>
+            <div class="col col-5" style="text-align: center; flex-basis: 10%">Type User</div>
 
-            <div class="col col-5" style="text-align: center; flex-basis: 10%">Date</div>
+            <div class="col col-6" style="text-align: center; flex-basis: 20%">Date</div>
 
-            <div class="col col-8" style="text-align: center; flex-basis: 20%">Options</div>
+            <div class="col col-7" style="text-align: center; flex-basis: 25%">Options</div>
 
         </li>
         @foreach (var person in ViewBag.Records)
@@ -153,17 +153,17 @@
 
                 <div class="col col-1" data-label="ID" style="text-align: center; flex-basis: 10%">@person.ID</div>
 
-                <div class="col col-2" data-label="Username" style="text-align: center; flex-basis: 30%">@person.Username</div>
+                <div class="col col-2" data-label="Username" style="text-align: center; flex-basis: 25%">@person.Username</div>
 
-                <div class="col col-1" data-label="Credentials" style="text-align: center; flex-basis: 10%"> @person.Employee_Number</div>
+                <div class="col col-3" data-label="Credentials" style="text-align: center; flex-basis: 5%"> @person.Employee_Number</div>
 
-                <div class="col col-3" data-label="Log In" style="text-align: center; flex-basis: 20%"> @person.Login_session</div>
+                <div class="col col-4" data-label="Log In" style="text-align: center; flex-basis: 20%"> @person.Login_session</div>
 
-                <div class="col col-4" data-label="Type User" style="text-align: center; flex-basis: 10%"> @person.Type_user</div>
+                <div class="col col-5" data-label="Type User" style="text-align: center; flex-basis: 10%"> @person.Type_user</div>
 
-                <div class="col col-5" data-label="Date" style="text-align: center; flex-basis: 10%"> @person.DateAdded</div>
+                <div class="col col-6" data-label="Date" style="text-align: center; flex-basis: 20%"> @person.DateAdded</div>
 
-                <div class="col col-8" data-label="Options" style="text-align: center; flex-basis: 20%">
+                <div class="col col-7" data-label="Options" style="text-align: center; flex-basis: 25%">
 
                     @if (person.Type_user == "HISENSE")
                     {
