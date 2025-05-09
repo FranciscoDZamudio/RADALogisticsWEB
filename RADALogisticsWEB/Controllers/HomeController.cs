@@ -55,9 +55,10 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult AdministratorHome()
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null && Session["Type"] == null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
             ViewBag.User = Session["Username"];
@@ -103,9 +104,10 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult RadaHome()
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null && Session["Type"] == null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
             ViewBag.User = Session["Username"];
@@ -151,9 +153,10 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult HisenseHome()
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null && Session["Type"] == null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
             ViewBag.User = Session["Username"];
@@ -199,9 +202,10 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Restore(string ID)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null && Session["Type"] == null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
             ViewBag.User = Session["Username"];
@@ -266,9 +270,10 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Cancellation()
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null && Session["Type"] == null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
             ViewBag.User = Session["Username"];
@@ -290,9 +295,10 @@ namespace RADALogisticsWEB.Controllers
         [HttpPost]
         public ActionResult Cancellation(string Timeend, string TimeStart)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null && Session["Type"] == null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
             ViewBag.User = Session["Username"];
@@ -393,9 +399,10 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Details(string id)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null && Session["Type"] == null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
             ViewBag.User = Session["Username"];
