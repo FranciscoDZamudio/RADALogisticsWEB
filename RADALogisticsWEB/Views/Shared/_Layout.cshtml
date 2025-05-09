@@ -135,14 +135,9 @@
 
 
 <script>
-    function toggleMenu() {
-        const menu = document.getElementById("menu");
-        menu.classList.toggle("active");
-    }
-
     setInterval(function () {
-        fetch('/Home/PingSession');
-    }, 10 * 1000); // cada 10 segundos
+        fetch('/Home/PingSession', { method: 'GET', credentials: 'include' });
+    }, 10000); // cada 10 segundos
 </script>
 
 
