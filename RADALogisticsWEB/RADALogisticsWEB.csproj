@@ -247,6 +247,7 @@
     <Content Include="Views\RADA\Comments.cshtml" />
     <Content Include="Views\History\Dashboard.cshtml" />
     <Content Include="Views\Home\Details.cshtml" />
+    <Content Include="Views\RADA\Replace.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

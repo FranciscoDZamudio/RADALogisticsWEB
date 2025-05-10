@@ -62,7 +62,16 @@ namespace RADALogisticsWEB.Controllers
                 {
                     DBSPP.Open();
                     con.Connection = DBSPP;
-                    con.CommandText = "SELECT A.[Foio] AS Folio, A.[Choffer] AS Chofer,B.[message] FROM [RADAEmpire].[dbo].[RADAEmpires_DZChofferMovement] A LEFT JOIN [RADAEmpire].[dbo].[RADAEmpire_BRequestContainers] B ON A.[Foio] = B.[Folio] WHERE A.[Active] = '1' ORDER BY  A.[Foio] DESC;";
+                    con.CommandText = @"SELECT DISTINCT 
+    A.[Foio] AS Folio, 
+    A.[Choffer] AS Chofer, 
+    B.[message]
+FROM [RADAEmpire].[dbo].[RADAEmpires_DZChofferMovement] A 
+LEFT JOIN [RADAEmpire].[dbo].[RADAEmpire_BRequestContainers] B 
+    ON A.[Foio] = B.[Folio] 
+WHERE A.[Active] = '1' 
+ORDER BY A.[Foio] DESC;
+";
                     dr = con.ExecuteReader();
                     while (dr.Read())
                     {
@@ -112,7 +121,7 @@ namespace RADALogisticsWEB.Controllers
                     //    " AND r.Areas IN ({0}) AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
 
                     string queryUsers = @"
-                                SELECT 
+                                SELECT DISTINCT
                                   A.[Foio] AS Folio,
                                   A.[Choffer] AS Chofer,
                                   B.[message]
@@ -209,7 +218,6 @@ namespace RADALogisticsWEB.Controllers
                 return PartialView("table", ViewBag.Records);  // Luego, pasa la lista a la vista
             }
         }
-
 
         public PartialViewResult mov(string Folio)
         {
@@ -341,7 +349,6 @@ namespace RADALogisticsWEB.Controllers
                 Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
-
             ViewBag.User = Session["Username"];
             ViewBag.Type = Session["Type"];
 
@@ -362,6 +369,390 @@ namespace RADALogisticsWEB.Controllers
                     return RedirectToAction("EntryContainer", "RADA", new { query = '1', date = data });
                 }
             }
+        }
+
+        public ActionResult Replace(string ID)
+        {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
+
+            string Contenedor = null;
+            SqlCommand asiggne = new SqlCommand("Select Container from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + ID.ToString() + "'", DBSPP);
+            DBSPP.Open();
+            SqlDataReader drasiggne = asiggne.ExecuteReader();
+            if (drasiggne.HasRows)
+            {
+                while (drasiggne.Read())
+                {
+                    Contenedor = drasiggne["Container"].ToString();
+                }
+            }
+            DBSPP.Close();
+
+            ViewBag.ID = ID.ToString();
+            ViewBag.Contenedor = Contenedor.ToString();
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ReplaceProcess(string OldID, string OldContainer, string NewContainer, bool guardarAnterior)
+        {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
+
+            if (guardarAnterior == true)
+            {
+                //Generar nuevo reporte de contenedor anterior
+                string folio = null, whosend = null, destination = null, 
+                    origins = null, status = null, shift = null,
+                    date = null, datetimeadded = null, grua = null;
+
+                SqlCommand asiggne = new SqlCommand("Select * from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + OldID.ToString() + "'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drasiggne = asiggne.ExecuteReader();
+                if (drasiggne.HasRows)
+                {
+                    while (drasiggne.Read())
+                    {
+                        folio = drasiggne["Folio"].ToString();
+                        whosend = drasiggne["Who_Send"].ToString();
+                        //container = drasiggne["Container"].ToString();
+                        destination = drasiggne["Destination_Location"].ToString();
+                        origins = drasiggne["Origins_Location"].ToString();
+                        status = drasiggne["Status"].ToString();
+                        //message = drasiggne["Container"].ToString();
+                        shift = drasiggne["shift"].ToString();
+                        date = drasiggne["Date"].ToString();
+                        datetimeadded = drasiggne["Datetime"].ToString();
+                        //Active = drasiggne["Container"].ToString();
+                        grua = drasiggne["GruaRequest"].ToString();
+
+                    }
+                }
+                DBSPP.Close();
+
+                // Crear la lista
+                List<string> lista = new List<string>();
+
+                // Consulta SQL
+                string query = @"SELECT Process_Movement 
+                 FROM RADAEmpires_DZDetailsHisense 
+                 WHERE Activo = '1' AND Folio = '" + OldID.ToString() + "' ORDER BY ID ASC";
+
+                SqlCommand Moviments = new SqlCommand(query, DBSPP);
+
+                DBSPP.Open();
+                SqlDataReader drMoviments = Moviments.ExecuteReader();
+
+                // Leer y agregar a la lista
+                while (drMoviments.Read())
+                {
+                    string movimiento = drMoviments["Process_Movement"].ToString();
+                    lista.Add(movimiento);
+                }
+
+                drMoviments.Close(); // Cierra primero el lector
+                DBSPP.Close();
+
+                //create generate randoms int value
+                string randomval = null;
+                SqlCommand conse = new SqlCommand("Select top (1) ID from RADAEmpire_BRequestContainers order by ID desc", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drconse = conse.ExecuteReader();
+                if (drconse.HasRows)
+                {
+                    while (drconse.Read())
+                    {
+                        randomval = drconse[0].ToString();//234 + 1216 + 
+                    }
+                }
+                else
+                {
+                    randomval = "0";
+                }
+                DBSPP.Close();
+
+                int sum = int.Parse(randomval) + 1;
+
+                //Random folio = new Random();
+                //int val = folio.Next(1, 1000000000);
+                string Folio = null;
+                Folio = "MOV" + sum.ToString();
+
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+
+                //Guardar informacion a la base de datos del proyecto
+                DBSPP.Open();
+                SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
+                    "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest) values " +
+                    "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest) ", DBSPP);
+                //--------------------------------------------------------------------------------------------------------------------------------
+                PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
+                PalletControl.Parameters.AddWithValue("@Who_Send", whosend.ToString());
+                PalletControl.Parameters.AddWithValue("@Container", OldContainer.ToUpper());
+                PalletControl.Parameters.AddWithValue("@Destination_Location", destination.ToUpper());
+                PalletControl.Parameters.AddWithValue("@Origins_Location", origins.ToUpper());
+                PalletControl.Parameters.AddWithValue("@Status", status.ToString());
+                PalletControl.Parameters.AddWithValue("@message", "PENDING");
+                PalletControl.Parameters.AddWithValue("@shift", shift.ToString());
+                PalletControl.Parameters.AddWithValue("@Date", date.ToString());
+                PalletControl.Parameters.AddWithValue("@Datetime", datetimeadded.ToString());
+                PalletControl.Parameters.AddWithValue("@Active", true);
+                PalletControl.Parameters.AddWithValue("@GruaRequest", grua.ToString());
+
+                PalletControl.ExecuteNonQuery();
+                DBSPP.Close();
+
+                //Guardar informacion a la base de datos del proyecto
+                DBSPP.Open();
+                SqlCommand RADAdocument = new SqlCommand("insert into RADAEmpire_CEntryContrainers" +
+                    "(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date,AreaWork, Active,Cancel) values " +
+                    "(@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date,@AreaWork, @Active, @Cancel) ", DBSPP);
+                //--------------------------------------------------------------------------------------------------------------------------------
+                RADAdocument.Parameters.AddWithValue("@Folio_Request", Folio.ToString());
+                RADAdocument.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
+                RADAdocument.Parameters.AddWithValue("@Time_Confirm", "00:00:00");
+                RADAdocument.Parameters.AddWithValue("@Choffer", "PENDNING CONFIRM");
+                RADAdocument.Parameters.AddWithValue("@FastCard", "PENDNING CONFIRM");
+                RADAdocument.Parameters.AddWithValue("@Time_Finished", "00:00:00");
+                RADAdocument.Parameters.AddWithValue("@Date", usTime.ToString());
+                RADAdocument.Parameters.AddWithValue("@AreaWork", "RADALogistics");
+                RADAdocument.Parameters.AddWithValue("@Active", true);
+                RADAdocument.Parameters.AddWithValue("@Cancel", false);
+                RADAdocument.ExecuteNonQuery();
+                DBSPP.Close();
+
+                // Guardar información de cada paso en la base de datos
+                DBSPP.Open();
+                foreach (string paso in lista)
+                {
+                    SqlCommand ProcessDB = new SqlCommand("INSERT INTO RADAEmpires_DZDetailsHisense " +
+                        "(Folio, Type_StatusContainer, GruaMov, Process_Movement, End_date, Status, Comment, Date_Process, Activo) " +
+                        "VALUES (@Folio, @Type_StatusContainer, @GruaMov, @Process_Movement, @End_date, @Status, @Comment, GETDATE(), @Activo)", DBSPP);
+
+                    ProcessDB.Parameters.AddWithValue("@Folio", Folio.ToString());
+                    ProcessDB.Parameters.AddWithValue("@Type_StatusContainer", status.ToString());
+                    ProcessDB.Parameters.AddWithValue("@GruaMov", grua.ToString());
+                    ProcessDB.Parameters.AddWithValue("@Process_Movement", paso); // Aquí se guarda cada paso de la lista
+                    ProcessDB.Parameters.AddWithValue("@End_date", "00:00:00");
+                    ProcessDB.Parameters.AddWithValue("@Status", "PENDIENTE");
+                    ProcessDB.Parameters.AddWithValue("@Comment", "SIN COMENTARIOS");
+                    ProcessDB.Parameters.AddWithValue("@Activo", true);
+
+                    ProcessDB.ExecuteNonQuery();
+                }
+                DBSPP.Close();
+
+                //Actualizar numero de contenedor
+                string updateQuery = "UPDATE RADAEmpire_BRequestContainers " +
+                    " SET Container = @Container WHERE Folio = @ID";
+                using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
+                {
+                    DBSPP.Open();
+                    command.Parameters.AddWithValue("@Container", NewContainer.ToUpper());
+                    command.Parameters.AddWithValue("@ID", OldID.ToString());
+                    int rowsAffected = command.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+            }
+            else
+            {
+                //Generar nuevo reporte de contenedor anterior
+                string folio = null, whosend = null, destination = null,
+                    origins = null, status = null, shift = null,
+                    date = null, datetimeadded = null, grua = null;
+
+                SqlCommand asiggne = new SqlCommand("Select * from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + OldID.ToString() + "'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drasiggne = asiggne.ExecuteReader();
+                if (drasiggne.HasRows)
+                {
+                    while (drasiggne.Read())
+                    {
+                        folio = drasiggne["Folio"].ToString();
+                        whosend = drasiggne["Who_Send"].ToString();
+                        //container = drasiggne["Container"].ToString();
+                        destination = drasiggne["Destination_Location"].ToString();
+                        origins = drasiggne["Origins_Location"].ToString();
+                        status = drasiggne["Status"].ToString();
+                        //message = drasiggne["Container"].ToString();
+                        shift = drasiggne["shift"].ToString();
+                        date = drasiggne["Date"].ToString();
+                        datetimeadded = drasiggne["Datetime"].ToString();
+                        //Active = drasiggne["Container"].ToString();
+                        grua = drasiggne["GruaRequest"].ToString();
+
+                    }
+                }
+                DBSPP.Close();
+
+                // Crear la lista
+                List<string> lista = new List<string>();
+
+                // Consulta SQL
+                string query = @"SELECT Process_Movement 
+                 FROM RADAEmpires_DZDetailsHisense 
+                 WHERE Activo = '1' AND Folio = '" + OldID.ToString() + "' ORDER BY ID ASC";
+
+                SqlCommand Moviments = new SqlCommand(query, DBSPP);
+
+                DBSPP.Open();
+                SqlDataReader drMoviments = Moviments.ExecuteReader();
+
+                // Leer y agregar a la lista
+                while (drMoviments.Read())
+                {
+                    string movimiento = drMoviments["Process_Movement"].ToString();
+                    lista.Add(movimiento);
+                }
+
+                drMoviments.Close(); // Cierra primero el lector
+                DBSPP.Close();
+
+                //create generate randoms int value
+                string randomval = null;
+                SqlCommand conse = new SqlCommand("Select top (1) ID from RADAEmpire_BRequestContainers order by ID desc", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drconse = conse.ExecuteReader();
+                if (drconse.HasRows)
+                {
+                    while (drconse.Read())
+                    {
+                        randomval = drconse[0].ToString();//234 + 1216 + 
+                    }
+                }
+                else
+                {
+                    randomval = "0";
+                }
+                DBSPP.Close();
+
+                int sum = int.Parse(randomval) + 1;
+
+                //Random folio = new Random();
+                //int val = folio.Next(1, 1000000000);
+                string Folio = null;
+                Folio = "MOV" + sum.ToString();
+
+                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                // Formatear la fecha para que sea adecuada para la base de datos
+                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+
+                //Guardar informacion a la base de datos del proyecto
+                DBSPP.Open();
+                SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
+                    "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest) values " +
+                    "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest) ", DBSPP);
+                //--------------------------------------------------------------------------------------------------------------------------------
+                PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
+                PalletControl.Parameters.AddWithValue("@Who_Send", whosend.ToString());
+                PalletControl.Parameters.AddWithValue("@Container", OldContainer.ToUpper());
+                PalletControl.Parameters.AddWithValue("@Destination_Location", destination.ToUpper());
+                PalletControl.Parameters.AddWithValue("@Origins_Location", origins.ToUpper());
+                PalletControl.Parameters.AddWithValue("@Status", status.ToString());
+                PalletControl.Parameters.AddWithValue("@message", "Canceled by Rada");
+                PalletControl.Parameters.AddWithValue("@shift", shift.ToString());
+                PalletControl.Parameters.AddWithValue("@Date", date.ToString());
+                PalletControl.Parameters.AddWithValue("@Datetime", datetimeadded.ToString());
+                PalletControl.Parameters.AddWithValue("@Active", true);
+                PalletControl.Parameters.AddWithValue("@GruaRequest", grua.ToString());
+
+                PalletControl.ExecuteNonQuery();
+                DBSPP.Close();
+
+                //Guardar informacion a la base de datos del proyecto
+                DBSPP.Open();
+                SqlCommand RADAdocument = new SqlCommand("insert into RADAEmpire_CEntryContrainers" +
+                    "(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date,AreaWork, Active,Cancel) values " +
+                    "(@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date,@AreaWork, @Active, @Cancel) ", DBSPP);
+                //--------------------------------------------------------------------------------------------------------------------------------
+                RADAdocument.Parameters.AddWithValue("@Folio_Request", Folio.ToString());
+                RADAdocument.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
+                RADAdocument.Parameters.AddWithValue("@Time_Confirm", "00:00:00");
+                RADAdocument.Parameters.AddWithValue("@Choffer", "PENDNING CONFIRM");
+                RADAdocument.Parameters.AddWithValue("@FastCard", "PENDNING CONFIRM");
+                RADAdocument.Parameters.AddWithValue("@Time_Finished", "00:00:00");
+                RADAdocument.Parameters.AddWithValue("@Date", usTime.ToString());
+                RADAdocument.Parameters.AddWithValue("@AreaWork", "RADALogistics");
+                RADAdocument.Parameters.AddWithValue("@Active", true);
+                RADAdocument.Parameters.AddWithValue("@Cancel", false);
+                RADAdocument.ExecuteNonQuery();
+                DBSPP.Close();
+
+                // Guardar información de cada paso en la base de datos
+                DBSPP.Open();
+                foreach (string paso in lista)
+                {
+                    SqlCommand ProcessDB = new SqlCommand("INSERT INTO RADAEmpires_DZDetailsHisense " +
+                        "(Folio, Type_StatusContainer, GruaMov, Process_Movement, End_date, Status, Comment, Date_Process, Activo) " +
+                        "VALUES (@Folio, @Type_StatusContainer, @GruaMov, @Process_Movement, @End_date, @Status, @Comment, GETDATE(), @Activo)", DBSPP);
+
+                    ProcessDB.Parameters.AddWithValue("@Folio", Folio.ToString());
+                    ProcessDB.Parameters.AddWithValue("@Type_StatusContainer", status.ToString());
+                    ProcessDB.Parameters.AddWithValue("@GruaMov", grua.ToString());
+                    ProcessDB.Parameters.AddWithValue("@Process_Movement", paso); // Aquí se guarda cada paso de la lista
+                    ProcessDB.Parameters.AddWithValue("@End_date", "00:00:00");
+                    ProcessDB.Parameters.AddWithValue("@Status", "PENDIENTE");
+                    ProcessDB.Parameters.AddWithValue("@Comment", "SIN COMENTARIOS");
+                    ProcessDB.Parameters.AddWithValue("@Activo", true);
+
+                    ProcessDB.ExecuteNonQuery();
+                }
+                DBSPP.Close();
+
+                //Actualizar numero de contenedor
+                string updateQuery = "UPDATE RADAEmpire_BRequestContainers " +
+                    " SET Container = @Container WHERE Folio = @ID";
+                using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
+                {
+                    DBSPP.Open();
+                    command.Parameters.AddWithValue("@Container", NewContainer.ToUpper());
+                    command.Parameters.AddWithValue("@ID", OldID.ToString());
+                    int rowsAffected = command.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+            }
+
+            return RedirectToAction("EntryContainer", "RADA");
         }
 
         public ActionResult EntryContainer(string query, string date)
@@ -543,10 +934,19 @@ namespace RADALogisticsWEB.Controllers
                     {
                         DBSPP.Open();
                         con.Connection = DBSPP;
-                        con.CommandText = "Select top (100) " +
-                            " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                            " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua " +
-                            " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + date.ToString() + "' ORDER by a.Folio desc";
+                        con.CommandText = "SELECT TOP (100) " +
+                 " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                 " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua " +
+                 " FROM RADAEmpire_BRequestContainers as a " +
+                 " INNER JOIN RADAEmpire_CEntryContrainers as b ON b.Folio_Request = a.Folio " +
+                 " WHERE a.Date = '" + date.ToString() + "' " +
+                 " ORDER BY " +
+                 "     CASE " +
+                 "         WHEN a.message = 'PENDING' THEN 1 " +
+                 "         WHEN a.message = 'Canceled by Rada' THEN 4 " +
+                 "         WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3 " +
+                 "         ELSE 2 " +
+                 "     END, a.Folio DESC";
                         dr = con.ExecuteReader();
                         while (dr.Read())
                         {
@@ -605,10 +1005,19 @@ namespace RADALogisticsWEB.Controllers
 
                         DBSPP.Open();
                         con.Connection = DBSPP;
-                        con.CommandText = "Select top (100) " +
-                            " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                            " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area,a.GruaRequest as Grua" +
-                            " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + date.ToString() + "' ORDER by a.Folio desc";
+                        con.CommandText = "SELECT TOP (100) " +
+                 " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                 " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua " +
+                 " FROM RADAEmpire_BRequestContainers as a " +
+                 " INNER JOIN RADAEmpire_CEntryContrainers as b ON b.Folio_Request = a.Folio " +
+                 " WHERE a.Date = '" + date.ToString() + "' " +
+                 " ORDER BY " +
+                 "     CASE " +
+                 "         WHEN a.message = 'PENDING' THEN 1 " +
+                 "         WHEN a.message = 'Canceled by Rada' THEN 4 " +
+                 "         WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3 " +
+                 "         ELSE 2 " +
+                 "     END, a.Folio DESC";
                         dr = con.ExecuteReader();
                         while (dr.Read())
                         {
@@ -7512,10 +7921,19 @@ namespace RADALogisticsWEB.Controllers
                 string datenow = usTime.ToString();
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "  Select top (100) " +
-                    " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area,a.GruaRequest as Grua " +
-                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + datenow.ToString() + "' ORDER by a.Folio desc";
+                con.CommandText = "SELECT TOP (100) " +
+     " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+     " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua " +
+     " FROM RADAEmpire_BRequestContainers as a " +
+     " INNER JOIN RADAEmpire_CEntryContrainers as b ON b.Folio_Request = a.Folio " +
+     " WHERE a.Date = '" + datenow.ToString() + "' " +
+     " ORDER BY " +
+     "     CASE " +
+     "         WHEN a.message = 'PENDING' THEN 1 " +
+     "         WHEN a.message = 'Canceled by Rada' THEN 4 " + 
+     "         WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3 " +
+     "         ELSE 2 " +
+     "     END, a.Folio DESC";
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {
@@ -7591,10 +8009,20 @@ namespace RADALogisticsWEB.Controllers
                 string datenow = usTime.ToString();
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "  Select top (100) " +
-                    " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area , a.GruaRequest as Grua " +
-                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Date = '" + datenow.ToString() + "' ORDER by a.Folio desc";
+                con.CommandText = "SELECT TOP (100) " +
+      " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+      " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua " +
+      " FROM RADAEmpire_BRequestContainers as a " +
+      " INNER JOIN RADAEmpire_CEntryContrainers as b ON b.Folio_Request = a.Folio " +
+      " WHERE a.Date = '" + datenow.ToString() + "' " +
+      " ORDER BY " +
+      "     CASE " +
+      "         WHEN a.message = 'PENDING' THEN 1 " +
+      "         WHEN a.message = 'Canceled by Rada' THEN 4 " +
+      "         WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3 " +
+      "         ELSE 2 " +
+      "     END, a.Folio DESC";
+
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {

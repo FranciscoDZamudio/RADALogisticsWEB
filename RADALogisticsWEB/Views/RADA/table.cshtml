@@ -6,15 +6,15 @@
 @foreach (var person in ViewBag.Records)
 {
 <li class="table-row" id="tblCustomers" style="color:black ; background-color:
-    @(person.Comment == "Canceled by Rada" ? "#F9D0D0" :
-      person.Comment == "Canceled by Hisense" ? "#F9D0D0" :
-      person.Comment == "PENDING" ? "#F8E6E6" :
-      person.Comment == "CHOFER TERMINA MOVIMIENTO" ? "#D0F9E5" :
-      person.Comment == "Movement in process" ? "#E5F8EC" : "#EDE8CE")">
+    @(person.Comment == "Canceled by Rada" ? "#E9B4B4" :
+      person.Comment == "Canceled by Hisense" ? "#E9B4B4" :
+      person.Comment == "PENDING" ? "#DDDCD4" :
+      person.Comment == "CHOFER TERMINA MOVIMIENTO" ? "#C0E9B4" :
+      person.Comment == "Movement in process" ? "#E5F8EC" : "#E9D8B4")">
 
     <div class="col col-15" data-label="Options" style="text-align:center">
 
-        @Html.ActionLink("🔘 Comment ", "Comments", new { id = @person.Folio, Status = @person.Comment })
+        @Html.ActionLink("🔘 Comment ", "Comments", new { id = @person.Folio, Status = @person.Comment }) 
 
     </div>
 
@@ -54,8 +54,11 @@
            data-id="@person.Folio"
            data-choffer="@person.Choffer"
            data-requestgrua="@person.RequestGrua"
-           data-comment="@person.Comment">✅ Confirmation
+           data-comment="@person.Comment">
+            ✅ Confirmation
         </a>
+        /
+        @Html.ActionLink(" 🔄 Replace ", "Replace", new { ID = @person.Folio })
 
     </div>
 </li>

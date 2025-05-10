@@ -267,7 +267,6 @@ namespace RADALogisticsWEB.Controllers
                 Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
-
             ViewBag.User = Session["Username"];
             ViewBag.Type = Session["Type"];
 
