@@ -110,13 +110,31 @@
 
     @{
         string motValue = ViewBag.mot as string;
-        string actionName = string.IsNullOrEmpty(motValue) ? "RequestContainer" : (motValue == "YES" ? "HRecord" : "RequestContainer");
-        string controllerName = string.IsNullOrEmpty(motValue) ? "HISENSE" : (motValue == "YES" ? "History" : "HISENSE");
+
+        string actionName;
+        string controllerName;
+
+        switch (motValue)
+        {
+            case "YES":
+                actionName = "HRecord";
+                controllerName = "History";
+                break;
+            case "RADASers":
+                actionName = "Records";
+                controllerName = "History";
+                break;
+            default:
+                actionName = "LogIn";
+                controllerName = "Login";
+                break;
+        }
+
         var backUrl = Url.Action(actionName, controllerName);
     }
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i data-lucide="truck"></i> Container Details</h2>
+        <h2><i data-lucide="truck"></i> Detalles de contenedor</h2>
         <a href="@backUrl" class="btn btn-outline-secondary">
             <i data-lucide="arrow-left-circle"></i> Volver
         </a>
@@ -142,20 +160,20 @@
                         <span class="badge bg-secondary">@ViewBag.Status</span>
                     }
                 </div>
-                <div class="col-md-6"><strong>Request:</strong> @ViewBag.Solicitud</div>
-                <div class="col-md-6"><strong>Confirmation:</strong> @ViewBag.Confirmacion</div>
-                <div class="col-md-6"><strong>Delivery Date:</strong> @ViewBag.entrega</div>
-                <div class="col-md-6"><strong>Chauffeur:</strong> @ViewBag.choffer</div>
-                <div class="col-md-6"><strong>Origin:</strong> @ViewBag.origins</div>
-                <div class="col-md-6"><strong>Destiny:</strong> @ViewBag.destination</div>
-                <div class="col-md-12"><strong>Commentary:</strong> <span class="text-muted">@ViewBag.comment</span></div>
-                <div class="col-md-6"><strong>Request Date:</strong> @ViewBag.date</div>
+                <div class="col-md-6"><strong>Hora de Solicitud:</strong> @ViewBag.Solicitud</div>
+                <div class="col-md-6"><strong>Hora de Confirmacion:</strong> @ViewBag.Confirmacion</div>
+                <div class="col-md-6"><strong>Hora de Entrega:</strong> @ViewBag.entrega</div>
+                <div class="col-md-6"><strong>Chofer:</strong> @ViewBag.choffer</div>
+                <div class="col-md-6"><strong>Origen:</strong> @ViewBag.origins</div>
+                <div class="col-md-6"><strong>Destino:</strong> @ViewBag.destination</div>
+                <div class="col-md-12"><strong>Comentario:</strong> <span class="text-muted">@ViewBag.comment</span></div>
+                <div class="col-md-6"><strong>Fecha de Solicitud:</strong> @ViewBag.date</div>
                 <div class="col-md-6"><strong>Area:</strong> @ViewBag.Areas </div>
-                <div class="col-md-6"><strong>Motion Reason Canceled:</strong> @ViewBag.ReasonMT </div>
-                <div class="col-md-6"><strong>Requested by:</strong> @ViewBag.Request</div>
+                <div class="col-md-6"><strong>Motivo de Reporte Cancelado:</strong> @ViewBag.ReasonMT </div>
+                <div class="col-md-6"><strong>Solicitado por:</strong> @ViewBag.Request</div>
 
                 <button id="exportPDF" class="btn btn-danger mb-3">
-                    <i data-lucide="download"></i> Export to PDF
+                    <i data-lucide="download"></i> Exportar a PDF
                 </button>
 
             </div>
@@ -164,15 +182,15 @@
 
     <p style="text-align: center;">&nbsp;</p>
 
-    <h4 class="mb-3"><i data-lucide="list"></i> Movement History </h4>
+    <h4 class="mb-3"><i data-lucide="list"></i> Historial de Movimientos </h4>
     <ul class="responsive-table">
         <li class="table-header" id="tableData">
-            <div class="col col-10" style="font-size:13px">Movement Number</div>
-            <div class="col col-11" style="font-size:13px">Current Process</div>
-            <div class="col col-12" style="font-size:13px">End Date</div>
-            <div class="col col-13" style="font-size:13px">Status</div>
-            <div class="col col-14" style="font-size:13px">Comment</div>
-            <div class="col col-15" style="font-size:13px">Date of Process</div>
+            <div class="col col-10" style="font-size:13px">Número de Movimiento</div>
+            <div class="col col-11" style="font-size:13px">Proceso Actual</div>
+            <div class="col col-12" style="font-size:13px">Fecha de Finalización</div>
+            <div class="col col-13" style="font-size:13px">Estado</div>
+            <div class="col col-14" style="font-size:13px">Comentario</div>
+            <div class="col col-15" style="font-size:13px">Fecha del Proceso</div>
         </li>
 
         @foreach (var person in ViewBag.Records)

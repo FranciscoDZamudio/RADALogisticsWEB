@@ -27,8 +27,8 @@
             }
         </style>
 
-        <h2 class="page-title"> Generate new work area for the driver </h2>
-        <h4 class="section-subtitle"> Create New Area </h4>
+        <h2 class="page-title"> Genera una nueva Area de traslados </h2>
+        <h4 class="section-subtitle"> Crea o elimina un area registrada en el sistema </h4>
 
         @*<hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -51,7 +51,7 @@
 
             <input style="font-size:12px" readonly="@true" type="text" id="User" name="User" value="@ViewBag.User" hidden="hidden" required>
 
-            <h5 class="Tittlelabel"  style="font-weight: 700;"> New Area Overview </h5>
+            <h5 class="Tittlelabel"  style="font-weight: 700;"> Informacion de nueva Area </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
@@ -59,20 +59,20 @@
                 <input type="text" id="Name" name="Name" style="text-transform: uppercase;" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter the name of the area:</label>
+                <label>Ingresa el nombre de la nueva Area:</label>
             </div>
 
             <p style="text-align: center;">&nbsp;</p>
             <button type="submit" class="Bto_saved" style="width: 35vh">
-                ✅ Save
+                ✅ Guardar
             </button>
         }
 
         <p style="text-align: center;">&nbsp;</p>
         <p style="text-align: center;">&nbsp;</p>
 
-        <h4 class="Tittlelabel" style="font-weight: 700;"> Areas recently registered to the system </h4>
-        <h5 class="Tittlelabel"> Total Records: @ViewBag.Count </h5>
+        <h4 class="Tittlelabel" style="font-weight: 700;"> Areas Registradas recientemente en el sistema </h4>
+        <h5 class="Tittlelabel"> Total: @ViewBag.Count </h5>
 
 
     </div>
@@ -108,7 +108,7 @@
 
                 <div class="col col-7" data-label="Options" style="text-align:center">
 
-                    @Html.ActionLink("❌ Delete", "RemoveArea", new { ID = @person.id })
+                    @Html.ActionLink("❌ Eliminar", "RemoveArea", new { ID = @person.id })
 
                 </div>
 

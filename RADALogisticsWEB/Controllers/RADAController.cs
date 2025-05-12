@@ -234,7 +234,7 @@ ORDER BY A.[Foio] DESC;
             con.Connection = DBSPP;
             con.CommandText = "  Select top (100) " +
                 " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area,a.GruaRequest as Grua " +
+                " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area,a.GruaRequest as Grua,  a.RaRRequest as RaR " +
                 " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Folio = '" + Folio.ToString() + "' ORDER by a.Folio desc";
             dr = con.ExecuteReader();
             while (dr.Read())
@@ -255,6 +255,7 @@ ORDER BY A.[Foio] DESC;
                     Comment = (dr["Comment"].ToString()),
                     Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
                     Area = (dr["Area"].ToString()),
+                    RaR = (dr["RaR"].ToString()),
                 });
             }
             DBSPP.Close();
@@ -426,7 +427,7 @@ ORDER BY A.[Foio] DESC;
                 //Generar nuevo reporte de contenedor anterior
                 string folio = null, whosend = null, destination = null, 
                     origins = null, status = null, shift = null,
-                    date = null, datetimeadded = null, grua = null;
+                    date = null, datetimeadded = null, grua = null, rAR = null;
 
                 SqlCommand asiggne = new SqlCommand("Select * from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + OldID.ToString() + "'", DBSPP);
                 DBSPP.Open();
@@ -447,6 +448,7 @@ ORDER BY A.[Foio] DESC;
                         datetimeadded = drasiggne["Datetime"].ToString();
                         //Active = drasiggne["Container"].ToString();
                         grua = drasiggne["GruaRequest"].ToString();
+                        rAR = drasiggne["RaRRequest"].ToString();
 
                     }
                 }
@@ -514,8 +516,8 @@ ORDER BY A.[Foio] DESC;
                 //Guardar informacion a la base de datos del proyecto
                 DBSPP.Open();
                 SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
-                    "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest) values " +
-                    "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest) ", DBSPP);
+                    "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest,RaRRequest) values " +
+                    "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest,@RaRRequest) ", DBSPP);
                 //--------------------------------------------------------------------------------------------------------------------------------
                 PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
                 PalletControl.Parameters.AddWithValue("@Who_Send", whosend.ToString());
@@ -529,7 +531,7 @@ ORDER BY A.[Foio] DESC;
                 PalletControl.Parameters.AddWithValue("@Datetime", datetimeadded.ToString());
                 PalletControl.Parameters.AddWithValue("@Active", true);
                 PalletControl.Parameters.AddWithValue("@GruaRequest", grua.ToString());
-
+                PalletControl.Parameters.AddWithValue("@RaRRequest", rAR.ToString());
                 PalletControl.ExecuteNonQuery();
                 DBSPP.Close();
 
@@ -591,7 +593,7 @@ ORDER BY A.[Foio] DESC;
                 //Generar nuevo reporte de contenedor anterior
                 string folio = null, whosend = null, destination = null,
                     origins = null, status = null, shift = null,
-                    date = null, datetimeadded = null, grua = null;
+                    date = null, datetimeadded = null, grua = null, rAR = null;
 
                 SqlCommand asiggne = new SqlCommand("Select * from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + OldID.ToString() + "'", DBSPP);
                 DBSPP.Open();
@@ -612,7 +614,7 @@ ORDER BY A.[Foio] DESC;
                         datetimeadded = drasiggne["Datetime"].ToString();
                         //Active = drasiggne["Container"].ToString();
                         grua = drasiggne["GruaRequest"].ToString();
-
+                        rAR = drasiggne["RaRRequest"].ToString();
                     }
                 }
                 DBSPP.Close();
@@ -679,8 +681,8 @@ ORDER BY A.[Foio] DESC;
                 //Guardar informacion a la base de datos del proyecto
                 DBSPP.Open();
                 SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
-                    "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest) values " +
-                    "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest) ", DBSPP);
+                    "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest, RaRRequest) values " +
+                    "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest, @RaRRequest) ", DBSPP);
                 //--------------------------------------------------------------------------------------------------------------------------------
                 PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
                 PalletControl.Parameters.AddWithValue("@Who_Send", whosend.ToString());
@@ -694,7 +696,7 @@ ORDER BY A.[Foio] DESC;
                 PalletControl.Parameters.AddWithValue("@Datetime", datetimeadded.ToString());
                 PalletControl.Parameters.AddWithValue("@Active", true);
                 PalletControl.Parameters.AddWithValue("@GruaRequest", grua.ToString());
-
+                PalletControl.Parameters.AddWithValue("@RaRRequest", rAR.ToString());
                 PalletControl.ExecuteNonQuery();
                 DBSPP.Close();
 
@@ -936,7 +938,7 @@ ORDER BY A.[Foio] DESC;
                         con.Connection = DBSPP;
                         con.CommandText = "SELECT TOP (100) " +
                  " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                 " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua " +
+                 " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua , a.RaRRequest as RaR" +
                  " FROM RADAEmpire_BRequestContainers as a " +
                  " INNER JOIN RADAEmpire_CEntryContrainers as b ON b.Folio_Request = a.Folio " +
                  " WHERE a.Date = '" + date.ToString() + "' " +
@@ -966,6 +968,7 @@ ORDER BY A.[Foio] DESC;
                                 Comment = (dr["Comment"].ToString()),
                                 Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
                                 Area = (dr["Area"].ToString()),
+                                RaR = (dr["RaR"].ToString()),
                             });
                         }
                         DBSPP.Close();
@@ -1006,18 +1009,18 @@ ORDER BY A.[Foio] DESC;
                         DBSPP.Open();
                         con.Connection = DBSPP;
                         con.CommandText = "SELECT TOP (100) " +
-                 " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                 " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua " +
-                 " FROM RADAEmpire_BRequestContainers as a " +
-                 " INNER JOIN RADAEmpire_CEntryContrainers as b ON b.Folio_Request = a.Folio " +
-                 " WHERE a.Date = '" + date.ToString() + "' " +
-                 " ORDER BY " +
-                 "     CASE " +
-                 "         WHEN a.message = 'PENDING' THEN 1 " +
-                 "         WHEN a.message = 'Canceled by Rada' THEN 4 " +
-                 "         WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3 " +
-                 "         ELSE 2 " +
-                 "     END, a.Folio DESC";
+               " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+               " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua , a.RaRRequest as RaR" +
+               " FROM RADAEmpire_BRequestContainers as a " +
+               " INNER JOIN RADAEmpire_CEntryContrainers as b ON b.Folio_Request = a.Folio " +
+               " WHERE a.Date = '" + date.ToString() + "' " +
+               " ORDER BY " +
+               "     CASE " +
+               "         WHEN a.message = 'PENDING' THEN 1 " +
+               "         WHEN a.message = 'Canceled by Rada' THEN 4 " +
+               "         WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3 " +
+               "         ELSE 2 " +
+               "     END, a.Folio DESC";
                         dr = con.ExecuteReader();
                         while (dr.Read())
                         {
@@ -1041,6 +1044,7 @@ ORDER BY A.[Foio] DESC;
                                     Comment = (dr["Comment"].ToString()),
                                     Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
                                     Area = (dr["Area"].ToString()),
+                                    RaR = (dr["RaR"].ToString()),
                                 });
                             }
                         }
@@ -1283,7 +1287,7 @@ ORDER BY A.[Foio] DESC;
         }
 
         [HttpPost]
-        public JsonResult ConfirmProcess(string ID, string choffer, string requestGrua, string Comment)
+        public JsonResult ConfirmProcess(string ID, string choffer, string requestGrua, string Comment, string RaR)
         {
             if (Comment == "PENDING")
             {
@@ -1321,7 +1325,7 @@ ORDER BY A.[Foio] DESC;
                 DBSPP.Close();
 
                 //area de envios
-                if (estatusActual == "CAR" && shift == "ENVIOS")
+                if (estatusActual == "CAR" && shift == "ENVIOS" && RaR == "NO")
                 {
                     if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                     {
@@ -1494,7 +1498,7 @@ ORDER BY A.[Foio] DESC;
                 }
                 else
                 {
-                    if (estatusActual == "VAC" && shift == "ENVIOS")
+                    if (estatusActual == "VAC" && shift == "ENVIOS" && RaR == "NO")
                     {
                         if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                         {
@@ -1661,7 +1665,7 @@ ORDER BY A.[Foio] DESC;
                 }
 
                 //area de PT
-                if (estatusActual == "CAR" && shift == "PT")
+                if (estatusActual == "CAR" && shift == "PT" && RaR == "NO")
                 {
                     if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                     {
@@ -1831,7 +1835,7 @@ ORDER BY A.[Foio] DESC;
                 }
                 else
                 {
-                    if (estatusActual == "VAC" && shift == "PT")
+                    if (estatusActual == "VAC" && shift == "PT" && RaR == "NO")
                     {
                         if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                         {
@@ -1999,7 +2003,7 @@ ORDER BY A.[Foio] DESC;
                 }
 
                 //area de EMPAQUE
-                if (shift == "EMPAQUE" && estatusActual == "CAR" && requestGrua == "NO")
+                if (shift == "EMPAQUE" && estatusActual == "CAR" && requestGrua == "NO" && RaR == "NO")
                 {
                     if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                     {
@@ -2166,7 +2170,7 @@ ORDER BY A.[Foio] DESC;
                 }
                 else
                 {
-                    if (shift == "EMPAQUE" && estatusActual == "VAC" && requestGrua == "NO")
+                    if (shift == "EMPAQUE" && estatusActual == "VAC" && requestGrua == "NO" && RaR == "NO")
                     {
                         if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                         {
@@ -2333,7 +2337,7 @@ ORDER BY A.[Foio] DESC;
                     }
                     else
                     {
-                        if (shift == "EMPAQUE" && estatusActual == "CAR" && requestGrua == "SI")
+                        if (shift == "EMPAQUE" && estatusActual == "CAR" && requestGrua == "SI" && RaR == "NO")
                         {
                             if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                             {
@@ -2375,7 +2379,7 @@ ORDER BY A.[Foio] DESC;
                                         DBSPP.Open();
                                         coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
                                         coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                        coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE ACCESO A GRUA");
+                                        coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE SALIDA DE GRUA");
                                         coms.Parameters.AddWithValue("@Folio", ID.ToString());
                                         int rowsAffected = coms.ExecuteNonQuery();
                                         DBSPP.Close();
@@ -2386,7 +2390,7 @@ ORDER BY A.[Foio] DESC;
                                     using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
                                     {
                                         DBSPP.Open();
-                                        coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE ACCESO A GRUA");
+                                        coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE SALIDA DE GRUA");
                                         coms.Parameters.AddWithValue("@ID", ID.ToString());
                                         int rowsAffected = coms.ExecuteNonQuery();
                                         DBSPP.Close();
@@ -2395,7 +2399,7 @@ ORDER BY A.[Foio] DESC;
                                 }
                                 else
                                 {
-                                    if (message == "CHOFER EN ESPERA DE ACCESO A GRUA")
+                                    if (message == "CHOFER EN ESPERA DE SALIDA DE GRUA")
                                     {
                                         //------------------------------------------------------------------------------
                                         string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
@@ -2405,7 +2409,7 @@ ORDER BY A.[Foio] DESC;
                                             DBSPP.Open();
                                             coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
                                             coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                            coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE MANIOBRA EN GRUA");
+                                            coms.Parameters.AddWithValue("@ID", "CHOFER EN RUTA A RAMPA DESTINO");
                                             coms.Parameters.AddWithValue("@Folio", ID.ToString());
                                             int rowsAffected = coms.ExecuteNonQuery();
                                             DBSPP.Close();
@@ -2416,7 +2420,7 @@ ORDER BY A.[Foio] DESC;
                                         using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
                                         {
                                             DBSPP.Open();
-                                            coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE MANIOBRA EN GRUA");
+                                            coms.Parameters.AddWithValue("@message", "CHOFER EN RUTA A RAMPA DESTINO");
                                             coms.Parameters.AddWithValue("@ID", ID.ToString());
                                             int rowsAffected = coms.ExecuteNonQuery();
                                             DBSPP.Close();
@@ -2425,7 +2429,7 @@ ORDER BY A.[Foio] DESC;
                                     }
                                     else
                                     {
-                                        if (message == "CHOFER EN ESPERA DE MANIOBRA EN GRUA")
+                                        if (message == "CHOFER EN RUTA A RAMPA DESTINO")
                                         {
                                             //------------------------------------------------------------------------------
                                             string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
@@ -2435,7 +2439,7 @@ ORDER BY A.[Foio] DESC;
                                                 DBSPP.Open();
                                                 coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
                                                 coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                                coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE SALIDA DE GRUA");
+                                                coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CAJA");
                                                 coms.Parameters.AddWithValue("@Folio", ID.ToString());
                                                 int rowsAffected = coms.ExecuteNonQuery();
                                                 DBSPP.Close();
@@ -2446,7 +2450,7 @@ ORDER BY A.[Foio] DESC;
                                             using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
                                             {
                                                 DBSPP.Open();
-                                                coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE SALIDA DE GRUA");
+                                                coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CAJA");
                                                 coms.Parameters.AddWithValue("@ID", ID.ToString());
                                                 int rowsAffected = coms.ExecuteNonQuery();
                                                 DBSPP.Close();
@@ -2455,7 +2459,7 @@ ORDER BY A.[Foio] DESC;
                                         }
                                         else
                                         {
-                                            if (message == "CHOFER EN ESPERA DE SALIDA DE GRUA")
+                                            if (message == "CHOFER SOLTANDO CAJA")
                                             {
                                                 //------------------------------------------------------------------------------
                                                 string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
@@ -2465,7 +2469,7 @@ ORDER BY A.[Foio] DESC;
                                                     DBSPP.Open();
                                                     coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
                                                     coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                                    coms.Parameters.AddWithValue("@ID", "CHOFER EN RUTA A RAMPA DESTINO");
+                                                    coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
                                                     coms.Parameters.AddWithValue("@Folio", ID.ToString());
                                                     int rowsAffected = coms.ExecuteNonQuery();
                                                     DBSPP.Close();
@@ -2476,117 +2480,52 @@ ORDER BY A.[Foio] DESC;
                                                 using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
                                                 {
                                                     DBSPP.Open();
-                                                    coms.Parameters.AddWithValue("@message", "CHOFER EN RUTA A RAMPA DESTINO");
+                                                    coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
                                                     coms.Parameters.AddWithValue("@ID", ID.ToString());
                                                     int rowsAffected = coms.ExecuteNonQuery();
                                                     DBSPP.Close();
                                                 }
                                                 //------------------------------------------------------------------------------
+                                                string Timefinished = "UPDATE RADAEmpire_CEntryContrainers SET " +
+                                                    " Time_Finished = @Time_Finished WHERE Folio_Request = @Folio";
+                                                using (SqlCommand coms = new SqlCommand(Timefinished, DBSPP))
+                                                {
+                                                    DBSPP.Open();
+                                                    coms.Parameters.AddWithValue("@Time_Finished", usTime.ToString("HH:mm:ss"));
+                                                    coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                                    int rowsAffected = coms.ExecuteNonQuery();
+                                                    DBSPP.Close();
+                                                }
+
+                                                //------------------------------------------------------------------------------
+                                                string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
+                                                    " Status = @Status WHERE Username = @Username";
+                                                using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                                                {
+                                                    DBSPP.Open();
+                                                    coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                                                    coms.Parameters.AddWithValue("@Username", choffer.ToString());
+                                                    int rowsAffected = coms.ExecuteNonQuery();
+                                                    DBSPP.Close();
+                                                }
+
+                                                //------------------------------------------------------------------------------
+                                                string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
+                                                    " Active = @Active WHERE Foio = @Foio";
+                                                using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
+                                                {
+                                                    DBSPP.Open();
+                                                    coms.Parameters.AddWithValue("@Active", false);
+                                                    coms.Parameters.AddWithValue("@Foio", ID.ToString());
+                                                    int rowsAffected = coms.ExecuteNonQuery();
+                                                    DBSPP.Close();
+                                                }
                                             }
                                             else
                                             {
-                                                if (message == "CHOFER EN RUTA A RAMPA DESTINO")
+                                                if (message == "CHOFER TERMINA MOVIMIENTO")
                                                 {
-                                                    //------------------------------------------------------------------------------
-                                                    string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
-                                                        " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
-                                                    using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
-                                                    {
-                                                        DBSPP.Open();
-                                                        coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
-                                                        coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                                        coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CAJA");
-                                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
-                                                        int rowsAffected = coms.ExecuteNonQuery();
-                                                        DBSPP.Close();
-                                                    }
-                                                    //------------------------------------------------------------------------------
-                                                    string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
-                                                        " message = @message WHERE Folio = @ID";
-                                                    using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
-                                                    {
-                                                        DBSPP.Open();
-                                                        coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CAJA");
-                                                        coms.Parameters.AddWithValue("@ID", ID.ToString());
-                                                        int rowsAffected = coms.ExecuteNonQuery();
-                                                        DBSPP.Close();
-                                                    }
-                                                    //------------------------------------------------------------------------------
-                                                }
-                                                else
-                                                {
-                                                    if (message == "CHOFER SOLTANDO CAJA")
-                                                    {
-                                                        if (message == "CHOFER SOLTANDO CAJA")
-                                                        {
-                                                            //------------------------------------------------------------------------------
-                                                            string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
-                                                                " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
-                                                            using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
-                                                            {
-                                                                DBSPP.Open();
-                                                                coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
-                                                                coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                                                coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
-                                                                coms.Parameters.AddWithValue("@Folio", ID.ToString());
-                                                                int rowsAffected = coms.ExecuteNonQuery();
-                                                                DBSPP.Close();
-                                                            }
-                                                            //------------------------------------------------------------------------------
-                                                            string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
-                                                                " message = @message WHERE Folio = @ID";
-                                                            using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
-                                                            {
-                                                                DBSPP.Open();
-                                                                coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
-                                                                coms.Parameters.AddWithValue("@ID", ID.ToString());
-                                                                int rowsAffected = coms.ExecuteNonQuery();
-                                                                DBSPP.Close();
-                                                            }
-                                                            //------------------------------------------------------------------------------
-                                                            string Timefinished = "UPDATE RADAEmpire_CEntryContrainers SET " +
-                                                                " Time_Finished = @Time_Finished WHERE Folio_Request = @Folio";
-                                                            using (SqlCommand coms = new SqlCommand(Timefinished, DBSPP))
-                                                            {
-                                                                DBSPP.Open();
-                                                                coms.Parameters.AddWithValue("@Time_Finished", usTime.ToString("HH:mm:ss"));
-                                                                coms.Parameters.AddWithValue("@Folio", ID.ToString());
-                                                                int rowsAffected = coms.ExecuteNonQuery();
-                                                                DBSPP.Close();
-                                                            }
-
-                                                            //------------------------------------------------------------------------------
-                                                            string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
-                                                                " Status = @Status WHERE Username = @Username";
-                                                            using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
-                                                            {
-                                                                DBSPP.Open();
-                                                                coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
-                                                                coms.Parameters.AddWithValue("@Username", choffer.ToString());
-                                                                int rowsAffected = coms.ExecuteNonQuery();
-                                                                DBSPP.Close();
-                                                            }
-
-                                                            //------------------------------------------------------------------------------
-                                                            string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
-                                                                " Active = @Active WHERE Foio = @Foio";
-                                                            using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
-                                                            {
-                                                                DBSPP.Open();
-                                                                coms.Parameters.AddWithValue("@Active", false);
-                                                                coms.Parameters.AddWithValue("@Foio", ID.ToString());
-                                                                int rowsAffected = coms.ExecuteNonQuery();
-                                                                DBSPP.Close();
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (message == "CHOFER TERMINA MOVIMIENTO")
-                                                            {
-                                                                return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
-                                                            }
-                                                        }
-                                                    }
+                                                    return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
                                                 }
                                             }
                                         }
@@ -2596,7 +2535,7 @@ ORDER BY A.[Foio] DESC;
                         }
                         else
                         {
-                            if (shift == "EMPAQUE" && estatusActual == "VAC" && requestGrua == "SI")
+                            if (shift == "EMPAQUE" && estatusActual == "VAC" && requestGrua == "SI" && RaR == "NO")
                             {
                                 if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                                 {
@@ -2890,7 +2829,7 @@ ORDER BY A.[Foio] DESC;
                 }
 
                 //area de GENERALES
-                if (shift == "GENERALES" && estatusActual == "CAR" && requestGrua == "NO")
+                if (shift == "GENERALES" && estatusActual == "CAR" && requestGrua == "NO" && RaR == "NO")
                 {
                     if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                     {
@@ -3057,7 +2996,7 @@ ORDER BY A.[Foio] DESC;
                 }
                 else
                 {
-                    if (shift == "GENERALES" && estatusActual == "VAC" && requestGrua == "NO")
+                    if (shift == "GENERALES" && estatusActual == "VAC" && requestGrua == "NO" && RaR == "NO")
                     {
                         if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                         {
@@ -3224,7 +3163,7 @@ ORDER BY A.[Foio] DESC;
                     }
                     else
                     {
-                        if (shift == "GENERALES" && estatusActual == "CAR" && requestGrua == "SI")
+                        if (shift == "GENERALES" && estatusActual == "CAR" && requestGrua == "SI" && RaR == "NO")
                         {
                             if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                             {
@@ -3484,7 +3423,7 @@ ORDER BY A.[Foio] DESC;
                         }
                         else
                         {
-                            if (shift == "GENERALES" && estatusActual == "VAC" && requestGrua == "SI")
+                            if (shift == "GENERALES" && estatusActual == "VAC" && requestGrua == "SI" && RaR == "NO")
                             {
                                 if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                                 {
@@ -3586,7 +3525,7 @@ ORDER BY A.[Foio] DESC;
                                                     DBSPP.Open();
                                                     coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
                                                     coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                                    coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                                    coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE SALIDA DE GRUA");
                                                     coms.Parameters.AddWithValue("@Folio", ID.ToString());
                                                     int rowsAffected = coms.ExecuteNonQuery();
                                                     DBSPP.Close();
@@ -3597,7 +3536,7 @@ ORDER BY A.[Foio] DESC;
                                                 using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
                                                 {
                                                     DBSPP.Open();
-                                                    coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                                    coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE SALIDA DE GRUA");
                                                     coms.Parameters.AddWithValue("@ID", ID.ToString());
                                                     int rowsAffected = coms.ExecuteNonQuery();
                                                     DBSPP.Close();
@@ -3779,7 +3718,7 @@ ORDER BY A.[Foio] DESC;
                 }
 
                 //area de BODEGA 2
-                if (shift == "BODEGA 2" && estatusActual == "CAR" && requestGrua == "NO")
+                if (shift == "BODEGA 2" && estatusActual == "CAR" && requestGrua == "NO" && RaR == "NO")
                 {
                     if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                     {
@@ -3946,7 +3885,7 @@ ORDER BY A.[Foio] DESC;
                 }
                 else
                 {
-                    if (shift == "BODEGA 2" && estatusActual == "VAC" && requestGrua == "NO")
+                    if (shift == "BODEGA 2" && estatusActual == "VAC" && requestGrua == "NO" && RaR == "NO")
                     {
                         if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                         {
@@ -4113,7 +4052,7 @@ ORDER BY A.[Foio] DESC;
                     }
                     else
                     {
-                        if (shift == "BODEGA 2" && estatusActual == "CAR" && requestGrua == "SI")
+                        if (shift == "BODEGA 2" && estatusActual == "CAR" && requestGrua == "SI" && RaR == "NO")
                         {
                             if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                             {
@@ -4215,7 +4154,7 @@ ORDER BY A.[Foio] DESC;
                                                 DBSPP.Open();
                                                 coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
                                                 coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                                coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE ACCESO A GRUA");
+                                                coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE SALIDA DE GRUA");
                                                 coms.Parameters.AddWithValue("@Folio", ID.ToString());
                                                 int rowsAffected = coms.ExecuteNonQuery();
                                                 DBSPP.Close();
@@ -4226,7 +4165,7 @@ ORDER BY A.[Foio] DESC;
                                             using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
                                             {
                                                 DBSPP.Open();
-                                                coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE ACCESO A GRUA");
+                                                coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE SALIDA DE GRUA");
                                                 coms.Parameters.AddWithValue("@ID", ID.ToString());
                                                 int rowsAffected = coms.ExecuteNonQuery();
                                                 DBSPP.Close();
@@ -4435,7 +4374,7 @@ ORDER BY A.[Foio] DESC;
                         }
                         else
                         {
-                            if (shift == "BODEGA 2" && estatusActual == "VAC" && requestGrua == "SI")
+                            if (shift == "BODEGA 2" && estatusActual == "VAC" && requestGrua == "SI" && RaR == "NO")
                             {
                                 if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
                                 {
@@ -4537,7 +4476,7 @@ ORDER BY A.[Foio] DESC;
                                                     DBSPP.Open();
                                                     coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
                                                     coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                                    coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                                    coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE SALIDA DE GRUA");
                                                     coms.Parameters.AddWithValue("@Folio", ID.ToString());
                                                     int rowsAffected = coms.ExecuteNonQuery();
                                                     DBSPP.Close();
@@ -4548,7 +4487,7 @@ ORDER BY A.[Foio] DESC;
                                                 using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
                                                 {
                                                     DBSPP.Open();
-                                                    coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                                    coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE SALIDA DE GRUA");
                                                     coms.Parameters.AddWithValue("@ID", ID.ToString());
                                                     int rowsAffected = coms.ExecuteNonQuery();
                                                     DBSPP.Close();
@@ -4728,12 +4667,1364 @@ ORDER BY A.[Foio] DESC;
                     }
                 }
 
+
+                //MOVIMIENTO DE RAMPA A RAMPA (SOLO MOVIMIENTOS DE ESTE TIPO)
+
+                //contenedor de RAMPA a RAMPA
+                if (estatusActual == "CAR" && requestGrua == "NO" && RaR == "SI" && shift == "ENVIOS")
+                {
+                    if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
+                    {
+                        //------------------------------------------------------------------------------
+                        string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                            " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                        using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                        {
+                            DBSPP.Open();
+                            coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                            coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                            coms.Parameters.AddWithValue("@ID", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                            int rowsAffected = coms.ExecuteNonQuery();
+                            DBSPP.Close();
+                        }
+                        //------------------------------------------------------------------------------
+                        string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                            " message = @message WHERE Folio = @ID";
+                        using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                        {
+                            DBSPP.Open();
+                            coms.Parameters.AddWithValue("@message", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            coms.Parameters.AddWithValue("@ID", ID.ToString());
+                            int rowsAffected = coms.ExecuteNonQuery();
+                            DBSPP.Close();
+                        }
+                        //------------------------------------------------------------------------------
+                    }
+                    else
+                    {
+                        if (message == "CHOFER EN PROCESO DE ENGANCHE DE CAJA")
+                        {
+                            //------------------------------------------------------------------------------
+                            string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                            using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                coms.Parameters.AddWithValue("@ID", "CHOFER EN RUTA A RAMPA DESTINO");
+                                coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                            string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                " message = @message WHERE Folio = @ID";
+                            using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@message", "CHOFER EN RUTA A RAMPA DESTINO");
+                                coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                        }
+                        else
+                        {
+                            if (message == "CHOFER EN RUTA A RAMPA DESTINO")
+                            {
+                                //------------------------------------------------------------------------------
+                                string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                    " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                    coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                    coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CAJA");
+                                    coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                                string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                    " message = @message WHERE Folio = @ID";
+                                using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CAJA");
+                                    coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                            }
+                            else
+                            {
+                                if (message == "CHOFER SOLTANDO CAJA")
+                                {
+                                    //------------------------------------------------------------------------------
+                                    string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                        " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                        coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                        " message = @message WHERE Folio = @ID";
+                                    using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Timefinished = "UPDATE RADAEmpire_CEntryContrainers SET " +
+                                        " Time_Finished = @Time_Finished WHERE Folio_Request = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(Timefinished, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Time_Finished", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+
+                                    //------------------------------------------------------------------------------
+                                    string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
+                                        " Status = @Status WHERE Username = @Username";
+                                    using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@Username", choffer.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+
+                                    //------------------------------------------------------------------------------
+                                    string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
+                                        " Active = @Active WHERE Foio = @Foio";
+                                    using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Active", false);
+                                        coms.Parameters.AddWithValue("@Foio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                }
+                                else
+                                {
+                                    if (message == "CHOFER TERMINA MOVIMIENTO")
+                                    {
+                                        return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
+                                        //return RedirectToAction("EntryContainer", "RADA");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (estatusActual == "VAC" && requestGrua == "NO" && RaR == "SI" && shift == "ENVIOS")
+                    {
+                        if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
+                        {
+                            //------------------------------------------------------------------------------
+                            string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                            using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                coms.Parameters.AddWithValue("@ID", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                            string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                " message = @message WHERE Folio = @ID";
+                            using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@message", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                        }
+                        else
+                        {
+                            if (message == "CHOFER EN PROCESO DE ENGANCHE DE CAJA")
+                            {
+                                //------------------------------------------------------------------------------
+                                string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                    " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                    coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                    coms.Parameters.AddWithValue("@ID", "CHOFER EN RUTA A RAMPA DESTINO");
+                                    coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                                string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                    " message = @message WHERE Folio = @ID";
+                                using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@message", "CHOFER EN RUTA A RAMPA DESTINO");
+                                    coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                            }
+                            else
+                            {
+                                if (message == "CHOFER EN RUTA A RAMPA DESTINO")
+                                {
+                                    //------------------------------------------------------------------------------
+                                    string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                        " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                        coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CAJA");
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                        " message = @message WHERE Folio = @ID";
+                                    using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CAJA");
+                                        coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                }
+                                else
+                                {
+                                    if (message == "CHOFER SOLTANDO CAJA")
+                                    {
+                                        //------------------------------------------------------------------------------
+                                        string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                            " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                        using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                            coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                            coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                        //------------------------------------------------------------------------------
+                                        string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                            " message = @message WHERE Folio = @ID";
+                                        using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                        //------------------------------------------------------------------------------
+                                        string Timefinished = "UPDATE RADAEmpire_CEntryContrainers SET " +
+                                            " Time_Finished = @Time_Finished WHERE Folio_Request = @Folio";
+                                        using (SqlCommand coms = new SqlCommand(Timefinished, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Time_Finished", usTime.ToString("HH:mm:ss"));
+                                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+
+                                        //------------------------------------------------------------------------------
+                                        string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
+                                            " Status = @Status WHERE Username = @Username";
+                                        using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@Username", choffer.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+
+                                        //------------------------------------------------------------------------------
+                                        string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
+                                            " Active = @Active WHERE Foio = @Foio";
+                                        using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Active", false);
+                                            coms.Parameters.AddWithValue("@Foio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (message == "CHOFER TERMINA MOVIMIENTO")
+                                        {
+                                            return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
+                                            //return RedirectToAction("EntryContainer", "RADA");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //contenedor de RAMPA a RAMPA
+                if (estatusActual == "CAR" && requestGrua == "NO" && RaR == "SI" && shift == "EMPAQUE")
+                {
+                    if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
+                    {
+                        //------------------------------------------------------------------------------
+                        string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                            " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                        using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                        {
+                            DBSPP.Open();
+                            coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                            coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                            coms.Parameters.AddWithValue("@ID", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                            int rowsAffected = coms.ExecuteNonQuery();
+                            DBSPP.Close();
+                        }
+                        //------------------------------------------------------------------------------
+                        string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                            " message = @message WHERE Folio = @ID";
+                        using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                        {
+                            DBSPP.Open();
+                            coms.Parameters.AddWithValue("@message", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            coms.Parameters.AddWithValue("@ID", ID.ToString());
+                            int rowsAffected = coms.ExecuteNonQuery();
+                            DBSPP.Close();
+                        }
+                        //------------------------------------------------------------------------------
+                    }
+                    else
+                    {
+                        if (message == "CHOFER EN PROCESO DE ENGANCHE DE CAJA")
+                        {
+                            //------------------------------------------------------------------------------
+                            string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                            using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                coms.Parameters.AddWithValue("@ID", "CHOFER EN RUTA A RAMPA DESTINO");
+                                coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                            string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                " message = @message WHERE Folio = @ID";
+                            using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@message", "CHOFER EN RUTA A RAMPA DESTINO");
+                                coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                        }
+                        else
+                        {
+                            if (message == "CHOFER EN RUTA A RAMPA DESTINO")
+                            {
+                                //------------------------------------------------------------------------------
+                                string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                    " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                    coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                    coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CAJA");
+                                    coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                                string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                    " message = @message WHERE Folio = @ID";
+                                using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CAJA");
+                                    coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                            }
+                            else
+                            {
+                                if (message == "CHOFER SOLTANDO CAJA")
+                                {
+                                    //------------------------------------------------------------------------------
+                                    string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                        " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                        coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                        " message = @message WHERE Folio = @ID";
+                                    using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Timefinished = "UPDATE RADAEmpire_CEntryContrainers SET " +
+                                        " Time_Finished = @Time_Finished WHERE Folio_Request = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(Timefinished, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Time_Finished", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+
+                                    //------------------------------------------------------------------------------
+                                    string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
+                                        " Status = @Status WHERE Username = @Username";
+                                    using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@Username", choffer.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+
+                                    //------------------------------------------------------------------------------
+                                    string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
+                                        " Active = @Active WHERE Foio = @Foio";
+                                    using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Active", false);
+                                        coms.Parameters.AddWithValue("@Foio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                }
+                                else
+                                {
+                                    if (message == "CHOFER TERMINA MOVIMIENTO")
+                                    {
+                                        return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
+                                        //return RedirectToAction("EntryContainer", "RADA");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (estatusActual == "VAC" && requestGrua == "NO" && RaR == "SI" && shift == "EMPAQUE")
+                    {
+                        if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
+                        {
+                            //------------------------------------------------------------------------------
+                            string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                            using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                coms.Parameters.AddWithValue("@ID", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                            string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                " message = @message WHERE Folio = @ID";
+                            using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@message", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                        }
+                        else
+                        {
+                            if (message == "CHOFER EN PROCESO DE ENGANCHE DE CAJA")
+                            {
+                                //------------------------------------------------------------------------------
+                                string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                    " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                    coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                    coms.Parameters.AddWithValue("@ID", "CHOFER EN RUTA A RAMPA DESTINO");
+                                    coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                                string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                    " message = @message WHERE Folio = @ID";
+                                using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@message", "CHOFER EN RUTA A RAMPA DESTINO");
+                                    coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                            }
+                            else
+                            {
+                                if (message == "CHOFER EN RUTA A RAMPA DESTINO")
+                                {
+                                    //------------------------------------------------------------------------------
+                                    string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                        " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                        coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CAJA");
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                        " message = @message WHERE Folio = @ID";
+                                    using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CAJA");
+                                        coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                }
+                                else
+                                {
+                                    if (message == "CHOFER SOLTANDO CAJA")
+                                    {
+                                        //------------------------------------------------------------------------------
+                                        string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                            " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                        using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                            coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                            coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                        //------------------------------------------------------------------------------
+                                        string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                            " message = @message WHERE Folio = @ID";
+                                        using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                        //------------------------------------------------------------------------------
+                                        string Timefinished = "UPDATE RADAEmpire_CEntryContrainers SET " +
+                                            " Time_Finished = @Time_Finished WHERE Folio_Request = @Folio";
+                                        using (SqlCommand coms = new SqlCommand(Timefinished, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Time_Finished", usTime.ToString("HH:mm:ss"));
+                                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+
+                                        //------------------------------------------------------------------------------
+                                        string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
+                                            " Status = @Status WHERE Username = @Username";
+                                        using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@Username", choffer.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+
+                                        //------------------------------------------------------------------------------
+                                        string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
+                                            " Active = @Active WHERE Foio = @Foio";
+                                        using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Active", false);
+                                            coms.Parameters.AddWithValue("@Foio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (message == "CHOFER TERMINA MOVIMIENTO")
+                                        {
+                                            return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
+                                            //return RedirectToAction("EntryContainer", "RADA");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //contenedor de RAMPA a RAMPA
+                if (estatusActual == "CAR" && requestGrua == "NO" && RaR == "SI" && shift == "GENERALES")
+                {
+                    if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
+                    {
+                        //------------------------------------------------------------------------------
+                        string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                            " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                        using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                        {
+                            DBSPP.Open();
+                            coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                            coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                            coms.Parameters.AddWithValue("@ID", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                            int rowsAffected = coms.ExecuteNonQuery();
+                            DBSPP.Close();
+                        }
+                        //------------------------------------------------------------------------------
+                        string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                            " message = @message WHERE Folio = @ID";
+                        using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                        {
+                            DBSPP.Open();
+                            coms.Parameters.AddWithValue("@message", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            coms.Parameters.AddWithValue("@ID", ID.ToString());
+                            int rowsAffected = coms.ExecuteNonQuery();
+                            DBSPP.Close();
+                        }
+                        //------------------------------------------------------------------------------
+                    }
+                    else
+                    {
+                        if (message == "CHOFER EN PROCESO DE ENGANCHE DE CAJA")
+                        {
+                            //------------------------------------------------------------------------------
+                            string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                            using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                coms.Parameters.AddWithValue("@ID", "CHOFER EN RUTA A RAMPA DESTINO");
+                                coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                            string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                " message = @message WHERE Folio = @ID";
+                            using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@message", "CHOFER EN RUTA A RAMPA DESTINO");
+                                coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                        }
+                        else
+                        {
+                            if (message == "CHOFER EN RUTA A RAMPA DESTINO")
+                            {
+                                //------------------------------------------------------------------------------
+                                string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                    " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                    coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                    coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CAJA");
+                                    coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                                string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                    " message = @message WHERE Folio = @ID";
+                                using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CAJA");
+                                    coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                            }
+                            else
+                            {
+                                if (message == "CHOFER SOLTANDO CAJA")
+                                {
+                                    //------------------------------------------------------------------------------
+                                    string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                        " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                        coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                        " message = @message WHERE Folio = @ID";
+                                    using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Timefinished = "UPDATE RADAEmpire_CEntryContrainers SET " +
+                                        " Time_Finished = @Time_Finished WHERE Folio_Request = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(Timefinished, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Time_Finished", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+
+                                    //------------------------------------------------------------------------------
+                                    string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
+                                        " Status = @Status WHERE Username = @Username";
+                                    using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@Username", choffer.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+
+                                    //------------------------------------------------------------------------------
+                                    string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
+                                        " Active = @Active WHERE Foio = @Foio";
+                                    using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Active", false);
+                                        coms.Parameters.AddWithValue("@Foio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                }
+                                else
+                                {
+                                    if (message == "CHOFER TERMINA MOVIMIENTO")
+                                    {
+                                        return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
+                                        //return RedirectToAction("EntryContainer", "RADA");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (estatusActual == "VAC" && requestGrua == "NO" && RaR == "SI" && shift == "GENERALES")
+                    {
+                        if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
+                        {
+                            //------------------------------------------------------------------------------
+                            string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                            using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                coms.Parameters.AddWithValue("@ID", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                            string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                " message = @message WHERE Folio = @ID";
+                            using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@message", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                        }
+                        else
+                        {
+                            if (message == "CHOFER EN PROCESO DE ENGANCHE DE CAJA")
+                            {
+                                //------------------------------------------------------------------------------
+                                string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                    " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                    coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                    coms.Parameters.AddWithValue("@ID", "CHOFER EN RUTA A RAMPA DESTINO");
+                                    coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                                string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                    " message = @message WHERE Folio = @ID";
+                                using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@message", "CHOFER EN RUTA A RAMPA DESTINO");
+                                    coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                            }
+                            else
+                            {
+                                if (message == "CHOFER EN RUTA A RAMPA DESTINO")
+                                {
+                                    //------------------------------------------------------------------------------
+                                    string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                        " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                        coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CAJA");
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                        " message = @message WHERE Folio = @ID";
+                                    using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CAJA");
+                                        coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                }
+                                else
+                                {
+                                    if (message == "CHOFER SOLTANDO CAJA")
+                                    {
+                                        //------------------------------------------------------------------------------
+                                        string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                            " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                        using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                            coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                            coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                        //------------------------------------------------------------------------------
+                                        string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                            " message = @message WHERE Folio = @ID";
+                                        using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                        //------------------------------------------------------------------------------
+                                        string Timefinished = "UPDATE RADAEmpire_CEntryContrainers SET " +
+                                            " Time_Finished = @Time_Finished WHERE Folio_Request = @Folio";
+                                        using (SqlCommand coms = new SqlCommand(Timefinished, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Time_Finished", usTime.ToString("HH:mm:ss"));
+                                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+
+                                        //------------------------------------------------------------------------------
+                                        string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
+                                            " Status = @Status WHERE Username = @Username";
+                                        using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@Username", choffer.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+
+                                        //------------------------------------------------------------------------------
+                                        string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
+                                            " Active = @Active WHERE Foio = @Foio";
+                                        using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Active", false);
+                                            coms.Parameters.AddWithValue("@Foio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (message == "CHOFER TERMINA MOVIMIENTO")
+                                        {
+                                            return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
+                                            //return RedirectToAction("EntryContainer", "RADA");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //contenedor de RAMPA a RAMPA
+                if (estatusActual == "CAR" && requestGrua == "NO" && RaR == "SI" && shift == "BODEGA 2")
+                {
+                    if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
+                    {
+                        //------------------------------------------------------------------------------
+                        string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                            " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                        using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                        {
+                            DBSPP.Open();
+                            coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                            coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                            coms.Parameters.AddWithValue("@ID", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                            int rowsAffected = coms.ExecuteNonQuery();
+                            DBSPP.Close();
+                        }
+                        //------------------------------------------------------------------------------
+                        string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                            " message = @message WHERE Folio = @ID";
+                        using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                        {
+                            DBSPP.Open();
+                            coms.Parameters.AddWithValue("@message", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            coms.Parameters.AddWithValue("@ID", ID.ToString());
+                            int rowsAffected = coms.ExecuteNonQuery();
+                            DBSPP.Close();
+                        }
+                        //------------------------------------------------------------------------------
+                    }
+                    else
+                    {
+                        if (message == "CHOFER EN PROCESO DE ENGANCHE DE CAJA")
+                        {
+                            //------------------------------------------------------------------------------
+                            string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                            using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                coms.Parameters.AddWithValue("@ID", "CHOFER EN RUTA A RAMPA DESTINO");
+                                coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                            string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                " message = @message WHERE Folio = @ID";
+                            using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@message", "CHOFER EN RUTA A RAMPA DESTINO");
+                                coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                        }
+                        else
+                        {
+                            if (message == "CHOFER EN RUTA A RAMPA DESTINO")
+                            {
+                                //------------------------------------------------------------------------------
+                                string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                    " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                    coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                    coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CAJA");
+                                    coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                                string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                    " message = @message WHERE Folio = @ID";
+                                using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CAJA");
+                                    coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                            }
+                            else
+                            {
+                                if (message == "CHOFER SOLTANDO CAJA")
+                                {
+                                    //------------------------------------------------------------------------------
+                                    string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                        " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                        coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                        " message = @message WHERE Folio = @ID";
+                                    using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Timefinished = "UPDATE RADAEmpire_CEntryContrainers SET " +
+                                        " Time_Finished = @Time_Finished WHERE Folio_Request = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(Timefinished, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Time_Finished", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+
+                                    //------------------------------------------------------------------------------
+                                    string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
+                                        " Status = @Status WHERE Username = @Username";
+                                    using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                                        coms.Parameters.AddWithValue("@Username", choffer.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+
+                                    //------------------------------------------------------------------------------
+                                    string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
+                                        " Active = @Active WHERE Foio = @Foio";
+                                    using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@Active", false);
+                                        coms.Parameters.AddWithValue("@Foio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                }
+                                else
+                                {
+                                    if (message == "CHOFER TERMINA MOVIMIENTO")
+                                    {
+                                        return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
+                                        //return RedirectToAction("EntryContainer", "RADA");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (estatusActual == "VAC" && requestGrua == "NO" && RaR == "SI" && shift == "BODEGA 2")
+                    {
+                        if (message == "CHOFER ASIGNADO AL MOVIMIENTO")
+                        {
+                            //------------------------------------------------------------------------------
+                            string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                            using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                coms.Parameters.AddWithValue("@ID", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                            string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                " message = @message WHERE Folio = @ID";
+                            using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                            {
+                                DBSPP.Open();
+                                coms.Parameters.AddWithValue("@message", "CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                int rowsAffected = coms.ExecuteNonQuery();
+                                DBSPP.Close();
+                            }
+                            //------------------------------------------------------------------------------
+                        }
+                        else
+                        {
+                            if (message == "CHOFER EN PROCESO DE ENGANCHE DE CAJA")
+                            {
+                                //------------------------------------------------------------------------------
+                                string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                    " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                    coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                    coms.Parameters.AddWithValue("@ID", "CHOFER EN RUTA A RAMPA DESTINO");
+                                    coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                                string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                    " message = @message WHERE Folio = @ID";
+                                using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                {
+                                    DBSPP.Open();
+                                    coms.Parameters.AddWithValue("@message", "CHOFER EN RUTA A RAMPA DESTINO");
+                                    coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                    int rowsAffected = coms.ExecuteNonQuery();
+                                    DBSPP.Close();
+                                }
+                                //------------------------------------------------------------------------------
+                            }
+                            else
+                            {
+                                if (message == "CHOFER EN RUTA A RAMPA DESTINO")
+                                {
+                                    //------------------------------------------------------------------------------
+                                    string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                        " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                    using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                        coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                        coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CAJA");
+                                        coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                    string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                        " message = @message WHERE Folio = @ID";
+                                    using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                    {
+                                        DBSPP.Open();
+                                        coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CAJA");
+                                        coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                        int rowsAffected = coms.ExecuteNonQuery();
+                                        DBSPP.Close();
+                                    }
+                                    //------------------------------------------------------------------------------
+                                }
+                                else
+                                {
+                                    if (message == "CHOFER SOLTANDO CAJA")
+                                    {
+                                        //------------------------------------------------------------------------------
+                                        string queryDetails = "UPDATE RADAEmpires_DZDetailsHisense SET " +
+                                            " End_date = @End_date, Status = @Status WHERE Process_Movement = @ID and Folio = @Folio";
+                                        using (SqlCommand coms = new SqlCommand(queryDetails, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
+                                            coms.Parameters.AddWithValue("@Status", "COMPLETADO");
+                                            coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                        //------------------------------------------------------------------------------
+                                        string Updatemessages = "UPDATE RADAEmpire_BRequestContainers SET " +
+                                            " message = @message WHERE Folio = @ID";
+                                        using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@ID", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                        //------------------------------------------------------------------------------
+                                        string Timefinished = "UPDATE RADAEmpire_CEntryContrainers SET " +
+                                            " Time_Finished = @Time_Finished WHERE Folio_Request = @Folio";
+                                        using (SqlCommand coms = new SqlCommand(Timefinished, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Time_Finished", usTime.ToString("HH:mm:ss"));
+                                            coms.Parameters.AddWithValue("@Folio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+
+                                        //------------------------------------------------------------------------------
+                                        string CHOFFERS = "UPDATE RADAEmpire_AChoffer SET " +
+                                            " Status = @Status WHERE Username = @Username";
+                                        using (SqlCommand coms = new SqlCommand(CHOFFERS, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                                            coms.Parameters.AddWithValue("@Username", choffer.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+
+                                        //------------------------------------------------------------------------------
+                                        string inactive = "UPDATE RADAEmpires_DZChofferMovement SET " +
+                                            " Active = @Active WHERE Foio = @Foio";
+                                        using (SqlCommand coms = new SqlCommand(inactive, DBSPP))
+                                        {
+                                            DBSPP.Open();
+                                            coms.Parameters.AddWithValue("@Active", false);
+                                            coms.Parameters.AddWithValue("@Foio", ID.ToString());
+                                            int rowsAffected = coms.ExecuteNonQuery();
+                                            DBSPP.Close();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (message == "CHOFER TERMINA MOVIMIENTO")
+                                        {
+                                            return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
+                                            //return RedirectToAction("EntryContainer", "RADA");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
                 return Json(new { success = true });
                 //return RedirectToAction("EntryContainer", "RADA");
             }
         }
 
-        public ActionResult ViewConfirm(string ID, string choffer, string requestGrua)
+        public ActionResult ViewConfirm(string ID, string choffer, string requestGrua, string RaR)
         {
             if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
             {
@@ -7922,18 +9213,18 @@ ORDER BY A.[Foio] DESC;
                 DBSPP.Open();
                 con.Connection = DBSPP;
                 con.CommandText = "SELECT TOP (100) " +
-     " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-     " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua " +
-     " FROM RADAEmpire_BRequestContainers as a " +
-     " INNER JOIN RADAEmpire_CEntryContrainers as b ON b.Folio_Request = a.Folio " +
-     " WHERE a.Date = '" + datenow.ToString() + "' " +
-     " ORDER BY " +
-     "     CASE " +
-     "         WHEN a.message = 'PENDING' THEN 1 " +
-     "         WHEN a.message = 'Canceled by Rada' THEN 4 " + 
-     "         WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3 " +
-     "         ELSE 2 " +
-     "     END, a.Folio DESC";
+               " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+               " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua , a.RaRRequest as RaR" +
+               " FROM RADAEmpire_BRequestContainers as a " +
+               " INNER JOIN RADAEmpire_CEntryContrainers as b ON b.Folio_Request = a.Folio " +
+               " WHERE a.Date = '" + datenow.ToString() + "' " +
+               " ORDER BY " +
+               "     CASE " +
+               "         WHEN a.message = 'PENDING' THEN 1 " +
+               "         WHEN a.message = 'Canceled by Rada' THEN 4 " +
+               "         WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3 " +
+               "         ELSE 2 " +
+               "     END, a.Folio DESC";
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {
@@ -7957,6 +9248,7 @@ ORDER BY A.[Foio] DESC;
                             Comment = (dr["Comment"].ToString()),
                             Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
                             Area = (dr["Area"].ToString()),
+                            RaR = (dr["RaR"].ToString()),
                         });
                     }
                 }
@@ -8010,18 +9302,18 @@ ORDER BY A.[Foio] DESC;
                 DBSPP.Open();
                 con.Connection = DBSPP;
                 con.CommandText = "SELECT TOP (100) " +
-      " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-      " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua " +
-      " FROM RADAEmpire_BRequestContainers as a " +
-      " INNER JOIN RADAEmpire_CEntryContrainers as b ON b.Folio_Request = a.Folio " +
-      " WHERE a.Date = '" + datenow.ToString() + "' " +
-      " ORDER BY " +
-      "     CASE " +
-      "         WHEN a.message = 'PENDING' THEN 1 " +
-      "         WHEN a.message = 'Canceled by Rada' THEN 4 " +
-      "         WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3 " +
-      "         ELSE 2 " +
-      "     END, a.Folio DESC";
+               " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+               " b.Time_Confirm as HConfirm, b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area, a.GruaRequest as Grua , a.RaRRequest as RaR " +
+               " FROM RADAEmpire_BRequestContainers as a " +
+               " INNER JOIN RADAEmpire_CEntryContrainers as b ON b.Folio_Request = a.Folio " +
+               " WHERE a.Date = '" + datenow.ToString() + "' " +
+               " ORDER BY " +
+               "     CASE " +
+               "         WHEN a.message = 'PENDING' THEN 1 " +
+               "         WHEN a.message = 'Canceled by Rada' THEN 4 " +
+               "         WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3 " +
+               "         ELSE 2 " +
+               "     END, a.Folio DESC";
 
                 dr = con.ExecuteReader();
                 while (dr.Read())
@@ -8042,6 +9334,7 @@ ORDER BY A.[Foio] DESC;
                         Comment = (dr["Comment"].ToString()),
                         Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
                         Area = (dr["Area"].ToString()),
+                        RaR = (dr["RaR"].ToString()),
                     });
                 }
                 DBSPP.Close();

@@ -29,8 +29,8 @@
             }
         </style>
 
-        <h2 class="page-title">Inventory Control - Inventory History</h2>
-        <h4 class="section-subtitle">See a range of dates for the following information</h4>
+        <h2 class="page-title"> Historial de inventario de contenedores </h2>
+        <h4 class="section-subtitle"> Selecciona un rango de fecha para consultar la informacion </h4>
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -52,19 +52,19 @@
             <div class="form-row">
 
                 <div class="form-group col-md-6 text-center">
-                    <label for="TimeStart" style="font-family: 'Century Gothic'; display: block">Date Start</label>
+                    <label for="TimeStart" style="font-family: 'Century Gothic'; display: block">Fecha Inicial:</label>
                     <input id="TimeStart" name="TimeStart" type="date" class="form-control mx-auto" style="max-width: 100%; display: block;" />
                 </div>
 
                 <div class="form-group col-md-6 text-center">
-                    <label for="Timeend" style="font-family: 'Century Gothic'; display: block">Date End</label>
+                    <label for="Timeend" style="font-family: 'Century Gothic'; display: block">Fecha Final:</label>
                     <input id="Timeend" name="Timeend" type="date" class="form-control mx-auto" style="max-width: 100%; display: block;" />
                 </div>
 
                 <p style="text-align: center;">&nbsp;</p>
 
                 <button style="width:45vh" type="submit" class="Bto_saved">
-                    🪢 Query
+                    🪢 Buscar . . . 
                 </button>
 
                 <p style="text-align: center;">&nbsp;</p>
@@ -74,8 +74,8 @@
 </div>
 
 <p style="text-align: center;">&nbsp;</p>
-<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Latest inventory records entered into the system </h4>
-<h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
+<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Registros ingresados recientemente al sistema </h4>
+<h5 style="text-align:center" class="Tittlelabel"> Total: @ViewBag.Count</h5>
 
 @using (Html.BeginForm("UpdateInventory", "RADA", FormMethod.Post))
 {
@@ -116,8 +116,8 @@
 
                     <div class="col col-7" data-label="Options" style="text-align:center">
                         @*<a href="@Url.Action("RemoveInventary", "RADA" , new { ID = @person.ID })" class="link-label"> ❌ Delete </a>*@ 
-                        <a href="#" class="delete-inventary" data-id="@person.ID">❌ Delete </a>/
-                        <a href="@Url.Action("UpdateInventory", "RADA" ,  new { ID = @person.ID })" class="link-label"> ♻️ Update </a>
+                        <a href="#" class="delete-inventary" data-id="@person.ID">❌ Eliminar </a>/
+                        <a href="@Url.Action("UpdateInventory", "RADA" ,  new { ID = @person.ID })" class="link-label"> ♻️ Actualizar </a>
                     </div>
 
                 </li>

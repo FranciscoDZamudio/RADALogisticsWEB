@@ -33,8 +33,8 @@
             }
         </style>
 
-        <h2 class="page-title">Add a New User to the System</h2>
-        <h4 class="section-subtitle">Create a New User Account</h4>
+        <h2 class="page-title"> Genera un nuevo usuario </h2>
+        <h4 class="section-subtitle"> Completa los siguientes campos para dar de alta a un usuario </h4>
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -53,7 +53,7 @@
 
         @using (Html.BeginForm("GetUser", "Users", FormMethod.Post))
         {
-            <h5 class="typelbl" style="text-align: center; font-size: 15px; font-weight: 700; ">Type:</h5>
+            <h5 class="typelbl" style="text-align: center; font-size: 15px; font-weight: 700; ">Tipo de Usuario:</h5>
             <div class="group">
                 <select name="TypeUsers" id="TypeUsers" class="form-control" style="max-width: 30vh; color: black; text-align: center">
                     <option value="ADMINISTRATOR">ADMINISTRATOR</option>
@@ -65,24 +65,24 @@
 
             <input id="UserCreate" name="UserCreate" value="@ViewBag.Create" hidden="hidden" />
 
-            <h5 class="Tittlelabel" style="font-weight: 700;"> Information Personal</h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Informacion Personal </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
             <div class="group">
                 <input type="text" id="Username" name="Username" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter your Username:</label>
+                <label>Ingresa Nombre de usuario:</label>
             </div>
 
             <div class="group">
                 <input type="number" id="Credentials" name="Credentials" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Employee Number:</label>
+                <label>Numero de empleado:</label>
             </div>
 
-            <h5 class="Tittlelabel" style="font-weight: 700;"> Email and Log In </h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Correo e inicio de sesion </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
@@ -90,27 +90,27 @@
                 <input type="text" id="Email" name="Email" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter your Email:</label>
+                <label>Ingresa Correo Electronico:</label>
             </div>
 
             <div class="group">
                 <input type="text" id="Log" name="Log" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter your Log In:</label>
+                <label>Ingresa Nombre de usuario (Inicio de Sesion):</label>
             </div>
 
             <div class="group">
                 <input type="password" id="Pass" name="Pass" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter your password:</label>
+                <label>Ingresa clave de acceso:</label>
             </div>
 
             <h5 class="Tittlelabel"> Message: @ViewBag.message </h5>
             <p style="text-align: center;">&nbsp;</p>
             <button type="submit" class="Bto_saved">
-                ✅ Save
+                ✅ Guardar
             </button>
 
             <p style="text-align: center;">&nbsp;</p>
@@ -120,8 +120,8 @@
         }
 
         <p style="text-align: center;">&nbsp;</p>
-        <h4 class="Tittlelabel" style="font-weight: 700;"> Users recently registered to the system </h4>
-        <h5 class="Tittlelabel"> Total Records: @ViewBag.Count </h5>
+        <h4 class="Tittlelabel" style="font-weight: 700;"> Usuarios registrados Recientemente </h4>
+        <h5 class="Tittlelabel"> Total: @ViewBag.Count </h5>
     </div>
 
 
@@ -167,17 +167,17 @@
 
                     @if (person.Type_user == "HISENSE")
                     {
-                        @: @Html.ActionLink("🪢 Area Assignment", "Assignments", new { id = @person.ID, ETP = "HISENSE" }) /
+                        @: @Html.ActionLink("🪢 Asignacion de Areas", "Assignments", new { id = @person.ID, ETP = "HISENSE" }) /
                     }
 
                     @if (person.Type_user == "RADA")
                     {
-                        @: @Html.ActionLink("🪢 Area Assignment", "Assignments", new { id = @person.ID, ETP = "RADA" }) /
+                        @: @Html.ActionLink("🪢  Asignacion de Areas", "Assignments", new { id = @person.ID, ETP = "RADA" }) /
                     }
 
-                    @Html.ActionLink("♻️ Update", "UpdateProcess", new { ID = @person.ID }) /
+                    @Html.ActionLink("♻️ Actualizar", "UpdateProcess", new { ID = @person.ID }) /
                     @*@Html.ActionLink("❌ Delete", "RemoveUser", new { ID = @person.ID })*@
-                    <a href="#" class="delete-user" data-id="@person.ID">❌ Delete</a>
+                    <a href="#" class="delete-user" data-id="@person.ID">❌ Eliminar</a>
                 </div>
 
             </li>

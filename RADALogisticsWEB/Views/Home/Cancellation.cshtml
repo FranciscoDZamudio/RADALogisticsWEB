@@ -28,43 +28,42 @@
             }
         </style>
 
-        <h2 class="page-title">History of Cancelled Movements</h2>
-        <h4 class="section-subtitle">View Cancelled Records</h4>
+        <h2 class="page-title">Historial de Movimientos Cancelados</h2>
+        <h4 class="section-subtitle">Ingresa un rango de fecha para poder consultar la informacion del sistema</h4>
         <p style="text-align: center;">&nbsp;</p>
 
         @*<hr>
-        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-                <span class="text">Return to back</span>
-                <span class="circle"></span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-            </button>
-        </div>
-        <hr>*@
+            <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+                <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                    </svg>
+                    <span class="text">Return to back</span>
+                    <span class="circle"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                    </svg>
+                </button>
+            </div>
+            <hr>*@
 
         @using (Html.BeginForm("Cancellation", "Home", FormMethod.Post))
         {
             <div class="form-row">
-
                 <div class="form-group col-md-6 text-center">
-                    <label for="TimeStart" style="font-family: 'Century Gothic'; display: block">Date Start</label>
+                    <label for="TimeStart" style="font-family: 'Century Gothic'; display: block">Fecha Inicio:</label>
                     <input id="TimeStart" name="TimeStart" type="date" class="form-control mx-auto" style="max-width: 100%; display: block;" />
                 </div>
 
                 <div class="form-group col-md-6 text-center">
-                    <label for="Timeend" style="font-family: 'Century Gothic'; display: block">Date End</label>
+                    <label for="Timeend" style="font-family: 'Century Gothic'; display: block">Fecha Final:</label>
                     <input id="Timeend" name="Timeend" type="date" class="form-control mx-auto" style="max-width: 100%; display: block;" />
                 </div>
 
                 <p style="text-align: center;">&nbsp;</p>
 
                 <button style="width:45vh" type="submit" class="Bto_saved">
-                    🪢 Query
+                    🪢 Buscar . . .
                 </button>
 
                 <p style="text-align: center;">&nbsp;</p>
@@ -78,8 +77,8 @@
 </div>
 
 <p style="text-align: center;">&nbsp;</p>
-<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Latest cancelled movements entered into the system </h4>
-<h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
+<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Registros ingresados recientemente al sistema </h4>
+<h5 style="text-align:center" class="Tittlelabel"> Total: @ViewBag.Count</h5>
 
 <ul class="responsive-table">
     <li class="table-header" id="tableData">
@@ -108,7 +107,7 @@
             <div class="col col-4" data-label="Datetime" style="text-align:center"> @person.Datetime</div>
 
             <div class="col col-4" data-label="Options" style="text-align:center">
-                @Html.ActionLink("🔸View", "Details", new { id = @person.Folio })
+                @Html.ActionLink("🔸Ver Detalles", "Details", new { id = @person.Folio })
             </div>
 
         </li>

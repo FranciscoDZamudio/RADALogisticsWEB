@@ -28,8 +28,8 @@
             }
         </style>
 
-        <h2 class="page-title" style="font-weight: 700;"> Motion Confirmation Input </h2>
-        <h4 class="section-subtitle"> Container Movement </h4>
+        <h2 class="page-title" style="font-weight: 700;"> Confirmacion de Movimiento </h2>
+        <h4 class="section-subtitle"> Selecciona a un chofer para completar la confirmacin del movimiento </h4>
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -52,7 +52,7 @@
             <input hidden="hidden" value="@ViewBag.Username" id="Username" name="Username" />
             <input hidden="hidden" value="@ViewBag.area" id="area" name="area" />
 
-            <h1 style="font-size:22px"> Container Movement Information</h1>
+            <h1 style="font-size:22px"> Informacion general del contenedor </h1>
 
             <p style="text-align: center;"> &nbsp;</p>
 
@@ -60,13 +60,13 @@
                 <div class="row" style="text-align:center">
                     <div class="col-md-3" style="text-align:center">
 
-                        <p>Who Request: </p>
+                        <p>Quien Solicita: </p>
                         <h1 style="font-size:18px">@ViewBag.WhoSend</h1>
 
                     </div>
                     <div class="col-md-3" style="text-align:center">
 
-                        <p>Container Request:</p>
+                        <p>Contenedor Solicitado:</p>
                         <h1 style="font-size:18px">@ViewBag.Container</h1>
                         <input hidden="hidden" value="@ViewBag.Container" id="Container" name="Container" />
 
@@ -74,14 +74,14 @@
 
                     <div class="col-md-3" style="text-align:center">
 
-                        <p>Destination Location:</p>
+                        <p>Locacion Destino:</p>
                         <h1 style="font-size:18px">@ViewBag.Destination</h1>
 
                     </div>
 
                     <div class="col-md-3" style="text-align:center">
 
-                        <p>Origins Location:</p>
+                        <p>Locacion Origen:</p>
                         <h1 style="font-size:18px">@ViewBag.Origins</h1>
 
                     </div>
@@ -92,20 +92,20 @@
                 <div class="row" style="text-align:center">
                     <div class="col-md-4" style="text-align:center">
 
-                        <p>Status Container: </p>
+                        <p>Estatus del contenedor: </p>
                         <h1 style="font-size:18px">@ViewBag.Status</h1>
 
                     </div>
                     <div class="col-md-4" style="text-align:center">
 
-                        <p>Date Request (Time):</p>
+                        <p>Fecha de Solicitud (Hora):</p>
                         <h1 style="font-size:18px" id="Time_Confirm" name="Time_Confirm">@ViewBag.Datetime</h1>
 
                     </div>
 
                     <div class="col-md-4" style="text-align:center">
 
-                        <p>Date Request (Month):</p>
+                        <p>Fecha de Solicitud (Mes):</p>
                         <h1 style="font-size:18px">@ViewBag.Date</h1>
 
                     </div>
@@ -124,7 +124,7 @@
                 </select>
             </div>*@
 
-            <h5 class="Tittlelabel" style=" font-weight: 700; color: #5264AE">Select Choffer(s):</h5>
+            <h5 class="Tittlelabel" style=" font-weight: 700; color: #5264AE"> Selecciona a un chofer:</h5>
             <div class="group" style="padding: 5px 0px 0px 0px">
                 <select name="Choffer" id="Choffer" class="form-control" style="max-width: 40vh; color: black; text-align: center">
                     @foreach (var person in ViewBag.RadaUsers)
@@ -135,13 +135,13 @@
             </div>
 
             <button type="submit" class="Bto_saved">
-                ✅ Confirm Process
+                ✅ Confirmar Proceso
             </button>
 
             <p style="text-align: center;">&nbsp;</p>
             <p style="text-align: center;">&nbsp;</p>
 
-            <h4 class="Tittlelabel" style="font-weight: 700;"> Drivers currently on the move </h4>
+            <h4 class="Tittlelabel" style="font-weight: 700;"> Choferes Actuales en movimiento </h4>
             <ul class="responsive-table">
 
                 <li class="table-header" id="tableData">

@@ -30,8 +30,8 @@
             }
         </style>
 
-        <h2 class="page-title" style="font-weight: 700;"> Inventory Control - View Inventory Systems </h2>
-        <h4 class="section-subtitle">Create Inventary and update control</h4>
+        <h2 class="page-title" style="font-weight: 700;"> Control de Inventario - Buscar y registrar inventario de contenedores </h2>
+        <h4 class="section-subtitle"> Genera y actualiza Inventario de contenedores </h4>
         <p style="text-align: center;">&nbsp;</p>
 
         @*<hr>
@@ -52,7 +52,7 @@
         @using (Html.BeginForm("ProcessData", "RADA", FormMethod.Post))
         {
             <p style="text-align: center;">&nbsp;</p>
-            <h5 class="Tittlelabel" style="font-weight: 700;"> Username Overview </h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Informacion de Usuario </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
@@ -62,7 +62,7 @@
                 <span class="bar"></span>
             </div>
 
-            <h5 class="Tittlelabel" style="font-weight: 700;"> Container Overview </h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Informacion de Contenedor </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
@@ -70,19 +70,19 @@
                 <input type="text" id="Container" name="Container" style="background-color: #F3F5F8;" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter your Container:</label>
+                <label>Ingresa contenedor:</label>
             </div>
 
             <div class="group">
                 <input type="text" id="Location" name="Location" style="background-color: #F3F5F8;" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter location:</label>
+                <label>Ingresa locacion:</label>
             </div>
 
             <p style="text-align: center;">&nbsp;</p>
             <button type="submit" class="Bto_saved">
-                ✅ Save
+                ✅ Guardar
             </button>
             <p style="text-align: center;">&nbsp;</p>
         }
@@ -98,11 +98,11 @@
     </div>*@
 
 <p style="text-align: center;">&nbsp;</p>
-<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Latest inventory records entered into the system </h4>
-<h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
+<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Registros recientes ingresados al sistema </h4>
+<h5 style="text-align:center" class="Tittlelabel"> Total: @ViewBag.Count</h5>
 
 <div style="text-align:center">
-    <p style="padding:5px 0px 5px 0px">@Html.ActionLink("View History", "InventoryRecords", "History")</p>
+    <p style="padding:5px 0px 5px 0px">@Html.ActionLink("Ver Historial de registros", "InventoryRecords", "History")</p>
 </div>
 
 @using (Html.BeginForm("UpdateInventory", "RADA", FormMethod.Post))

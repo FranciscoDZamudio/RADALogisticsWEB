@@ -115,7 +115,6 @@ namespace RADALogisticsWEB.Controllers
 
                 GetDetailss(ID);
                 ViewBag.Records = GetDetails;
-
                 return View();
             }
         }
@@ -255,7 +254,7 @@ namespace RADALogisticsWEB.Controllers
             return PartialView("table", ViewBag.Records);
         }
 
-        public ActionResult ProcessData(string User, string Type, string Container, string Origins, string Destination, string Area, string ActivoHidden)
+        public ActionResult ProcessData(string ActivoRampa , string User, string Type, string Container, string Origins, string Destination, string Area, string ActivoHidden)
         {
             if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
             {
@@ -282,6 +281,14 @@ namespace RADALogisticsWEB.Controllers
                 }
                 else
                 {
+                    if (ActivoRampa == "true")
+                    {
+                        ActivoRampa = "SI";
+                    }
+                    else
+                    {
+                        ActivoRampa = "NO";
+                    }
                     //create generate randoms int value
                     string randomval = null;
                     SqlCommand conse = new SqlCommand("Select top (1) ID from RADAEmpire_BRequestContainers order by ID desc", DBSPP);
@@ -320,8 +327,8 @@ namespace RADALogisticsWEB.Controllers
                     //Guardar informacion a la base de datos del proyecto
                     DBSPP.Open();
                     SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
-                        "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest) values " +
-                        "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest) ", DBSPP);
+                        "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest, RaRRequest) values " +
+                        "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest, @RaRRequest) ", DBSPP);
                     //--------------------------------------------------------------------------------------------------------------------------------
                     PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
                     PalletControl.Parameters.AddWithValue("@Who_Send", User.ToString());
@@ -335,7 +342,7 @@ namespace RADALogisticsWEB.Controllers
                     PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString("HH:mm:ss"));
                     PalletControl.Parameters.AddWithValue("@Active", true);
                     PalletControl.Parameters.AddWithValue("@GruaRequest", ActivoHidden);
-
+                    PalletControl.Parameters.AddWithValue("@RaRRequest", ActivoRampa.ToString());
                     PalletControl.ExecuteNonQuery();
                     DBSPP.Close();
                     //--------------------------------------------------------------------------------------------------------------------------------
@@ -363,7 +370,7 @@ namespace RADALogisticsWEB.Controllers
                     //Generar una lista por areas
                     List<string> lista = new List<string>();
 
-                    if (Area == "ENVIOS" && Type == "CAR")
+                    if (Area == "ENVIOS" && Type == "CAR" && ActivoRampa == "NO")
                     {
                         lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                         lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
@@ -373,7 +380,7 @@ namespace RADALogisticsWEB.Controllers
                     }
                     else
                     {
-                        if (Area == "ENVIOS" && Type == "VAC")
+                        if (Area == "ENVIOS" && Type == "VAC" && ActivoRampa == "NO")
                         {
                             lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                             lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
@@ -383,7 +390,7 @@ namespace RADALogisticsWEB.Controllers
                         }
                         else
                         {
-                            if (Area == "PT" && Type == "CAR")
+                            if (Area == "PT" && Type == "CAR" && ActivoRampa == "NO")
                             {
                                 lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                                 lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
@@ -393,7 +400,7 @@ namespace RADALogisticsWEB.Controllers
                             }
                             else
                             {
-                                if (Area == "PT" && Type == "VAC")
+                                if (Area == "PT" && Type == "VAC" && ActivoRampa == "NO")
                                 {
                                     lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                                     lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
@@ -405,8 +412,8 @@ namespace RADALogisticsWEB.Controllers
                         }
                     }
 
-                    //AREA DE EMPAQUE
-                    if (Area == "EMPAQUE" && Type == "CAR" && ActivoHidden == "NO")
+                    //TIPO DE MOVIMIENTO DE RAMPA A RAMPA
+                    if (ActivoRampa == "SI" && ActivoHidden == "NO" && Type == "CAR")
                     {
                         lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                         lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
@@ -416,7 +423,29 @@ namespace RADALogisticsWEB.Controllers
                     }
                     else
                     {
-                        if (Area == "EMPAQUE" && Type == "VAC" && ActivoHidden == "NO")
+                        if (ActivoRampa == "SI" && ActivoHidden == "NO" && Type == "VAC")
+                        {
+                            lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                            lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
+                            lista.Add("CHOFER SOLTANDO CAJA");
+                            lista.Add("CHOFER TERMINA MOVIMIENTO");
+                        }
+                    }
+
+
+                    //AREA DE EMPAQUE
+                    if (Area == "EMPAQUE" && Type == "CAR" && ActivoHidden == "NO" && ActivoRampa == "NO")
+                    {
+                        lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                        lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                        lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
+                        lista.Add("CHOFER SOLTANDO CAJA");
+                        lista.Add("CHOFER TERMINA MOVIMIENTO");
+                    }
+                    else
+                    {
+                        if (Area == "EMPAQUE" && Type == "VAC" && ActivoHidden == "NO" && ActivoRampa == "NO")
                         {
                             lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                             lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
@@ -426,12 +455,12 @@ namespace RADALogisticsWEB.Controllers
                         }
                         else
                         {
-                            if (Area == "EMPAQUE" && Type == "CAR" && ActivoHidden == "SI")
+                            if (Area == "EMPAQUE" && Type == "CAR" && ActivoHidden == "SI" && ActivoRampa == "NO")
                             {
                                 lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                                 lista.Add("CHOFER ENGANCHANDO CHASIS");
-                                lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
-                                lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
+                                //lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
+                                //lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
                                 lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
                                 lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
                                 lista.Add("CHOFER SOLTANDO CAJA");
@@ -439,14 +468,14 @@ namespace RADALogisticsWEB.Controllers
                             }
                             else
                             {
-                                if (Area == "EMPAQUE" && Type == "VAC" && ActivoHidden == "SI")
+                                if (Area == "EMPAQUE" && Type == "VAC" && ActivoHidden == "SI" && ActivoRampa == "NO")
                                 {
                                     lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                                     lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
                                     lista.Add("CHOFER EN ESPERA DE SELLO");
                                     lista.Add("CHOFER EN ESPERA DE ACCESO DE GRÚA");
-                                    lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
-                                    lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
+                                    //lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                    //lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
                                     lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
                                     lista.Add("CHOFER SOLTANDO CHASIS");
                                     lista.Add("CHOFER TERMINA MOVIMIENTO");
@@ -456,7 +485,7 @@ namespace RADALogisticsWEB.Controllers
                     }
 
                     //AREA DE GENERALES
-                    if (Area == "GENERALES" && Type == "CAR" && ActivoHidden == "NO")
+                    if (Area == "GENERALES" && Type == "CAR" && ActivoHidden == "NO" && ActivoRampa == "NO")
                     {
                         lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                         lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
@@ -466,7 +495,7 @@ namespace RADALogisticsWEB.Controllers
                     }
                     else
                     {
-                        if (Area == "GENERALES" && Type == "VAC" && ActivoHidden == "NO")
+                        if (Area == "GENERALES" && Type == "VAC" && ActivoHidden == "NO" && ActivoRampa == "NO")
                         {
                             lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                             lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
@@ -476,12 +505,12 @@ namespace RADALogisticsWEB.Controllers
                         }
                         else
                         {
-                            if (Area == "GENERALES" && Type == "CAR" && ActivoHidden == "SI")
+                            if (Area == "GENERALES" && Type == "CAR" && ActivoHidden == "SI" && ActivoRampa == "NO")
                             {
                                 lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                                 lista.Add("CHOFER ENGANCHANDO CHASIS");
-                                lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
-                                lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
+                                //lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
+                                //lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
                                 lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
                                 lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
                                 lista.Add("CHOFER SOLTANDO CAJA");
@@ -489,14 +518,14 @@ namespace RADALogisticsWEB.Controllers
                             }
                             else
                             {
-                                if (Area == "GENERALES" && Type == "VAC" && ActivoHidden == "SI")
+                                if (Area == "GENERALES" && Type == "VAC" && ActivoHidden == "SI" && ActivoRampa == "NO")
                                 {
                                     lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                                     lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
                                     lista.Add("CHOFER EN ESPERA DE SELLO");
                                     lista.Add("CHOFER EN ESPERA DE ACCESO DE GRÚA");
-                                    lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
-                                    lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
+                                    //lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                    //lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
                                     lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
                                     lista.Add("CHOFER SOLTANDO CHASIS");
                                     lista.Add("CHOFER TERMINA MOVIMIENTO");

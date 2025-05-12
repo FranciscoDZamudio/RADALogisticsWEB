@@ -32,7 +32,7 @@
 
         <div class="choffer-float">
             <div class="choffer-box">
-                <h4 class="choffer-title">Drivers Without Movement</h4>
+                <h4 class="choffer-title">Choferes en Movimiento</h4>
 
                 <div class="choffer-scroll">
                     <table class="choffer-table">
@@ -71,8 +71,8 @@
             </div>
         </div>
 
-        <h2 class="page-title" style="font-weight: 700;">Entry of requested container movements</h2>
-        <h4 class="section-subtitle">Container inbound and request</h4>
+        <h2 class="page-title" style="font-weight: 700;">Entrada de Movmientos de Contenedores</h2>
+        <h4 class="section-subtitle"> Selecciona y continua con el proceso para finalizar la solicitud del contenedor </h4>
 
         <input value="@ViewBag.User" hidden="hidden" id="user" name="user" />
         <p style="text-align: center;">&nbsp;</p>
@@ -96,7 +96,7 @@
 </div>
 
 <div style="text-align: center; font-size: 14px; font-weight: 700;">
-    Next updated on: <span id="countdown">60</span> s
+    Siguiente Actualizacion: <span id="countdown">60</span> s
 </div>
 
 @using (Html.BeginForm("Query", "RADA", FormMethod.Post))
@@ -117,21 +117,22 @@
 
     <div style="display: flex; justify-content: center; margin: 10px 0;">
         <button type="submit" class="Bto_saved" style="text-align: center;">
-            🔍 Query
+            🔍 Buscar . . . 
         </button>
     </div>
 }
 
 <p style="text-align: center;">&nbsp;</p>
 
-<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Latest requested records entered into the system </h4>
-<h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
+<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Solicitudes Recientres Registradas en el Sistema </h4>
+<h5 style="text-align:center" class="Tittlelabel"> Total: @ViewBag.Count</h5>
 
 <div class="table-scroll">
     <ul class="responsive-table">
         <li class="table-header" id="tableData">
             <div class="col col-15" style="text-align:center">Comment</div>
             <div class="col col-1" style="text-align:center">Grua Mov.</div>
+            <div class="col col-1" style="text-align:center">R - R</div>
             <div class="col col-1" style="text-align:center">Folio</div>
             <div class="col col-2" style="text-align:center">Container</div>
             <div class="col col-3" style="text-align:center">Origins</div>
@@ -195,59 +196,6 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-   // CONFIRMACIÓN (✅ Confirmation)
-$(document).on("click", ".view-confirm", function (e) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    console.log("CLICK EN .view-confirm");
-
-    const id = $(this).data("id");
-    const choffer = $(this).data("choffer");
-    const requestGrua = $(this).data("requestgrua");
-    const comment = $(this).data("comment");
-
-    $.ajax({
-        url: '@Url.Action("ConfirmProcess", "RADA")',
-        type: 'POST',
-        data: {
-            ID: id,
-            choffer: choffer,
-            requestGrua: requestGrua,
-            comment: comment
-        },
-        success: function (response) {
-            if (response.success) {
-                if (response.redirectUrl) {
-                    window.location.href = response.redirectUrl;
-                } else {
-                    // Recargar sin mostrar mensaje ni borrar contenido
-                    $.ajax({
-                        url: '/RADA/mov2',
-                        type: 'GET',
-                        data: { Folio: id },
-                        success: function (data) {
-                            $('#tabla-container').fadeOut(100, function () {
-                                $(this).html(data).fadeIn(100);
-                            });
-                        },
-                        error: function () {
-                            alert('Error al recargar los detalles después de confirmar.');
-                        }
-                    });
-                }
-            } else {
-                alert("La confirmación no fue exitosa.");
-            }
-        },
-        error: function () {
-            alert("Hubo un error al confirmar");
-        }
-    });
-
-    return false;
-});
-
-
 
     // CARGAR MOVIMIENTO (🔍)
     $(document).on('click', '.folio-link', function (e) {
@@ -276,6 +224,58 @@ $(document).on("click", ".view-confirm", function (e) {
 
         return false;
     });
+
+    $(document).on("click", ".view-confirm", function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    const id = $(this).data("id");
+    const choffer = $(this).data("choffer");
+    const requestGrua = $(this).data("requestgrua");
+    const comment = $(this).data("comment");
+    const RaR = $(this).data("rar"); // 🔧 Aquí se usa el nombre correcto
+
+    $.ajax({
+        url: '@Url.Action("ConfirmProcess", "RADA")',
+        type: 'POST',
+        data: {
+            ID: id,
+            choffer: choffer,
+            requestGrua: requestGrua,
+            comment: comment,
+            RaR: RaR
+        },
+        success: function (response) {
+            if (response.success) {
+                if (response.redirectUrl) {
+                    window.location.href = response.redirectUrl;
+                } else {
+                    $.ajax({
+                        url: '/RADA/mov2',
+                        type: 'GET',
+                        data: { Folio: id },
+                        success: function (data) {
+                            $('#tabla-container').fadeOut(100, function () {
+                                $(this).html(data).fadeIn(100);
+                            });
+                        },
+                        error: function () {
+                            alert('Error al recargar los detalles después de confirmar.');
+                        }
+                    });
+                }
+            } else {
+                alert("La confirmación no fue exitosa.");
+            }
+        },
+        error: function () {
+            alert("Hubo un error al confirmar");
+        }
+    });
+
+    return false;
+});
+
 
 </script>
 

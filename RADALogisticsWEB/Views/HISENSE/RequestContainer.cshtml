@@ -30,30 +30,28 @@
             }
         </style>
 
-        <h2 class="page-title">Request for Container Movements</h2>
-        <h4 class="section-subtitle">Movement Request Overview</h4>
+        <h2 class="page-title"> Solicitud de nuevo contenedor </h2>
+        <h4 class="section-subtitle">Completa lo siguiente para solicitar un nuevo movimiento</h4>
 
         @*<hr>
-        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-                <span class="text"> Return to back Home </span>
-                <span class="circle"></span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-            </button>
-        </div>
-        <hr>*@
+            <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+                <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                    </svg>
+                    <span class="text"> Return to back Home </span>
+                    <span class="circle"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                    </svg>
+                </button>
+            </div>
+            <hr>*@
 
         @using (Html.BeginForm("ProcessData", "HISENSE", FormMethod.Post))
         {
-
-
             <p style="text-align: center;">&nbsp;</p>
-            <h5 class="Tittlelabel" style=" font-weight: 700;"> Username Overview </h5>
+            <h5 class="Tittlelabel" style=" font-weight: 700;">Informacion de usuario </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
@@ -63,11 +61,11 @@
                 <span class="bar"></span>
             </div>
 
-            <h5 class="Tittlelabel" style=" font-weight: 700;"> Container Overview </h5>
+            <h5 class="Tittlelabel" style=" font-weight: 700;"> Informacion de Contenedor </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
-            <h5 class="Tittlelabel" style=" font-weight: 700; ">Status:</h5>
+            <h5 class="Tittlelabel" style=" font-weight: 700; ">Selecciona el estatus del contenedor:</h5>
             <div class="group">
                 <select name="Type" id="Type" class="form-control" style="max-width: 30vh; color: black;  text-align: center ">
 
@@ -77,7 +75,7 @@
                 </select>
             </div>
 
-            <h5 class="Tittlelabel" style=" font-weight: 700;">Area:</h5>
+            <h5 class="Tittlelabel" style=" font-weight: 700;">Selecciona Area:</h5>
             <div class="group" style="padding: 5px 0px 0px 0px">
                 <select name="Area" id="Area" class="form-control" style="max-width: 30vh; color: black; text-align: center">
                     @foreach (var person in ViewBag.listed)
@@ -87,14 +85,24 @@
                 </select>
             </div>
 
-            <div id="checkboxContainer">
-                <h5 class="Tittlelabel" style=" font-weight: 700; color: #5264AE">
-                    Is the container in the Crane?
+            <div id="checkboxContainer1">
+                <h5 class="Tittlelabel" style="font-weight: 700; color: #5264AE">
+                    ¿Está el contenedor en la grúa?
                 </h5>
-                @Html.CheckBox("Activo", new { id = "chkActivo" })
-                <label for="chkActivo">Activo</label>
+                @Html.CheckBox("ActivoGrua", new { id = "chkActivoGrua" })
+                <label for="chkActivoGrua">Activo</label>
             </div>
             <input type="hidden" name="ActivoHidden" id="ActivoHidden" value="NO" />
+
+            <div id="checkboxContainer2">
+                <h5 class="Tittlelabel" style="font-weight: 700; color: #5264AE">
+                    ¿El movimiento es de Rampa a Rampa?
+                </h5>
+                @Html.CheckBox("ActivoRampa", new { id = "chkActivoRampa" })
+                <label for="chkActivoRampa">Activo</label>
+            </div>
+            <input type="hidden" name="ActivoRampa" id="ResultRampa" value="NO" />
+
 
             <p style="text-align: center;">&nbsp;</p>
             <p style="text-align: center;">&nbsp;</p>
@@ -103,26 +111,26 @@
                 <input style="font-size: 15px; background-color: #F3F5F8; " type="text" id="Container" name="Container" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter your Container:</label>
+                <label>Ingresa numero de contenedor:</label>
             </div>
 
             <div class="group">
                 <input style="font-size: 15px; background-color: #F3F5F8; " type="text" id="Origins" name="Origins" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Origins Location:</label>
+                <label>Locacion Origen:</label>
             </div>
 
             <div class="group">
                 <input style="font-size: 15px; background-color: #F3F5F8; " type="text" id="Destination" name="Destination" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Destination Location:</label>
+                <label>Locacion Destino:</label>
             </div>
 
             <p style="text-align: center;">&nbsp;</p>
             <button type="submit" class="Bto_saved">
-                ✅ Save
+                ✅ Guardar
             </button>
             <p style="text-align: center;">&nbsp;</p>
             <p style="text-align: center;">&nbsp;</p>
@@ -133,8 +141,8 @@
 </div>
 
 <p style="text-align: center;">&nbsp;</p>
-<h4 style="text-align:center;font-weight: 700" class="Tittlelabel" > Request Recently Requested Containers </h4>
-<h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
+<h4 style="text-align:center;font-weight: 700" class="Tittlelabel"> Solicitudes recientes de contenedores </h4>
+<h5 style="text-align:center" class="Tittlelabel"> Total: @ViewBag.Count</h5>
 
 <ul class="responsive-table">
 
@@ -151,7 +159,7 @@
         <div class="col col-5" style="text-align:center">Origins</div>
 
         <div class="col col-6" style="text-align:center">Status</div>
-        
+
         <div class="col col-2" style="text-align:center">Message</div>
 
         <div class="col col-6" style="text-align:center">Area</div>
@@ -186,43 +194,86 @@
     setInterval(actualizarTabla, 60000);
 </script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("chkActivo").addEventListener("change", function () {
-            document.getElementById("ActivoHidden").value = this.checked ? "SI" : "NO";
-        });
-    });
-</script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
 
-        // Cuando cambie la selección
+        // Checkbox de GRÚA
+        $('#chkActivoGrua').on('change', function () {
+            if (this.checked) {
+                $('#chkActivoRampa').prop('checked', false);
+                $('#ResultRampa').val('NO'); // aseguramos que rampa quede en NO
+            }
+            $('#ActivoHidden').val(this.checked ? 'SI' : 'NO');
+        });
+
+        // Checkbox de RAMPA
+        $('#chkActivoRampa').on('change', function () {
+            if (this.checked) {
+                $('#chkActivoGrua').prop('checked', false);
+                $('#ActivoHidden').val('NO'); // desactiva GRÚA
+            }
+            $('#ResultRampa').val(this.checked ? 'SI' : 'NO');
+        });
+
+        // Mostrar u ocultar solo el checkbox de grúa según el área
         $('#Area').on('change', function () {
             var selected = $(this).val().toUpperCase();
 
             if (selected === 'ENVIOS' || selected === 'PT') {
-                // Oculta el checkbox y cambia el valor a NO
-                $('#checkboxContainer').hide();
-                $('#chkActivo').prop('checked', false);
+                $('#checkboxContainer1').hide();
+                $('#chkActivoGrua').prop('checked', false);
                 $('#ActivoHidden').val('NO');
             } else {
-                // Muestra el checkbox
-                $('#checkboxContainer').show();
+                $('#checkboxContainer1').show();
             }
         });
 
-        // También actualiza el valor del hidden cuando se cambia el checkbox
-        $('#chkActivo').on('change', function () {
-            $('#ActivoHidden').val(this.checked ? 'SI' : 'NO');
-        });
-
-        // Ejecuta el cambio al cargar la página para aplicar la lógica inicial
+        // Ejecutar la lógica inicial al cargar
         $('#Area').trigger('change');
     });
 </script>
+
+
+
+
+@*<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("chkActivo").addEventListener("change", function () {
+                document.getElementById("ActivoHidden").value = this.checked ? "SI" : "NO";
+            });
+        });
+    </script>*@
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@*<script>
+        $(document).ready(function () {
+
+            // Cuando cambie la selección
+            $('#Area').on('change', function () {
+                var selected = $(this).val().toUpperCase();
+
+                if (selected === 'ENVIOS' || selected === 'PT') {
+                    // Oculta el checkbox y cambia el valor a NO
+                    $('#checkboxContainer').hide();
+                    $('#chkActivo').prop('checked', false);
+                    $('#ActivoHidden').val('NO');
+                } else {
+                    // Muestra el checkbox
+                    $('#checkboxContainer').show();
+                }
+            });
+
+            // También actualiza el valor del hidden cuando se cambia el checkbox
+            $('#chkActivo').on('change', function () {
+                $('#ActivoHidden').val(this.checked ? 'SI' : 'NO');
+            });
+
+            // Ejecuta el cambio al cargar la página para aplicar la lógica inicial
+            $('#Area').trigger('change');
+        });
+    </script>*@
 
 <p style="text-align: center;">&nbsp;</p>
 <p style="text-align: center;">&nbsp;</p>

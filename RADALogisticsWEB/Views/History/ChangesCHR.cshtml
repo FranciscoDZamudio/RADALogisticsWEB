@@ -1,9 +1,9 @@
 ﻿
 @{
-    ViewBag.Title = "RADA Logistics - Comment";
+    ViewBag.Title = "ChangesCHR";
 }
 
-<link href="~/Stylee/NewUsersStylee.css" rel="stylesheet" />
+<link href="~/Stylee/RecordsStylee.css" rel="stylesheet" />
 
 <div class="container" style="text-align: center; width: 100%; height: 100%">
 
@@ -12,12 +12,10 @@
         <style>
             .page-title {
                 text-align: center;
-                font-size: 20px;
+                font-size: 21px;
                 font-weight: 700;
                 color: #2c3e50;
                 margin-bottom: 15px;
-                text-transform: uppercase;
-                letter-spacing: 0px;
             }
 
             .section-subtitle {
@@ -29,13 +27,12 @@
             }
         </style>
 
-        <h2 class="page-title" style="font-weight: 700;"> Comentario Actual </h2>
-        <h4 class="section-subtitle"> Ingresa un comentario sobre el movimiento actual del sistema </h4>
+        <h2 class="page-title"> Cambio de chofer para el movimiento </h2>
+        <h4 class="section-subtitle"> Selecciona al nuevo chofer para terminar el movimiento </h4>
 
-        <input value="@ViewBag.User" hidden="hidden" id="user" name="user" />
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("EntryContainer", "RADA")'">
+            <button class="animated-button" onclick="location.href='@Url.Action("Records", "History")'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
                     <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
                 </svg>
@@ -47,42 +44,50 @@
             </button>
         </div>
         <hr>
-    </div>
-</div>
 
-<div class="container" style="text-align: center; width: 100%; height: 100%">
 
-    <div style="text-align: center; min-width: 100%; ">
-
-       @using (Html.BeginForm("GetComments", "RADA", FormMethod.Post))
+        @using (Html.BeginForm("ChangesProcess", "History", FormMethod.Post))
         {
-            <br>
-            <h5 class="labelTitt" style="font-weight: 700; color: #5264AE" > Estatus Actual: </h5>
-            <h5 class="labelTitt"> @ViewBag.Status </h5>
-            <input value="@ViewBag.Status" hidden="hidden" id="Status" name="Status" />
-
-            <br>
-            <h5 class="labelTitt" style="font-weight: 700; color: #5264AE" > Numero de Reporte (Folio): </h5>
-            <h5 class="labelTitt"> @ViewBag.id </h5>
-            <input value="@ViewBag.id" hidden="hidden" id="id" name="id" />
-
             <p style="text-align: center;">&nbsp;</p>
+
+            <input readonly="@true" type="text" id="ID" name="ID" value="@ViewBag.ID" hidden="hidden" required>
+
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Chofer Assignado en el movmiento Actual: </h5>
+            <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
             <div class="group">
-                <input type="text" id="Comment" name="Comment" required>
+                <input readonly="@true" type="text" id="ChofferOld" name="ChofferOld" value="@ViewBag.Choffer" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Ingresa un Comentario:</label>
             </div>
 
             <p style="text-align: center;">&nbsp;</p>
+
+            <h5 class="Tittlelabel" style=" font-weight: 700; color: #5264AE"> Selecciona a un chofer:</h5>
+            <div class="group" style="padding: 5px 0px 0px 0px">
+                <select name="Choffers" id="Choffers" class="form-control" style="max-width: 40vh; color: black; text-align: center">
+                    @foreach (var person in ViewBag.RadaUsers)
+                    {
+                        <option value="@person.Username">@person.Username</option>
+                    }
+                </select>
+            </div>
+
+
+            <!-- Campo oculto para enviar la decisión -->
+            <input type="hidden" id="guardarAnterior" name="guardarAnterior" value="" />
+
+            <p style="text-align: center;">&nbsp;</p>
             <button type="submit" class="Bto_saved">
-                ✅ Guardar 
+                ✅ Guardar Cambios
             </button>
+            <p style="text-align: center;">&nbsp;</p>
         }
+
 
     </div>
 
 </div>
+
 

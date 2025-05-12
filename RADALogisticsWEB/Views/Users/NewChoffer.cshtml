@@ -33,8 +33,8 @@
             }
         </style>
 
-        <h2 class="page-title">Add New Drivers to the System</h2>
-        <h4 class="section-subtitle">Create New Driver Profile</h4>
+        <h2 class="page-title">Genera un nuevo usuario (Chofer)</h2>
+        <h4 class="section-subtitle">Completa los siguientes campos para dar de alta a un usuario</h4>
 
 
         <hr>
@@ -61,14 +61,14 @@
                 <input type="text" id="Username" name="Username" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter your Username:</label>
+                <label>Ingresa su nombre completo:</label>
             </div>
 
             <div class="group">
                 <input type="number" id="FastCard" name="FastCard" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter your FastCard:</label>
+                <label>Ingresa su FastCard:</label>
             </div>
 
             <!--<h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Assigned work Area:</h5>
@@ -83,7 +83,7 @@
 
             @*<p style="padding:10px 0px 0px 0px">@Html.ActionLink("New Area", "Area")</p>*@
 
-            <h5 class="typelbl" style="text-align: center; font-size: 15px; font-weight: 700 ">Assigned work shift:</h5>
+            <h5 class="typelbl" style="text-align: center; font-size: 15px; font-weight: 700 ">Asignacion de turno de trabajo:</h5>
             <div class="group">
                 <select name="Shift" id="Shift" class="form-control" style="max-width: 30vh; color: black; text-align: center">
                     <option value="1">1</option>
@@ -93,7 +93,7 @@
 
             <p style="text-align: center;">&nbsp;</p>
             <button type="submit" class="Bto_saved">
-                ✅ Save
+                ✅ Guardar
             </button>
             <p style="text-align: center;">&nbsp;</p>
         }
@@ -101,8 +101,8 @@
         <p style="text-align: center;">&nbsp;</p>
         <p style="text-align: center;">&nbsp;</p>
 
-        <h4 class="Tittlelabel" style=" font-weight: 700;"> Users recently registered to the system </h4>
-        <h5 class="Tittlelabel"> Total Records: @ViewBag.Count </h5>
+        <h4 class="Tittlelabel" style=" font-weight: 700;"> Usuarios registrados recientemente al sistema </h4>
+        <h5 class="Tittlelabel"> Total: @ViewBag.Count </h5>
 
     </div>
 
@@ -148,8 +148,8 @@
 
                 <div class="col col-2" data-label="Options" style="text-align:center">
 
-                    @Html.ActionLink("🪢 Area Assignment", "Assignment", new { id = @person.ID }) /
-                    @Html.ActionLink("♻️ Update", "UpdateDriver", new { id = @person.ID }) /
+                    @Html.ActionLink("🪢 Asignacion", "Assignment", new { id = @person.ID }) /
+                    @Html.ActionLink("♻️ Actualizacion", "UpdateDriver", new { id = @person.ID }) /
                     @*@Html.ActionLink("❌ Delete", "RemoverChoffer", new { id = @person.ID })*@
                     <a href="#" class="delete-choffer" data-id="@person.ID">❌ Eliminar</a>
                 </div>

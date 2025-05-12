@@ -29,8 +29,8 @@
                 }
             </style>
 
-            <h2 class="page-title">Update User Information – User Management</h2>
-            <h4 class="section-subtitle">Edit User Details</h4>
+            <h2 class="page-title"> Actualizacion de Informacion de Usuario </h2>
+            <h4 class="section-subtitle"> Editar Usuario </h4>
 
             <hr>
             <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
@@ -49,7 +49,7 @@
 
             <input value="@ViewBag.ID" name="id" id="id" hidden="hidden" />
 
-            <h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Type:</h5>
+            <h5 class="typelbl" style="text-align: center; font-size: 15px; font: bold; ">Tipo de Usuario:</h5>
             <div class="group">
                 <select name="TypeUsers" id="TypeUsers" class="form-control" style="width: 35vh; color: black; text-align: center">
                     <option value="@ViewBag.TypeUsers">@ViewBag.TypeUsers</option>
@@ -60,7 +60,7 @@
             </div>
             <p style="text-align: center;">&nbsp;</p>
 
-            <h5 class="Tittlelabel"> Information Personal</h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Informacion Personal </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
             <div class="group">
@@ -74,10 +74,10 @@
                 <input type="number" id="Credentials" name="Credentials" value="@ViewBag.EmployeeNumber" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Employee Number:</label>
+                <label>Numero de Empleado:</label>
             </div>
 
-            <h5 class="Tittlelabel"> Email and Log In </h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;"> Correo e Inicio de Sesion </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
@@ -85,27 +85,27 @@
                 <input type="text" id="Email" name="Email" value="@ViewBag.Email" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter your Email:</label>
+                <label>Ingresa correo electronico:</label>
             </div>
 
             <div class="group">
                 <input type="text" id="Log" name="Log" value="@ViewBag.LoginSession" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter your Log In:</label>
+                <label>Ingresa nombre de usuario (Inicio de Sesion):</label>
             </div>
 
             <div class="group">
                 <input type="password" id="Pass" name="Pass" value="@ViewBag.Passwords" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label>Enter your password:</label>
+                <label>Ingresa una clave de acceso:</label>
             </div>
 
             <h5 class="Tittlelabel"> Message: @ViewBag.message </h5>
             <p style="text-align: center;">&nbsp;</p>
             <button type="submit" class="Bto_saved">
-                ♻️ Update
+                ♻️ Actualizar
             </button>
         }
 

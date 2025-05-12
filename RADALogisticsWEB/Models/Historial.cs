@@ -22,5 +22,6 @@ namespace RADALogisticsWEB.Models
         public string Comment { get; set; }
         public string Date { get; set; }
         public string Area { get; set; }
+        public string RaR { get; set; }
     }
 }

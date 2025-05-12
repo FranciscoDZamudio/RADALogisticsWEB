@@ -27,8 +27,8 @@
             }
         </style>
 
-        <h2 class="page-title"> Assignment of Application Areas </h2>
-        <h4 class="section-subtitle"> It is important to assign the areas to hisense users in order to make requests </h4>
+        <h2 class="page-title"> Asignación de Áreas </h2>
+        <h4 class="section-subtitle"> Selecciona una nueva area al chofer </h4>
 
 
         <hr>
@@ -48,7 +48,7 @@
 
         @using (Html.BeginForm("AsignacionChofees", "Users", FormMethod.Post))
         {
-            <h5 class="Tittlelabel"> General Information </h5>
+            <h5 class="Tittlelabel"> Informacion General </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;">&nbsp;</p>
 
@@ -64,7 +64,7 @@
             <input type="text" id="user" name="user" value="@ViewBag.User" hidden="hidden" required>
 
             <p style="text-align: center;">&nbsp;</p>
-            <h5 class="Tittlelabel"> Area Assignment </h5>
+            <h5 class="Tittlelabel"> Selecciona una nueva area </h5>
             <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
             <p style="text-align: center;"> </p>
             <div class="group" style="padding: 10px 0px 0px 0px">
@@ -78,15 +78,15 @@
 
             <p style="text-align: center;">&nbsp;</p>
             <button type="submit" class="Bto_saved">
-                ✅ Save
+                ✅ Guardar
             </button>
         }
 
         <p style="text-align: center;">&nbsp;</p>
         <p style="text-align: center;">&nbsp;</p>
 
-        <h4 class="Tittlelabel" style="font-weight: 700;"> User Assigned Areas in the System </h4>
-        <h5 class="Tittlelabel"> Total Records: @ViewBag.Count </h5>
+        <h4 class="Tittlelabel" style="font-weight: 700;">  Areas Asignadas del usuario </h4>
+        <h5 class="Tittlelabel"> Total: @ViewBag.Count </h5>
 
 
 

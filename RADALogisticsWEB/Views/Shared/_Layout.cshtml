@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="es">
     <link rel="icon" type="image/x-icon" href="~/Pictures/Logo-RADA-1-300x212.ico" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
@@ -49,7 +51,7 @@
 
         @Html.ActionLink("📥 Contenedores", "EntryContainer", "RADA")
         @Html.ActionLink("🏗️ Control de Inventario", "Inventory", "RADA")
-        @Html.ActionLink("🗂️ Historial de Registros", "Record", "History")
+        @Html.ActionLink("🗂️ Historial de Registros", "Records", "History")
         @Html.ActionLink("‍📊 Panel de Control", "Dashboard", "History")
     }
     else if (ViewBag.Type == "ADMINISTRATOR")
