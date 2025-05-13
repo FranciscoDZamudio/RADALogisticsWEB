@@ -459,7 +459,7 @@ namespace RADALogisticsWEB.Controllers
                             {
                                 lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                                 lista.Add("CHOFER ENGANCHANDO CHASIS");
-                                //lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
+                                lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
                                 //lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
                                 lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
                                 lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
@@ -509,7 +509,7 @@ namespace RADALogisticsWEB.Controllers
                             {
                                 lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
                                 lista.Add("CHOFER ENGANCHANDO CHASIS");
-                                //lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
+                                lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
                                 //lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
                                 lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
                                 lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
@@ -526,6 +526,60 @@ namespace RADALogisticsWEB.Controllers
                                     lista.Add("CHOFER EN ESPERA DE ACCESO DE GRÚA");
                                     //lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
                                     //lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
+                                    lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
+                                    lista.Add("CHOFER SOLTANDO CHASIS");
+                                    lista.Add("CHOFER TERMINA MOVIMIENTO");
+                                }
+                            }
+                        }
+                    }
+
+                    if (Area == "BODEGA 2" && Type == "CAR" && ActivoHidden == "NO" && ActivoRampa == "NO")
+                    {
+                        lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                        lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                        lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
+                        lista.Add("CHOFER SOLTANDO CAJA");
+                        lista.Add("CHOFER TERMINA MOVIMIENTO");
+                    }
+                    else
+                    {
+                        if (Area == "BODEGA 2" && Type == "VAC" && ActivoHidden == "NO" && ActivoRampa == "NO")
+                        {
+                            lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                            lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                            lista.Add("CHOFER EN ESPERA DE SELLO");
+                            lista.Add("CHOFER EN ESPERA DE AREA DE VACIO");
+                            lista.Add("CHOFER TERMINA MOVIMIENTO");
+                        }
+                        else
+                        {
+                            if (Area == "BODEGA 2" && Type == "CAR" && ActivoHidden == "SI" && ActivoRampa == "NO")
+                            {
+                                lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                                lista.Add("CHOFER EN CAMINO A PLANTA");
+                                lista.Add("CHOFER INGRESANDO A RECIBOS");
+                                //lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
+                                lista.Add("CHOFER ENGANCHANDO CHASIS");
+                                lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
+                                //lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
+                                lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
+                                lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
+                                lista.Add("CHOFER SOLTANDO CAJA");
+                                lista.Add("CHOFER TERMINA MOVIMIENTO");
+                            }
+                            else
+                            {
+                                if (Area == "BODEGA 2" && Type == "VAC" && ActivoHidden == "SI" && ActivoRampa == "NO")
+                                {
+                                    lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
+                                    lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
+                                    lista.Add("CHOFER EN ESPERA DE SELLO");
+                                    lista.Add("CHOFER EN ESPERA DE ACCESO DE GRUA");
+                                    //lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                    //lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
+                                    lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                    lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
                                     lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
                                     lista.Add("CHOFER SOLTANDO CHASIS");
                                     lista.Add("CHOFER TERMINA MOVIMIENTO");

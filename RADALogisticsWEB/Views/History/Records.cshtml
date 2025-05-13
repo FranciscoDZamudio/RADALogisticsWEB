@@ -86,29 +86,29 @@
 
             <div class="col col-1" style="text-align:center">Folio</div>
 
-            <div class="col col-1" style="text-align:center">Container</div>
+            <div class="col col-1" style="text-align:center">Contenedor</div>
 
-            <div class="col col-2" style="text-align:center">Origins</div>
+            <div class="col col-2" style="text-align:center">Origen</div>
 
-            <div class="col col-3" style="text-align:center">Destination</div>
+            <div class="col col-3" style="text-align:center">Destino</div>
 
-            <div class="col col-4" style="text-align:center">Status</div>
+            <div class="col col-4" style="text-align:center">Estatus</div>
 
-            <div class="col col-5" style="text-align:center">HRequest</div>
+            <div class="col col-5" style="text-align:center">HSolicita</div>
 
-            <div class="col col-6" style="text-align:center">HConfirm</div>
+            <div class="col col-6" style="text-align:center">HConfirma</div>
 
-            <div class="col col-7" style="text-align:center">HFinish</div>
+            <div class="col col-7" style="text-align:center">HEntrega</div>
 
-            <div class="col col-8" style="text-align:center">Who Request</div>
+            <div class="col col-8" style="text-align:center">Solicitado por</div>
 
-            <div class="col col-9" style="text-align:center">Choffer</div>
+            <div class="col col-9" style="text-align:center">Chofer</div>
 
-            <div class="col col-10" style="text-align:center">Comment</div>
+            <div class="col col-10" style="text-align:center">Comentario</div>
 
             <div class="col col-10" style="text-align:center">Area</div>
 
-            <div class="col col-11" style="text-align:center">Date</div>
+            <div class="col col-11" style="text-align:center">Fecha</div>
 
             <div class="col col-1" style="text-align:center">Opciones</div>
 
@@ -161,7 +161,7 @@
             @if (person.Choffer != "PENDNING CONFIRM" && person.Comment != "Canceled by Rada" && person.Comment != "CHOFER TERMINA MOVIMIENTO")
             {
 
-                @Html.ActionLink("/n 🔨 Cambio", "ChangesCHR", new { ID = @person.Folio })
+                @Html.ActionLink("🔨 Cambio de Chofer", "ChangesCHR", new { ID = @person.Folio })
 
             }
 

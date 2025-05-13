@@ -28,8 +28,8 @@
             }
         </style>
 
-        <h2 class="page-title">Main Container Movement and Information Dashboard</h2>
-        <h4 class="section-subtitle">See a range of dates for the following information</h4>
+        <h2 class="page-title">Tablero de Movimiento e Información del Contenedor Principal</h2>
+        <h4 class="section-subtitle">Ingresa un rango de fechas para consultar la informacion</h4>
 
         <p style="text-align: center;">&nbsp;</p>
 
@@ -50,7 +50,7 @@
         @using (Html.BeginForm("Dashboard", "History", FormMethod.Post))
         {
             <div class="form-row" style="width: 100%; text-align: center">
-                <p class="tittleSearch" style=" font-weight: 700;">Select Date:</p>
+                <p class="tittleSearch" style=" font-weight: 700;">Selecciona una fecha:</p>
                 <input id="TimeStart" name="TimeStart" type="date"
                        style="width: 80%; margin: 0 auto; display: block;" />
                 <br>
@@ -71,27 +71,27 @@
                 <div class="row" style="text-align:center">
                     <div class="col-md-3" style="text-align:center">
 
-                        <p style="font-size:15px"> Area with the most Container Movements/Transfers: </p>
+                        <p style="font-size:15px"> Área con el mayor número de movimientos/transferencias de contenedores: </p>
                         <h2 style="font-size: 19px"> @ViewBag.MoreMovement </h2>
 
                     </div>
                     <div class="col-md-3" style="text-align:center">
 
-                        <p style="font-size: 15px">Total Container Requests:</p>
+                        <p style="font-size: 15px">Total de solicitudes de contenedores:</p>
                         <h2 style="font-size: 19px "> @ViewBag.RecordTotals Requests</h2>
 
                     </div>
 
                     <div class="col-md-3" style="text-align:center">
 
-                        <p style="font-size: 15px">Total Cancelled:</p>
+                        <p style="font-size: 15px">Total Cancelado:</p>
                         <h2 style="font-size: 19px "> @ViewBag.CanceledTotals Requests</h2>
 
                     </div>
 
                     <div class="col-md-3" style="text-align:center">
 
-                        <p style="font-size: 15px"> Lost Time due to Cancelled Containers (min):</p>
+                        <p style="font-size: 15px"> Tiempo perdido debido a contenedores cancelados (min):</p>
                         <h2 style="font-size: 19px"> 320 min </h2>
 
                     </div>
@@ -120,7 +120,7 @@
 
     <hr>
 
-    <h4 style="font-size:22px"> Latest container movement reports </h4>
+    <h4 style="font-size:22px"> Últimos informes de movimiento de contenedores </h4>
     <h4 style="font-size:17px"> Total Records: @ViewBag.count </h4>
 
 </div>
@@ -131,27 +131,27 @@
 
             <div class="col col-1" style="text-align:center">Folio</div>
 
-            <div class="col col-1" style="text-align:center">Container</div>
+            <div class="col col-1" style="text-align:center">Contenedor</div>
 
-            <div class="col col-2" style="text-align:center">Origins</div>
+            <div class="col col-2" style="text-align:center">Origen</div>
 
-            <div class="col col-3" style="text-align:center">Destination</div>
+            <div class="col col-3" style="text-align:center">Destino</div>
 
-            <div class="col col-4" style="text-align:center">Status</div>
+            <div class="col col-4" style="text-align:center">Estatus</div>
 
-            <div class="col col-5" style="text-align:center">HRequest</div>
+            <div class="col col-5" style="text-align:center">Solicitado</div>
 
-            <div class="col col-6" style="text-align:center">HConfirm</div>
+            <div class="col col-6" style="text-align:center">Confirmado</div>
 
-            <div class="col col-7" style="text-align:center">HFinish</div>
+            <div class="col col-7" style="text-align:center">Entregado</div>
 
-            <div class="col col-8" style="text-align:center">Who Request</div>
+            <div class="col col-8" style="text-align:center">Solicitado por</div>
 
-            <div class="col col-9" style="text-align:center">Choffer</div>
+            <div class="col col-9" style="text-align:center">Chofer</div>
 
-            <div class="col col-10" style="text-align:center">Comment</div>
+            <div class="col col-10" style="text-align:center">Comentario</div>
 
-            <div class="col col-11" style="text-align:center">Date</div>
+            <div class="col col-11" style="text-align:center">Fecha</div>
 
         </li>
         @foreach (var person in ViewBag.Records)

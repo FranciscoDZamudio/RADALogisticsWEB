@@ -58,12 +58,12 @@
            data-requestgrua="@person.RequestGrua"
            data-comment="@person.Comment"
            data-rar="@person.RaR">
-            ✅ Confirmation
+            ✅ Confirmacion
         </a>
 
         @if (person.Comment != "Canceled by Rada" && person.Comment != "CHOFER TERMINA MOVIMIENTO")
         {
-            @Html.ActionLink(" 🔄 Replace ", "Replace", new { ID = @person.Folio })
+            @Html.ActionLink(" 🔄 Cambiar Contenedor", "Replace", new { ID = @person.Folio })
         }
     </div>
 </li>
