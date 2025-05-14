@@ -74,13 +74,14 @@
         <h4 class="Tittlelabel" style="font-weight: 700;"> Areas Registradas recientemente en el sistema </h4>
         <h5 class="Tittlelabel"> Total: @ViewBag.Count </h5>
 
-
     </div>
 
 </div>
 
 <div class="table-scroll">
+
     <ul class="responsive-table">
+
         <li class="table-header" id="tableData">
 
             <div class="col col-1" style="text-align:center">ID</div>
@@ -94,7 +95,7 @@
             <div class="col col-7" style="text-align:center">Opciones</div>
         </li>
 
-        @foreach (var person in ViewBag.Records)
+       @foreach (var person in ViewBag.Records)
         {
             <li class="table-row" id="tblCustomers">
 
@@ -116,4 +117,5 @@
         }
 
     </ul>
+
 </div>

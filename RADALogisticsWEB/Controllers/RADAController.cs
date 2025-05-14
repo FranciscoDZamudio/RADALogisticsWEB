@@ -2692,7 +2692,7 @@ ORDER BY A.[Foio] DESC;
                                                     DBSPP.Open();
                                                     coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
                                                     coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                                    coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                                    coms.Parameters.AddWithValue("@ID", "CHOFER EN ESPERA DE SALIDA DE GRUA");
                                                     coms.Parameters.AddWithValue("@Folio", ID.ToString());
                                                     int rowsAffected = coms.ExecuteNonQuery();
                                                     DBSPP.Close();
@@ -2703,7 +2703,7 @@ ORDER BY A.[Foio] DESC;
                                                 using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
                                                 {
                                                     DBSPP.Open();
-                                                    coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE MANIOBRA DE GRUA");
+                                                    coms.Parameters.AddWithValue("@message", "CHOFER EN ESPERA DE SALIDA DE GRUA");
                                                     coms.Parameters.AddWithValue("@ID", ID.ToString());
                                                     int rowsAffected = coms.ExecuteNonQuery();
                                                     DBSPP.Close();
@@ -2782,7 +2782,7 @@ ORDER BY A.[Foio] DESC;
                                                                 DBSPP.Open();
                                                                 coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
                                                                 coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                                                coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CHASIS");
+                                                                coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
                                                                 coms.Parameters.AddWithValue("@Folio", ID.ToString());
                                                                 int rowsAffected = coms.ExecuteNonQuery();
                                                                 DBSPP.Close();
@@ -2793,7 +2793,7 @@ ORDER BY A.[Foio] DESC;
                                                             using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
                                                             {
                                                                 DBSPP.Open();
-                                                                coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CHASIS");
+                                                                coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
                                                                 coms.Parameters.AddWithValue("@ID", ID.ToString());
                                                                 int rowsAffected = coms.ExecuteNonQuery();
                                                                 DBSPP.Close();
@@ -3640,7 +3640,7 @@ ORDER BY A.[Foio] DESC;
                                                                 DBSPP.Open();
                                                                 coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
                                                                 coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                                                coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CHASIS");
+                                                                coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
                                                                 coms.Parameters.AddWithValue("@Folio", ID.ToString());
                                                                 int rowsAffected = coms.ExecuteNonQuery();
                                                                 DBSPP.Close();
@@ -3651,7 +3651,7 @@ ORDER BY A.[Foio] DESC;
                                                             using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
                                                             {
                                                                 DBSPP.Open();
-                                                                coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CHASIS");
+                                                                coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
                                                                 coms.Parameters.AddWithValue("@ID", ID.ToString());
                                                                 int rowsAffected = coms.ExecuteNonQuery();
                                                                 DBSPP.Close();
@@ -4591,7 +4591,7 @@ ORDER BY A.[Foio] DESC;
                                                                 DBSPP.Open();
                                                                 coms.Parameters.AddWithValue("@End_date", usTime.ToString("HH:mm:ss"));
                                                                 coms.Parameters.AddWithValue("@Status", "COMPLETADO");
-                                                                coms.Parameters.AddWithValue("@ID", "CHOFER SOLTANDO CHASIS");
+                                                                coms.Parameters.AddWithValue("@ID", "CHOFER TERMINA MOVIMIENTO");
                                                                 coms.Parameters.AddWithValue("@Folio", ID.ToString());
                                                                 int rowsAffected = coms.ExecuteNonQuery();
                                                                 DBSPP.Close();
@@ -4602,7 +4602,7 @@ ORDER BY A.[Foio] DESC;
                                                             using (SqlCommand coms = new SqlCommand(Updatemessages, DBSPP))
                                                             {
                                                                 DBSPP.Open();
-                                                                coms.Parameters.AddWithValue("@message", "CHOFER SOLTANDO CHASIS");
+                                                                coms.Parameters.AddWithValue("@message", "CHOFER TERMINA MOVIMIENTO");
                                                                 coms.Parameters.AddWithValue("@ID", ID.ToString());
                                                                 int rowsAffected = coms.ExecuteNonQuery();
                                                                 DBSPP.Close();

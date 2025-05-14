@@ -477,7 +477,7 @@ namespace RADALogisticsWEB.Controllers
                                     //lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
                                     //lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
                                     lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
-                                    lista.Add("CHOFER SOLTANDO CHASIS");
+                                    //lista.Add("CHOFER SOLTANDO CHASIS");
                                     lista.Add("CHOFER TERMINA MOVIMIENTO");
                                 }
                             }
@@ -527,7 +527,7 @@ namespace RADALogisticsWEB.Controllers
                                     //lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
                                     //lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
                                     lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
-                                    lista.Add("CHOFER SOLTANDO CHASIS");
+                                    //lista.Add("CHOFER SOLTANDO CHASIS");
                                     lista.Add("CHOFER TERMINA MOVIMIENTO");
                                 }
                             }
@@ -581,7 +581,7 @@ namespace RADALogisticsWEB.Controllers
                                     lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
                                     lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
                                     lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
-                                    lista.Add("CHOFER SOLTANDO CHASIS");
+                                    //lista.Add("CHOFER SOLTANDO CHASIS");
                                     lista.Add("CHOFER TERMINA MOVIMIENTO");
                                 }
                             }

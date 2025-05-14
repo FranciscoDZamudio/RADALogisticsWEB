@@ -15,6 +15,23 @@
 
     <link href="~/Stylee/mainStylee.css" rel="stylesheet" />
 
+    <style>
+        .sidebar-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            margin: 4px 0;
+            color: #062527;
+        }
+
+        .hr-divider {
+            border: none;
+            height: 1px;
+            background-color: #B6B8BB;
+            margin: 8px 0;
+        }
+    </style>
+
     @{
         var controller = ViewContext.RouteData.Values["controller"]?.ToString();
         var action = ViewContext.RouteData.Values["action"]?.ToString();
@@ -36,18 +53,26 @@
 
     @if (ViewBag.Type == "HISENSE")
     {
-        <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
-        <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Permisos de Usuario</p>
-        <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+        <hr class="hr-divider" />
+        <p class="sidebar-section-title">Permisos de Usuario</p>
+        <hr class="hr-divider" />
+
+        @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+            <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Permisos de Usuario</p>
+            <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
 
         @Html.ActionLink("📤 Solicitud de Carga", "RequestContainer", "HISENSE")
         @Html.ActionLink("🗂️ Historial de Registros", "HRecord", "History")
     }
     else if (ViewBag.Type == "RADA")
     {
-        <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
-        <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Permisos de Usuario</p>
-        <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+        <hr class="hr-divider" />
+        <p class="sidebar-section-title">Permisos de Usuario</p>
+        <hr class="hr-divider" />
+
+        @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+            <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Permisos de Usuario</p>
+            <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
 
         @Html.ActionLink("📥 Contenedores", "EntryContainer", "RADA")
         @Html.ActionLink("🏗️ Control de Inventario", "Inventory", "RADA")
@@ -56,24 +81,36 @@
     }
     else if (ViewBag.Type == "ADMINISTRATOR")
     {
-        <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
-        <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Administrador</p>
-        <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+        <hr class="hr-divider" />
+        <p class="sidebar-section-title">Permisos de Administrador</p>
+        <hr class="hr-divider" />
+
+        @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+            <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Administrador</p>
+            <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
 
         @Html.ActionLink("👷 Control de Usuarios", "Home", "Users")
         @Html.ActionLink("‍🗳️ Control de Areas", "Area", "Users")
         @Html.ActionLink("🗂️ Historial de Registros", "Records", "History")
         @Html.ActionLink("‍🔴 Historial de Bajas", "Cancellation", "Home")
 
-        <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
-        <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Hisense</p>
-        <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+        <hr class="hr-divider" />
+        <p class="sidebar-section-title">Permisos de Hisense</p>
+        <hr class="hr-divider" />
+
+        @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+            <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Hisense</p>
+            <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
 
         @Html.ActionLink("📤 Solicitud de Carga", "RequestContainer", "HISENSE")
 
-        <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
-        <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Rada</p>
-        <hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+        <hr class="hr-divider" />
+        <p class="sidebar-section-title">Permisos de Rada</p>
+        <hr class="hr-divider" />
+
+        @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+            <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Rada</p>
+            <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
 
         @Html.ActionLink("📊 Panel de Control", "Dashboard", "History")
         @Html.ActionLink("📥 Contenedores", "EntryContainer", "RADA")

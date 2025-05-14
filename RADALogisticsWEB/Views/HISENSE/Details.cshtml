@@ -138,10 +138,12 @@
     }
 
     <div class="d-flex justify-content-between align-items-center mb-4">
+
         <h2><i data-lucide="truck"></i> Detalles de contenedor</h2>
         <a href="@backUrl" class="btn btn-outline-secondary">
             <i data-lucide="arrow-left-circle"></i> Volver
         </a>
+
     </div>
 
     <div class="card shadow rounded-4 border-0 mb-4">
@@ -150,6 +152,7 @@
 
                 <div class="col-md-6"><strong>Container:</strong> @ViewBag.Container</div>
                 <div class="col-md-6">
+
                     <strong>State:</strong>
                     @if (ViewBag.Status == "Entregado")
                     {
@@ -163,17 +166,29 @@
                     {
                         <span class="badge bg-secondary">@ViewBag.Status</span>
                     }
+
                 </div>
+
                 <div class="col-md-6"><strong>Hora de Solicitud:</strong> @ViewBag.Solicitud</div>
+
                 <div class="col-md-6"><strong>Hora de Confirmacion:</strong> @ViewBag.Confirmacion</div>
+
                 <div class="col-md-6"><strong>Hora de Entrega:</strong> @ViewBag.entrega</div>
+
                 <div class="col-md-6"><strong>Chofer:</strong> @ViewBag.choffer</div>
+
                 <div class="col-md-6"><strong>Origen:</strong> @ViewBag.origins</div>
+
                 <div class="col-md-6"><strong>Destino:</strong> @ViewBag.destination</div>
+
                 <div class="col-md-12"><strong>Comentario:</strong> <span class="text-muted">@ViewBag.comment</span></div>
+
                 <div class="col-md-6"><strong>Fecha de Solicitud:</strong> @ViewBag.date</div>
+
                 <div class="col-md-6"><strong>Area:</strong> @ViewBag.Areas </div>
+
                 <div class="col-md-6"><strong>Motivo de Reporte Cancelado:</strong> @ViewBag.ReasonMT </div>
+
                 <div class="col-md-6"><strong>Solicitado por:</strong> @ViewBag.Request</div>
 
                 <button id="exportPDF" class="btn btn-danger mb-3">
@@ -187,35 +202,56 @@
     <p style="text-align: center;">&nbsp;</p>
 
     <h4 class="mb-3"><i data-lucide="list"></i> Historial de Movimientos </h4>
+
     <ul class="responsive-table">
+
         <li class="table-header" id="tableData">
+
             <div class="col col-10" style="font-size:13px">Número de Movimiento</div>
+
             <div class="col col-11" style="font-size:13px">Proceso Actual</div>
+
             <div class="col col-12" style="font-size:13px">Fecha de Finalización</div>
+
             <div class="col col-13" style="font-size:13px">Estado</div>
+
             <div class="col col-14" style="font-size:13px">Comentario</div>
+
             <div class="col col-15" style="font-size:13px">Fecha del Proceso</div>
+
         </li>
 
-        @foreach (var person in ViewBag.Records)
+       @foreach (var person in ViewBag.Records)
         {
             <li class="table-row" id="tblCustomers" style="font-size: 12px; background-color: @(person.Status == "PENDIENTE" ? "#fff3cd" :
+
                   person.Status == "COMPLETADO" ? "#d1e7dd" : "white")">
 
                 <div class="col col-10" data-label="Movement Number" style="font-size:12px">@person.Folio</div>
+
                 <div class="col col-11" data-label="Current Process" style="font-size: 12px">@person.ProcessMovement</div>
+
                 <div class="col col-12" data-label="End Date" style="font-size: 12px">@person.End_date</div>
+
                 <div class="col col-13" data-label="Status" style="font-size: 12px">
+
                     <span style="font-size:13px" class="badge-status badge
+
                         @(person.Status == "PENDIENTE" ? "bg-warning text-dark" :
                           person.Status == "COMPLETADO" ? "bg-success" : "bg-secondary")">
                         @person.Status
+
                     </span>
+
                 </div>
+
                 <div class="col col-14" data-label="Comment" style="font-size:13px">@person.Comment</div>
+
                 <div class="col col-15" data-label="Date of Process" style="font-size:13px">@person.Date_Process</div>
+
             </li>
         }
+
     </ul>
 </div>
 
