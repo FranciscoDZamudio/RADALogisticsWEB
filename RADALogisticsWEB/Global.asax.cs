@@ -17,5 +17,15 @@ namespace RADALogisticsWEB
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+
+        protected void Application_BeginRequest()
+        {
+            if (!Context.Request.IsSecureConnection && !Request.Url.Host.Contains("localhost"))
+            {
+                string url = Context.Request.Url.ToString().Replace("http:", "https:");
+                Response.Redirect(url, true);
+            }
+        }
+
     }
 }

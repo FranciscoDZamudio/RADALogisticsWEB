@@ -1,0 +1,106 @@
+﻿body {
+    /*background-image: url('../pictures/4857390.jpg');
+        background-size: cover;*/ /* Hace que la imagen cubra toda la pantalla */
+    /*background-position: center center;*/ /* Centra la imagen */
+    /*background-attachment: fixed;*/ /* Hace que la imagen no se desplace al hacer scroll */
+    /*height: 100vh;*/ /* Asegura que el fondo cubra toda la altura de la ventana */
+    /*margin: 0;*/ /* Elimina los márgenes predeterminados */
+    font-size: 15px;
+}
+
+
+.responsive-table {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+    width: 100%;
+    font-size: 14px;
+}
+
+.table-header, .table-row {
+    display: flex;
+    padding: 10px 15px;
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    background-color: #f8f9fa;
+}
+
+.table-header {
+    font-weight: bold;
+    background-color: #132C49;
+    color: white;
+}
+
+.table-row:hover {
+    background-color: #f1f1f1;
+}
+
+.table-row > div, .table-header > div {
+    flex: 1;
+    text-align: center;
+}
+
+.badge-status {
+    font-size: 0.95em;
+    padding: 0.4em 0.6em;
+    border-radius: 0.5rem;
+}
+
+.card-body, .card h6, .card p {
+    font-size: 14px;
+}
+
+.col-md-6, .col-md-12 {
+    font-size: 14px;
+}
+
+.responsive-table {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.table-header, .table-row {
+    display: flex;
+    padding: 10px 15px;
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    background-color: #f8f9fa;
+    font-size: 0.95rem;
+}
+
+.table-header {
+    font-weight: bold;
+    background-color: #363F4A;
+    color: white;
+}
+
+.table-row:hover {
+    background-color: #f1f1f1;
+}
+
+.table-row > div, .table-header > div {
+    flex: 1;
+    text-align: center;
+}
+
+.badge-status {
+    font-size: 0.9em;
+    padding: 0.4em 0.6em;
+    border-radius: 0.5rem;
+}
+
+@media (min-width: 425px) and (max-width: 735px) {
+    .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .responsive-table {
+        min-width: 850px; /* más espacio para columnas */
+    }
+}
+

@@ -189,6 +189,7 @@
     <Content Include="Pictures\5621625.jpg" />
     <Content Include="Stylee\Cancellation.css" />
     <Content Include="Stylee\DashboardStylee.css" />
+    <Content Include="Stylee\DetailsStylees.css" />
     <Content Include="Stylee\estyleeDetails.css" />
     <Content Include="Stylee\HisensePages.css" />
     <Content Include="Stylee\HisenseRecordsExcel.css" />

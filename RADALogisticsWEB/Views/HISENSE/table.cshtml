@@ -6,11 +6,11 @@
 @foreach (var person in ViewBag.Records)
 {
 <li class="table-row" id="tblCustomers" style="color:black ; background-color:
-    @(person.message == "Canceled by Rada" ? "#F9D0D0" :
-      person.message == "Canceled by Hisense" ? "#F9D0D0" :
-      person.message == "PENDING" ? "#F8E6E6" :
-      person.message == "CHOFER TERMINA MOVIMIENTO" ? "#D0F9E5" :
-      person.message == "Movement in process" ? "#E5F8EC" : "white")">
+    @(person.message == "Canceled by Rada" ? "#E9B4B4" :
+      person.message == "Canceled by Hisense" ? "#E9B4B4" :
+      person.message == "PENDING" ? "#DDDCD4" :
+      person.message == "CHOFER TERMINA MOVIMIENTO" ? "#C0E9B4" :
+      person.message == "Movement in process" ? "#E5F8EC" : "#E9D8B4")">
 
     <div class="col col-4" data-label="Folio" style="text-align:center">@person.Folio</div>
 

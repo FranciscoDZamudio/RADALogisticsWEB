@@ -281,14 +281,7 @@ namespace RADALogisticsWEB.Controllers
                 }
                 else
                 {
-                    if (ActivoRampa == "true")
-                    {
-                        ActivoRampa = "SI";
-                    }
-                    else
-                    {
-                        ActivoRampa = "NO";
-                    }
+                   
                     //create generate randoms int value
                     string randomval = null;
                     SqlCommand conse = new SqlCommand("Select top (1) ID from RADAEmpire_BRequestContainers order by ID desc", DBSPP);
@@ -327,9 +320,10 @@ namespace RADALogisticsWEB.Controllers
                     //Guardar informacion a la base de datos del proyecto
                     DBSPP.Open();
                     SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
-                        "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest, RaRRequest) values " +
-                        "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest, @RaRRequest) ", DBSPP);
+                        "(Urgencia,Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest, RaRRequest) values " +
+                        "(@Urgencia,@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest, @RaRRequest) ", DBSPP);
                     //--------------------------------------------------------------------------------------------------------------------------------
+                    PalletControl.Parameters.AddWithValue("@Urgencia", "Normal");
                     PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
                     PalletControl.Parameters.AddWithValue("@Who_Send", User.ToString());
                     PalletControl.Parameters.AddWithValue("@Container", Container.ToUpper());
@@ -672,28 +666,60 @@ namespace RADALogisticsWEB.Controllers
                 // Formatear la fecha para que sea adecuada para la base de datos
                 string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
 
+                // Zona horaria de Rosarito
+                TimeZoneInfo pacificZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+
+                // Obtener la hora actual en UTC y convertirla a Rosarito
+                DateTime rosaritoNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, pacificZone);
+                string rosaritoDateOnly = rosaritoNow.ToString("yyyy-MM-dd");
+
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "Select * from RADAEmpire_BRequestContainers where Active = '1' and Date = '" + usTime.ToString("yyyy-MM-dd") + "' order by ID desc";
+                con.CommandText = @"
+    SELECT * 
+    FROM RADAEmpire_BRequestContainers 
+    WHERE Active = '1' AND Date = @Date
+    ORDER BY 
+        CASE 
+            WHEN UPPER(message) = 'PENDING' THEN 0
+            WHEN UPPER(message) = 'CHOFER TERMINA MOVIMIENTO' THEN 2
+            WHEN UPPER(message) = 'CANCELED BY RADA' THEN 3
+            ELSE 1
+        END,
+        ID DESC";
+
+                con.Parameters.Clear();
+                con.Parameters.AddWithValue("@Date", rosaritoDateOnly);
+
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {
+                    // Convertir fechas a zona horaria de Rosarito
+                    DateTime originalDate = Convert.ToDateTime(dr["Date"]);
+                    DateTime utcDate = DateTime.SpecifyKind(originalDate, DateTimeKind.Utc);
+                    DateTime rosaritoDate = TimeZoneInfo.ConvertTimeFromUtc(utcDate, pacificZone);
+
+                    DateTime originalDateTime = Convert.ToDateTime(dr["Datetime"]);
+                    DateTime utcDateTime = DateTime.SpecifyKind(originalDateTime, DateTimeKind.Utc);
+                    DateTime rosaritoDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, pacificZone);
+
                     GetListed.Add(new Solicitud_Contenedores()
                     {
                         ID = int.Parse(dr["ID"].ToString()),
-                        Folio = (dr["Folio"].ToString()),
-                        Who_Send = (dr["Who_Send"].ToString()),
-                        Container = (dr["Container"].ToString()),
-                        Destination_Location = (dr["Destination_Location"].ToString()),
-                        Origins_Location = ((dr["Origins_Location"].ToString())),
-                        Status = (dr["Status"].ToString()),
-                        shift = (dr["shift"].ToString()),
-                        message = (dr["message"].ToString()),
-                        Date = (Convert.ToDateTime(dr["Date"].ToString())),
-                        Datetime = (Convert.ToDateTime(dr["Datetime"].ToString())),
+                        Folio = dr["Folio"].ToString(),
+                        Who_Send = dr["Who_Send"].ToString(),
+                        Container = dr["Container"].ToString(),
+                        Destination_Location = dr["Destination_Location"].ToString(),
+                        Origins_Location = dr["Origins_Location"].ToString(),
+                        Status = dr["Status"].ToString(),
+                        shift = dr["shift"].ToString(),
+                        message = dr["message"].ToString(),
+                        Date = rosaritoDate,
+                        Datetime = rosaritoDateTime
                     });
                 }
                 DBSPP.Close();
+
             }
         }
 
