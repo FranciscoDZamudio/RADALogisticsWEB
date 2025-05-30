@@ -58,21 +58,6 @@
         <h2 class="page-title"> Solicitud de nuevo contenedor </h2>
         <h4 class="section-subtitle">Completa lo siguiente para solicitar un nuevo movimiento</h4>
 
-        @*<hr>
-        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-                <span class="text"> Return to back Home </span>
-                <span class="circle"></span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-            </button>
-        </div>
-        <hr>*@
-
         @using (Html.BeginForm("ProcessData", "HISENSE", FormMethod.Post))
         {
             <p style="text-align: center;">&nbsp;</p>
@@ -100,16 +85,23 @@
                 </select>
             </div>
 
-            @*<h5 class="Tittlelabel" style=" font-weight: 700; "> Marca el nivel de urgencia del movimiento:</h5>
+            <h5 class="Tittlelabel" style="font-weight: 700;">Marca el nivel de urgencia del movimiento:</h5>
+
             <div class="group">
-                <select name="Type" id="Type" class="form-control" style="max-width: 30vh; color: black;  text-align: center ">
-
-                    <option value="CAR"> Normal </option>
-                    <option value="VAC"> Urgente </option>
-                    <option value="VAC"> Critico </option>
-
+                <select name="NivelUrgencia" id="NivelUrgencia" class="form-control" style="max-width: 30vh; color: black; text-align: center;">
+                    <option value="Normal">Normal</option>
+                    <option value="Urgente">Urgente</option>
+                    <option value="Critico">Critico</option>
                 </select>
-            </div>*@
+            </div>
+
+            <!-- Contenedor oculto por defecto y centrado -->
+            <div id="MotivoUrgenciaContainer" style="margin-top: 15px; display: none; flex-direction: column; align-items: center;">
+                <p for="MotivoUrgencia" style="font-weight: 600; margin-bottom: 5px;">Motivo de urgencia:</p>
+                <input type="text" name="MotivoUrgencia" id="MotivoUrgencia" class="form-control"
+                       placeholder="Describe el motivo..." style="max-width: 50vh; color: black; text-align: center;">
+            </div>
+            <br>
 
             <h5 class="Tittlelabel" style=" font-weight: 700;">Selecciona Area:</h5>
             <div class="group" style="padding: 5px 0px 0px 0px">
@@ -142,13 +134,13 @@
             </div>
 
             @*<div id="checkboxContainer2">
-                <h5 class="Tittlelabel" style="font-weight: 700; color: #5264AE">
-                    ¿El movimiento es de Rampa a Rampa?
-                </h5>
-                @Html.CheckBox("ActivoRampa", new { id = "chkActivoRampa" })
-                <label for="chkActivoRampa">Activo</label>
-            </div>
-            <input type="hidden" name="ActivoRampa" id="ResultRampa" value="NO" />*@
+                    <h5 class="Tittlelabel" style="font-weight: 700; color: #5264AE">
+                        ¿El movimiento es de Rampa a Rampa?
+                    </h5>
+                    @Html.CheckBox("ActivoRampa", new { id = "chkActivoRampa" })
+                    <label for="chkActivoRampa">Activo</label>
+                </div>
+                <input type="hidden" name="ActivoRampa" id="ResultRampa" value="NO" />*@
 
 
             <p style="text-align: center;">&nbsp;</p>
@@ -177,7 +169,7 @@
 
             <p style="text-align: center;">&nbsp;</p>
             <button type="submit" class="Bto_saved">
-                ✅ Guardar
+                Guardar
             </button>
             <p style="text-align: center;">&nbsp;</p>
             <p style="text-align: center;">&nbsp;</p>
@@ -194,6 +186,8 @@
 <ul class="responsive-table">
 
     <li class="table-header" id="tableData">
+
+        <div class="col col-6" style="text-align:center">Estado</div>
 
         <div class="col col-4" style="text-align:center">Folio</div>
 
@@ -281,6 +275,29 @@
     });
 </script>
 
+<script>
+    function toggleMotivoUrgencia() {
+        const select = document.getElementById("NivelUrgencia");
+        const motivoContainer = document.getElementById("MotivoUrgenciaContainer");
+        const motivoInput = document.getElementById("MotivoUrgencia");
+
+        const selectedValue = select.value.toLowerCase();
+
+        if (selectedValue === "urgente" || selectedValue === "critico") {
+            motivoContainer.style.display = "flex";
+            motivoInput.value = ""; // Limpiar el valor si se cambia a urgente o crítico
+        } else {
+            motivoContainer.style.display = "none";
+            motivoInput.value = "MOVIMIENTO NORMAL"; // Valor por defecto si es normal
+        }
+    }
+
+    // Ejecutar al cargar la página
+    window.addEventListener("DOMContentLoaded", toggleMotivoUrgencia);
+
+    // Ejecutar cuando cambia el valor del select
+    document.getElementById("NivelUrgencia").addEventListener("change", toggleMotivoUrgencia);
+</script>
 
 <p style="text-align: center;">&nbsp;</p>
 <p style="text-align: center;">&nbsp;</p>

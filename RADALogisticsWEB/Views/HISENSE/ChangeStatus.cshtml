@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - Change";
+    var pageValue = ViewBag.Page ?? "";
+    var data = ViewBag.data ?? "";
+}
+
+<link href="~/Stylee/NewUsersStylee.css" rel="stylesheet" />
+
+<div class="container" style="text-align: center; width: 100%; height: 100%">
+
+    <div style="text-align: center; min-width: 100%">
+
+        <style>
+            .page-title {
+                text-align: center;
+                font-size: 21px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 15px;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                font-size: 17px;
+                font-weight: 500;
+                color: #555;
+                margin-bottom: 25px;
+            }
+        </style>
+
+        <h2 class="page-title">Modificar estado del movimiento</h2>
+        <h4 class="section-subtitle">Indica el nuevo estado que deseas asignar</h4>
+
+        <hr>
+        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+            <button class="animated-button" onclick="redirectBasedOnPage()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+                <span class="text">Return to back</span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+            </button>
+        </div>
+        <hr>
+
+        @using (Html.BeginForm("NewConcept", "HISENSE", FormMethod.Post))
+        {
+            <input value="@ViewBag.ID" hidden="hidden" readonly="@true" id="id" name="id" />
+            <input value="@ViewBag.Page" hidden="hidden" readonly="@true" id="Page" name="Page" />
+            <input value="@ViewBag.data" hidden="hidden" readonly="@true" id="data" name="data" />
+
+            <h5 class="Tittlelabel" style="font-weight: 700;">Marca el nivel de urgencia del movimiento:</h5>
+            <div class="group">
+                <select name="NivelUrgencia" id="NivelUrgencia" class="form-control" style="max-width: 30vh; color: black; text-align: center;">
+                    <option value="Normal">Normal</option>
+                    <option value="Urgente">Urgente</option>
+                    <option value="Critico">Critico</option>
+                </select>
+            </div>
+
+            <!-- Contenedor oculto por defecto y centrado -->
+            <div id="MotivoUrgenciaContainer" style="margin-top: 15px; display: none; flex-direction: column; align-items: center;">
+                <p for="MotivoUrgencia" style="font-weight: 600; margin-bottom: 5px;">Motivo de urgencia:</p>
+                <input type="text" name="MotivoUrgencia" id="MotivoUrgencia" class="form-control"
+                       placeholder="Describe el motivo..." style="max-width: 50vh; color: black; text-align: center;">
+            </div>
+            <br>
+
+            <p style="text-align: center;">&nbsp;</p>
+            <button type="submit" class="Bto_saved" style="width: 35vh">
+                Guardar
+            </button>
+        }
+
+    </div>
+
+    </div>
+
+<script>
+    function toggleMotivoUrgencia() {
+        const select = document.getElementById("NivelUrgencia");
+        const motivoContainer = document.getElementById("MotivoUrgenciaContainer");
+        const motivoInput = document.getElementById("MotivoUrgencia");
+
+        const selectedValue = select.value.toLowerCase();
+
+        if (selectedValue === "urgente" || selectedValue === "critico") {
+            motivoContainer.style.display = "flex";
+            motivoInput.value = ""; // Limpiar el valor si se cambia a urgente o crítico
+        } else {
+            motivoContainer.style.display = "none";
+            motivoInput.value = "MOVIMIENTO NORMAL"; // Valor por defecto si es normal
+        }
+    }
+
+    // Ejecutar al cargar la página
+    window.addEventListener("DOMContentLoaded", toggleMotivoUrgencia);
+
+    // Ejecutar cuando cambia el valor del select
+    document.getElementById("NivelUrgencia").addEventListener("change", toggleMotivoUrgencia);
+</script>
+
+<script>
+    function redirectBasedOnPage() {
+        var page = "@pageValue".toLowerCase();
+        var data = "@data".toString();
+        if (page === "hisense" && data === "iNDEX") {
+            window.location.href = '@Url.Action("EntryContainer", "RADA")';
+        } else {
+            if (page === "hisense" && data === "RADASers") {
+                window.location.href = '@Url.Action("Records", "History")';
+            } else {
+                window.location.href = '@Url.Action("RequestContainer", "HISENSE")';
+            }
+        }
+    }
+</script>

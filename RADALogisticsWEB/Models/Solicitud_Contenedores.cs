@@ -7,6 +7,7 @@ namespace RADALogisticsWEB.Models
 {
     public class Solicitud_Contenedores
     {
+        public string Urgencia { get; set; }
         public int ID { get; set; }
         public string Folio { get; set; }
         public string Who_Send { get; set; }

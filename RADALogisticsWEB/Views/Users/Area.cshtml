@@ -64,7 +64,7 @@
 
             <p style="text-align: center;">&nbsp;</p>
             <button type="submit" class="Bto_saved" style="width: 35vh">
-                ✅ Guardar
+                 Guardar
             </button>
         }
 
@@ -84,32 +84,33 @@
 
         <li class="table-header" id="tableData">
 
-            <div class="col col-1" style="text-align:center">ID</div>
+            <div class="col col-1" style="text-align: center; flex-basis: 20%;">ID</div>
 
-            <div class="col col-2" style="text-align:center"> Creado por </div>
+            <div class="col col-2" style="text-align: center; flex-basis: 35%;"> Creado por </div>
 
-            <div class="col col-2" style="text-align:center">Area</div>
+            <div class="col col-2" style="text-align: center; flex-basis: 15%;">Area</div>
 
-            <div class="col col-5" style="text-align:center">Fecha</div>
+            <div class="col col-5" style="text-align: center; flex-basis: 20%;">Fecha</div>
 
-            <div class="col col-7" style="text-align:center">Opciones</div>
+            <div class="col col-7" style="text-align: center; flex-basis: 35%;">Opciones</div>
         </li>
 
        @foreach (var person in ViewBag.Records)
         {
             <li class="table-row" id="tblCustomers">
 
-                <div class="col col-1" data-label="ID" style="text-align:center">@person.id</div>
+                <div class="col col-1" data-label="ID" style="text-align: center; flex-basis: 20%;">@person.id</div>
 
-                <div class="col col-2" data-label="Username" style="text-align:center">@person.Who_create</div>
+                <div class="col col-2" data-label="Username" style="text-align: center; flex-basis: 35%; ">@person.Who_create</div>
 
-                <div class="col col-2" data-label="Container" style="text-align:center"> @person.Name</div>
+                <div class="col col-2" data-label="Container" style="text-align: center; flex-basis: 15%; "> @person.Name</div>
 
-                <div class="col col-5" data-label="Location" style="text-align:center"> @person.Datetime</div>
+                <div class="col col-5" data-label="Location" style="text-align: center; flex-basis: 20%;"> @person.Datetime</div>
 
-                <div class="col col-7" data-label="Options" style="text-align:center">
+                <div class="col col-7" data-label="Options" style="text-align: center; flex-basis: 35%; ">
 
-                    @Html.ActionLink("❌ Eliminar", "RemoveArea", new { ID = @person.id })
+                    @Html.ActionLink("❌ Eliminar", "RemoveArea", new { ID = @person.id }) / 
+                    @Html.ActionLink("↻ Asignacion de etapas", "AreaAssignaments", new { ID = @person.Name })
 
                 </div>
 

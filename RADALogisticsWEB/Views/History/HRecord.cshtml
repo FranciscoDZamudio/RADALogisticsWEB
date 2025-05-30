@@ -3,6 +3,33 @@
     ViewBag.Title = "RADA Logistics - Records";
 }
 
+<style>
+    .urgencia-box {
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-weight: bold;
+        display: inline-block;
+        color: white;
+        font-size: 0.9rem;
+    }
+
+    .urgencia-normal {
+        background-color: #363F4A; /* gris */
+        color: white;
+    }
+
+    .urgencia-urgente {
+        background-color: #f5d142; /* amarillo */
+        color: black;
+    }
+
+    .urgencia-critico {
+        background-color: #D42401; /* naranja con rojo */
+        color: white;
+    }
+</style>
+
+
 @*<link href="~/Stylee/RecordsStylee.css" rel="stylesheet" />*@
 <link href="~/Stylee/HisenseRecordsExcel.css" rel="stylesheet" />
 
@@ -31,42 +58,42 @@
             }
         </style>
 
-        <h2 class="page-title">Container Movement History - Query View data containers</h2>
-        <h4 class="section-subtitle">View transaction information by date range</h4>
+        <h2 class="page-title">Historial de Movimiento de Contenedores - Consulta de Datos</h2>
+        <h4 class="section-subtitle">Visualice la información de transacciones por rango de fechas</h4>
 
         @*<hr>
-        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("HisenseHome", "Home")'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-                <span class="text">Return to back</span>
-                <span class="circle"></span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-            </button>
-        </div>
-        <hr>*@
+            <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+                <button class="animated-button" onclick="location.href='@Url.Action("HisenseHome", "Home")'">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                    </svg>
+                    <span class="text">Return to back</span>
+                    <span class="circle"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                    </svg>
+                </button>
+            </div>
+            <hr>*@
 
         @using (Html.BeginForm("HRecord", "History", FormMethod.Post))
         {
             <div class="form-row">
 
                 <div class="form-group col-md-6 text-center">
-                    <label for="TimeStart" style="font-family: 'Century Gothic'; display: block">Date Start</label>
+                    <label for="TimeStart" style="font-family: 'Century Gothic'; display: block">Fecha Inicial:</label>
                     <input id="TimeStart" name="TimeStart" type="date" class="form-control mx-auto" style="max-width: 100%; display: block;" />
                 </div>
 
                 <div class="form-group col-md-6 text-center">
-                    <label for="Timeend" style="font-family: 'Century Gothic'; display: block">Date End</label>
+                    <label for="Timeend" style="font-family: 'Century Gothic'; display: block">Fecha Final:</label>
                     <input id="Timeend" name="Timeend" type="date" class="form-control mx-auto" style="max-width: 100%; display: block;" />
                 </div>
 
                 <p style="text-align: center;">&nbsp;</p>
 
                 <button style="width:45vh" type="submit" class="Bto_saved">
-                    🪢 Query
+                    Buscar
                 </button>
 
                 <p style="text-align: center;">&nbsp;</p>
@@ -76,12 +103,14 @@
 </div>
 
 <p style="text-align: center;">&nbsp;</p>
-<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Latest inventory records entered into the system </h4>
-<h5 style="text-align:center" class="Tittlelabel"> Total Records: @ViewBag.Count</h5>
+<h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Últimos registros ingresados en el sistema </h4>
+<h5 style="text-align:center" class="Tittlelabel"> Total de Registros: @ViewBag.Count</h5>
 
 <div class="table-scroll">
     <ul class="responsive-table">
         <li class="table-header" id="tableData">
+
+            <div class="col col-1" style="text-align:center">Urgencia</div>
 
             <div class="col col-1" style="text-align:center">Folio</div>
 
@@ -97,7 +126,7 @@
 
             @*<div class="col col-6" style="text-align:center">HConfirm</div>
 
-            <div class="col col-7" style="text-align:center">HFinish</div>*@
+                <div class="col col-7" style="text-align:center">HFinish</div>*@
 
             <div class="col col-7" style="text-align:center">Solicitado por</div>
 
@@ -112,14 +141,20 @@
             <div class="col col-11" style="text-align:center">Opciones</div>
 
         </li>
-       @foreach (var person in ViewBag.Records)
+        @foreach (var person in ViewBag.Records)
         {
             <li class="table-row" id="tblCustomers" style="color:black ; background-color:
-    @(person.Comment == "Canceled by Rada" ? "#F9D0D0" :
-      person.Comment == "Canceled by Hisense" ? "#F9D0D0" :
-      person.Comment == "PENDING" ? "#F8E6E6" :
-      person.Comment == "CHOFER TERMINA MOVIMIENTO" ? "#D0F9E5" :
-      person.Comment == "Movement in process" ? "#E5F8EC" : "white")">
+    @(person.Comment == "Canceled by Rada" ? "#E9B4B4" :
+      person.Comment == "Canceled by Hisense" ? "#E9B4B4" :
+      person.Comment == "PENDING" ? "#DDDCD4" :
+      person.Comment == "CHOFER TERMINA MOVIMIENTO" ? "#C0E9B4" :
+      person.Comment == "Movement in process" ? "#E5F8EC" : "#E9D8B4")">
+
+                <div class="col col-1" data-label="Folio" style="text-align:center">
+                    <span class="urgencia-box @(person.Urgencia == "Normal" ? "urgencia-normal" : person.Urgencia == "Urgente" ? "urgencia-urgente" : person.Urgencia == "Critico" ? "urgencia-critico" : "")">
+                        @person.Urgencia
+                    </span>
+                </div>
 
                 <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
 
@@ -135,7 +170,7 @@
 
                 @*<div class="col col-6" data-label="HConfirm" style="text-align:center"> @person.HConfirm</div>
 
-                <div class="col col-7" data-label="HFinish" style="text-align:center"> @person.HFinish</div>*@
+                    <div class="col col-7" data-label="HFinish" style="text-align:center"> @person.HFinish</div>*@
 
                 <div class="col col-7" data-label="Who Request" style="text-align:center"> @person.WhoRequest</div>
 
@@ -151,7 +186,7 @@
 
                     @*@Html.ActionLink("❌ Delete", "CancelContainer", new { ID = @person.Folio }) /*@
                     @*@Html.ActionLink("🎴 Details", "Details", "HISENSE" new { ID = @person.Folio })*@
-                    @Html.ActionLink("🎴 Details", "Details", "Hisense", new { ID = person.Folio, Record = "YES" }, null)
+                    @Html.ActionLink("🎴 Detalles", "Details", "Hisense", new { ID = person.Folio, Record = "YES" }, null)
                 </div>
 
             </li>
@@ -159,109 +194,109 @@
     </ul>
 </div>
 
-    <table id="myTable" class="table2excel" class="table table-striped table-responsive-xl table-hover" hidden="hidden">
-        <tr>
+<table id="myTable" class="table2excel" class="table table-striped table-responsive-xl table-hover" hidden="hidden">
+    <tr>
 
-            <th style="text-align:center">
-                <p> Container</p>
-            </th>
-            <th style="text-align:center">
-                <p>
-                    Origins Loc
-                </p>
-            </th>
-            <th style="text-align:center">
-                <p>
-                    Destination Loc
-                </p>
-            </th>
-            <th style="text-align:center">
-                <p>Status</p>
-            </th>
-            <th style="text-align:center">
-                <p>HRequest</p>
-            </th>
-            <th style="text-align:center">
-                <p>
-                    Who Request
-                </p>
-            </th>
-            <th style="text-align:center">
-                <p>FastCard</p>
-            </th>
-            <th style="text-align:center">
-                <p>Comment</p>
-            </th>
+        <th style="text-align:center">
+            <p> Container</p>
+        </th>
+        <th style="text-align:center">
+            <p>
+                Origins Loc
+            </p>
+        </th>
+        <th style="text-align:center">
+            <p>
+                Destination Loc
+            </p>
+        </th>
+        <th style="text-align:center">
+            <p>Status</p>
+        </th>
+        <th style="text-align:center">
+            <p>HRequest</p>
+        </th>
+        <th style="text-align:center">
+            <p>
+                Who Request
+            </p>
+        </th>
+        <th style="text-align:center">
+            <p>FastCard</p>
+        </th>
+        <th style="text-align:center">
+            <p>Comment</p>
+        </th>
 
-            <th style="text-align:center">
-                <p>Area</p>
-            </th>
+        <th style="text-align:center">
+            <p>Area</p>
+        </th>
 
-            <th style="text-align:center">
-                <p>Date</p>
-            </th>
+        <th style="text-align:center">
+            <p>Date</p>
+        </th>
 
-        </tr>
-        <tbody id="Table01">
-           @foreach (var person in ViewBag.Records)
-            {
-                <tr>
+    </tr>
+    <tbody id="Table01">
+        @foreach (var person in ViewBag.Records)
+        {
+            <tr>
 
-                    <td>
-                        @person.Container
-                    </td>
-                    <td>
-                        @person.Origen
-                    </td>
-                    <td>
-                        @person.Destination
-                    </td>
-                    <td>
-                        @person.Status
-                    </td>
-                    <td>
-                        @person.HSolicitud
-                    </td>
-                    <td>
-                        @person.WhoRequest
-                    </td>
-                    <td>
-                        @person.fastcard
-                    </td>
-                    <td>
-                        @person.Comment
-                    </td>
-                    <td>
-                        @person.Area
-                    </td>
+                <td>
+                    @person.Container
+                </td>
+                <td>
+                    @person.Origen
+                </td>
+                <td>
+                    @person.Destination
+                </td>
+                <td>
+                    @person.Status
+                </td>
+                <td>
+                    @person.HSolicitud
+                </td>
+                <td>
+                    @person.WhoRequest
+                </td>
+                <td>
+                    @person.fastcard
+                </td>
+                <td>
+                    @person.Comment
+                </td>
+                <td>
+                    @person.Area
+                </td>
 
-                    <td>
-                        @person.Date
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                <td>
+                    @person.Date
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-    <p style="text-align: center;">&nbsp;</p>
-    <div style="text-align:center">
-        <button id="Bton_Export" class="btn btn-success" style="text-align:left"> Exportar a excel <i class="fa fa-file-text"></i></button>
-    </div>
-    <p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
+<div style="text-align:center">
+    <button id="Bton_Export" class="btn btn-success" style="text-align:left"> Exportar a excel <i class="fa fa-file-text"></i></button>
+</div>
+<p style="text-align: center;">&nbsp;</p>
 
-    <script>
-        var datenow = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        // Function export grid to excel
-        $("#Bton_Export").click(function () {
-            $("#myTable").table2excel({
-                name: "Backup file for HTML content",
+<script>
+    var datenow = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    // Function export grid to excel
+    $("#Bton_Export").click(function () {
+        $("#myTable").table2excel({
+            name: "Backup file for HTML content",
 
-                //  include extension also
-                filename: "Control de Movimientos de Contenedores " + datenow + ".xls",
+            //  include extension also
+            filename: "Control de Movimientos de Contenedores " + datenow + ".xls",
 
-                // 'True' is set if background and font colors preserved
-                preserveColors: false
-            });
+            // 'True' is set if background and font colors preserved
+            preserveColors: false
         });
-    </script>
+    });
+</script>
 

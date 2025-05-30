@@ -3,6 +3,32 @@
     ViewBag.Title = "RADA Logistics - Records";
 }
 
+<style>
+    .urgencia-box {
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-weight: bold;
+        display: inline-block;
+        color: white;
+        font-size: 0.9rem;
+    }
+
+    .urgencia-normal {
+        background-color: #363F4A; /* gris */
+        color: white;
+    }
+
+    .urgencia-urgente {
+        background-color: #f5d142; /* amarillo */
+        color: black;
+    }
+
+    .urgencia-critico {
+        background-color: #D42401; /* naranja con rojo */
+        color: white;
+    }
+</style>
+
 <link href="~/Stylee/RecordsStylee.css" rel="stylesheet" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="~/Scripts/jquery.table2excel.min.js"></script>
@@ -29,7 +55,7 @@
             }
         </style>
 
-        <h2 class="page-title">Historial de movimientos de contenedores - Revision de registros</h2>
+        <h2 class="page-title">Historial de movimientos de contenedores</h2>
         <h4 class="section-subtitle">Ingresa un rango de fecha para poder consultar la informacion del sistema</h4>
         <p style="text-align: center;">&nbsp;</p>
 
@@ -65,7 +91,7 @@
                 <p style="text-align: center;">&nbsp;</p>
 
                 <button style="width:45vh" type="submit" class="Bto_saved">
-                    🪢 Buscar . . .
+                    Buscar
                 </button>
 
                 <p style="text-align: center;">&nbsp;</p>
@@ -76,7 +102,7 @@
 
 <p style="text-align: center;">&nbsp;</p>
 <h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Registros ingresados recientemente al sistema </h4>
-<h5 style="text-align:center" class="Tittlelabel"> Total: @ViewBag.Count</h5>
+<h5 style="text-align:center" class="Tittlelabel"> Total de Registros: @ViewBag.Count</h5>
 
 <div class="table-scroll">
     <ul class="responsive-table">
@@ -110,21 +136,23 @@
 
             <div class="col col-11" style="text-align:center">Fecha</div>
 
-            <div class="col col-1" style="text-align:center">Opciones</div>
+            <div class="col col-2" style="text-align:center">Estado</div>
+
+            @*<div class="col col-1" style="text-align:center">Opciones</div>*@
 
         </li>
        @foreach (var person in ViewBag.Records)
         {
     <li class="table-row" id="tblCustomers" style="color:black ; background-color:
-    @(person.Comment == "Canceled by Rada" ? "#F9D0D0" :
-      person.Comment == "Canceled by Hisense" ? "#F9D0D0" :
-      person.Comment == "PENDING" ? "#F8E6E6" :
-        person.Comment == "CHOFER TERMINA MOVIMIENTO" ? "#D0F9E5" :
-      person.Comment == "Movement in process" ? "#E5F8EC" : "white")">
+    @(person.Comment == "Canceled by Rada" ? "#E9B4B4" :
+      person.Comment == "Canceled by Hisense" ? "#E9B4B4" :
+      person.Comment == "PENDING" ? "#DDDCD4" :
+      person.Comment == "CHOFER TERMINA MOVIMIENTO" ? "#C0E9B4" :
+      person.Comment == "Movement in process" ? "#E5F8EC" : "#E9D8B4")">
 
         <div class="col col-1" data-label="Options" style="text-align:center">
 
-            @Html.ActionLink("🎴 Detalles", "Details", "HISENSE", new { ID = person.Folio , Record = "RADASers" }, null)
+            @Html.ActionLink("🎴 Detalles", "Details", "HISENSE", new { ID = person.Folio, Record = "RADASers" }, null)
 
         </div>
 
@@ -154,19 +182,12 @@
 
         <div class="col col-11" data-label="Date" style="text-align:center"> @person.Date</div>
 
-        <div class="col col-1" data-label="Options" style="text-align:center">
-
-            @Html.ActionLink("❌ Cancelar", "CancelContainerR", new { ID = @person.Folio })
-
-            @if (person.Choffer != "PENDNING CONFIRM" && person.Comment != "Canceled by Rada" && person.Comment != "CHOFER TERMINA MOVIMIENTO")
-            {
-
-                @Html.ActionLink("🔨 Cambio de Chofer", "ChangesCHR", new { ID = @person.Folio })
-
-            }
-
-
+        <div class="col col-2" data-label="Folio" style="text-align:center">
+            <span class="urgencia-box @(person.Urgencia == "Normal" ? "urgencia-normal" : person.Urgencia == "Urgente" ? "urgencia-urgente" : person.Urgencia == "Critico" ? "urgencia-critico" : "")">
+                @person.Urgencia
+            </span>
         </div>
+
     </li>
         }
     </ul>
@@ -220,7 +241,7 @@
 
     </tr>
     <tbody id="Table01">
-        @foreach (var person in ViewBag.Records)
+       @foreach (var person in ViewBag.Records)
         {
             <tr>
 

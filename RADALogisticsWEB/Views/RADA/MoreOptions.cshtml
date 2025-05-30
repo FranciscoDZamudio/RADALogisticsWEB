@@ -1,0 +1,179 @@
+﻿
+@{
+    ViewBag.Title = "RADA Logistics - Options";
+}
+
+<link href="~/Stylee/HisensePages.css" rel="stylesheet" />
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<div class="container" style="text-align: center; width: 100%; height: 100%">
+
+    <div style="text-align: center; min-width: 100%; ">
+
+        <style>
+            .page-title {
+                text-align: center;
+                font-size: 21px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 15px;
+                letter-spacing: 0px;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                font-size: 17px;
+                font-weight: 500;
+                color: #555;
+                margin-bottom: 25px;
+            }
+
+            .contenedor {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .botones {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+                max-width: 90%;
+            }
+
+            .btn {
+                display: inline-block;
+                width: 200px;
+                height: 50px;
+                background-color: #293B4F;
+                color: white;
+                text-align: center;
+                line-height: 35px;
+                text-decoration: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+            }
+
+                .btn:hover {
+                    background-color: #7F8A96;
+                }
+
+                .btn.rojo {
+                    background-color: #5F1011;
+                }
+
+                    .btn.rojo:hover {
+                        background-color: #9C7778;
+                    }
+        </style>
+
+        <h2 class="page-title"> Opciones de Movimiento </h2>
+        <h4 class="section-subtitle"> Selecciona una de las opciones disponibles del siguiente movimiento </h4>
+
+        <hr>
+        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+            <button class="animated-button" onclick="location.href='@Url.Action("EntryContainer", "RADA")'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+                <span class="text"> Return to back Home </span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+            </button>
+        </div>
+        <hr>
+
+        <h5 class="Tittlelabel" style=" font-weight: 700;"> Numero de Movimiento: </h5>
+        <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
+        <h4> @ViewBag.ID</h4><br>
+        <h5 class="Tittlelabel" style=" font-weight: 700;"> Estatus de Movimiento: </h5>
+        <h4> @ViewBag.Comment</h4>
+        <h5 class="Tittlelabel" style=" font-weight: 700;"> Nivel de urgencia de movimiento: </h5>
+        <h4> @ViewBag.ESTADO</h4>
+        <h5 class="Tittlelabel" style=" font-weight: 700;"> Descripcion de urgencia: </h5>
+        <h4> @ViewBag.MENSAJE</h4>
+        <br>
+
+        <h5 class="Tittlelabel" style=" font-weight: 700;"> ¿Qué te gustaría hacer? </h5>
+        <br>
+        <div class="contenedor">
+            <div class="botones">
+
+                @{
+                    string comment = ViewBag.Comment as string;
+                    string id = ViewBag.ID as string;
+                }
+
+                @switch (comment)
+                {
+                    case "CHOFER TERMINA MOVIMIENTO":
+                        <a class="btn disabled" title="No disponible mientras está en PENDING">♻️ Cambiar Contenedor</a>
+                        <a class="btn disabled" title="No disponible mientras está en PENDING">📝 Comentario de Estatus</a>
+
+                        @Html.ActionLink("🚫 Cancelar Movimiento", "CancelContainerR", "History",
+                           new { ID = ViewBag.ID },
+                           new { @class = "btn rojo" })
+
+                        <a class="btn disabled" title="No disponible mientras está en PENDING">♻️ Cambiar Chofer</a>
+                        <a class="btn disabled" title="No disponible mientras está en PENDING">✔️ Verificación de Estado</a>
+
+                        break;
+
+                    case "PENDING":
+                        @Html.ActionLink("♻️ Cambiar Contenedor", "Replace", "RADA",
+                                     new { ID = id },
+                                     new { @class = "btn" })
+
+                        @Html.ActionLink("📝 Comentario de Estatus", "Comments", "RADA",
+                                 new { ID = id, Status = comment },
+                                 new { @class = "btn" })
+
+                        @Html.ActionLink("🚫 Cancelar Movimiento", "CancelContainerR", "History",
+                         new { ID = ViewBag.ID },
+                         new { @class = "btn rojo" })
+
+                        <a class="btn disabled" title="No disponible mientras está en PENDING">♻️ Cambiar Chofer</a>
+
+                        @Html.ActionLink("✔️ Verificación de Estado", "ChangeStatus", "HISENSE",
+                         new { ID = @ViewBag.ID, Page = "Hisense", data = "iNDEX" },
+                         new { @class = "btn" })
+
+                        break;
+
+                    default:
+                        @Html.ActionLink("♻️ Cambiar Contenedor", "Replace", "RADA",
+                                 new { ID = id },
+                                 new { @class = "btn" })
+
+                        @Html.ActionLink("📝 Comentario de Estatus", "Comments", "RADA",
+                                 new { ID = id, Status = comment },
+                                 new { @class = "btn" })
+
+                        @Html.ActionLink("🚫 Cancelar Movimiento", "CancelContainerR", "History",
+                         new { ID = ViewBag.ID },
+                         new { @class = "btn rojo" })
+
+                        @Html.ActionLink("♻️ Cambiar Chofer", "ChangesCHR", "History",
+                            new { ID = id },
+                            new { @class = "btn" })
+
+                        @Html.ActionLink("✔️ Verificación de Estado", "ChangeStatus", "HISENSE",
+                      new { ID = @ViewBag.ID, Page = "Hisense", data = "iNDEX" },
+                      new { @class = "btn" })
+
+                        break;
+                }
+            </div>
+        </div>
+
+
+
+    </div>
+
+</div>

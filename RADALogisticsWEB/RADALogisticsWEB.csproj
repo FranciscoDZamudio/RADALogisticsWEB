@@ -131,10 +131,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Areas.cs" />
+    <Compile Include="Models\AsignacionAreas.cs" />
     <Compile Include="Models\AsignacionDeAreas.cs" />
     <Compile Include="Models\Chart2Statusfiles.cs" />
     <Compile Include="Models\Choferes.cs" />
     <Compile Include="Models\DetailsTable.cs" />
+    <Compile Include="Models\EtapaModel.cs" />
     <Compile Include="Models\Historial.cs" />
     <Compile Include="Models\Inventario.cs" />
     <Compile Include="Models\Movement.cs" />
@@ -250,6 +252,9 @@
     <Content Include="Views\Home\Details.cshtml" />
     <Content Include="Views\RADA\Replace.cshtml" />
     <Content Include="Views\History\ChangesCHR.cshtml" />
+    <Content Include="Views\RADA\MoreOptions.cshtml" />
+    <Content Include="Views\Users\AreaAssignaments.cshtml" />
+    <Content Include="Views\HISENSE\ChangeStatus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

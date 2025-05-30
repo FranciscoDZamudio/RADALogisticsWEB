@@ -73,7 +73,38 @@ namespace RADALogisticsWEB.Controllers
                     DBSPP.Close();
                 }
 
-                return RedirectToAction("Records", "History");
+                string QUERY2 = "UPDATE RADAEmpires_DZChofferMovement SET Choffer = @Choffer,Message = @Message WHERE Foio = @ID";
+                using (SqlCommand drqeuery = new SqlCommand(QUERY2, DBSPP))
+                {
+                    DBSPP.Open();
+                    drqeuery.Parameters.AddWithValue("@Choffer", username.ToString());
+                    drqeuery.Parameters.AddWithValue("@Message", "EL CHOFER " +  username.ToString() + " ESTA EN MOVIMIENTO");
+                    drqeuery.Parameters.AddWithValue("@ID", ID);
+                    int rowsAffected = drqeuery.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                string StatusChoffer = "UPDATE RADAEmpire_AChoffer SET Status = @Status WHERE Username = @ID";
+                using (SqlCommand drqeuery = new SqlCommand(StatusChoffer, DBSPP))
+                {
+                    DBSPP.Open();
+                    drqeuery.Parameters.AddWithValue("@Status", "SIN MOVIMIENTO");
+                    drqeuery.Parameters.AddWithValue("@ID", ChofferOld.ToString());
+                    int rowsAffected = drqeuery.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                string StatusChoffer2 = "UPDATE RADAEmpire_AChoffer SET Status = @Status WHERE Username = @ID";
+                using (SqlCommand drqeuery = new SqlCommand(StatusChoffer2, DBSPP))
+                {
+                    DBSPP.Open();
+                    drqeuery.Parameters.AddWithValue("@Status", "CHOFFER EN MOVIMIENTO");
+                    drqeuery.Parameters.AddWithValue("@ID", username.ToString());
+                    int rowsAffected = drqeuery.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                return RedirectToAction("EntryContainer", "RADA");
             }
         }
 
@@ -850,7 +881,7 @@ namespace RADALogisticsWEB.Controllers
                     DBSPP.Open();
                     con.Connection = DBSPP;
                     con.CommandText = "  Select " +
-                        " b.FastCard as FastCard, a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                        " a.Urgencia AS Urgencia, b.FastCard as FastCard, a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                         " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area " +
                         " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
                     dr = con.ExecuteReader();
@@ -858,6 +889,7 @@ namespace RADALogisticsWEB.Controllers
                     {
                         GetRecordsQeury.Add(new Historial()
                         {
+                            Urgencia = (dr["Urgencia"].ToString()),
                             Folio = (dr["Folio"].ToString()),
                             Container = (dr["Container"].ToString()),
                             Origen = (dr["Origen"].ToString()),
@@ -1246,7 +1278,7 @@ namespace RADALogisticsWEB.Controllers
                         DBSPP.Open();
                         con.Connection = DBSPP;
                         con.CommandText = "  Select " +
-                            " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                            " a.Urgencia AS Urgencia, a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                             " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area " +
                             " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
                         dr = con.ExecuteReader();
@@ -1254,6 +1286,7 @@ namespace RADALogisticsWEB.Controllers
                         {
                             GetRecordsQeury.Add(new Historial()
                             {
+                                Urgencia = (dr["Urgencia"].ToString()),
                                 Folio = (dr["Folio"].ToString()),
                                 Container = (dr["Container"].ToString()),
                                 Origen = (dr["Origen"].ToString()),
@@ -1281,14 +1314,15 @@ namespace RADALogisticsWEB.Controllers
                         DBSPP.Open();
                         con.Connection = DBSPP;
                         con.CommandText = "  Select " +
-                            " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                            " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date " +
+                            " a.Urgencia AS Urgencia, a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                            " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area " +
                             " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
                         dr = con.ExecuteReader();
                         while (dr.Read())
                         {
                             GetRecordsQeury.Add(new Historial()
                             {
+                                Urgencia = (dr["Urgencia"].ToString()),
                                 Folio = (dr["Folio"].ToString()),
                                 Container = (dr["Container"].ToString()),
                                 Origen = (dr["Origen"].ToString()),
@@ -1301,6 +1335,7 @@ namespace RADALogisticsWEB.Controllers
                                 Choffer = (dr["Choffer"].ToString()),
                                 Comment = (dr["Comment"].ToString()),
                                 Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                                Area = (dr["Area"].ToString()),
                             });
                         }
                         DBSPP.Close();
@@ -1569,8 +1604,8 @@ namespace RADALogisticsWEB.Controllers
                             DBSPP.Close();
                         }
                     }
-      
-                    return RedirectToAction("Records", "History");
+
+                    return RedirectToAction("EntryContainer", "RADA");
                 }
                 else
                 {
@@ -1618,7 +1653,8 @@ namespace RADALogisticsWEB.Controllers
                         int rowsAffected = comdmand.ExecuteNonQuery();
                         DBSPP.Close();
                     }
-                    return RedirectToAction("Records", "History");
+
+                    return RedirectToAction("EntryContainer", "RADA");
                 }
             }
         }
@@ -1634,7 +1670,7 @@ namespace RADALogisticsWEB.Controllers
                 DBSPP.Open();
                 con.Connection = DBSPP;
                 con.CommandText = "  Select top (500) " +
-                    " b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                    " a.Urgencia AS Urgencia, b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
                     " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio ORDER by a.Folio desc";
                 dr = con.ExecuteReader();
@@ -1646,6 +1682,7 @@ namespace RADALogisticsWEB.Controllers
                     {
                         GetRecords.Add(new Historial()
                         {
+                            Urgencia = (dr["Urgencia"].ToString()),
                             Folio = (dr["Folio"].ToString()),
                             Container = (dr["Container"].ToString()),
                             Origen = (dr["Origen"].ToString()),
@@ -1754,7 +1791,7 @@ namespace RADALogisticsWEB.Controllers
                 DBSPP.Open();
                 con.Connection = DBSPP;
                 con.CommandText = "  Select top (500) " +
-                    " b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                    " a.Urgencia AS Urgencia,b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
                     " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio ORDER by a.Folio desc";
                 dr = con.ExecuteReader();
@@ -1762,6 +1799,7 @@ namespace RADALogisticsWEB.Controllers
                 {
                     GetRecords.Add(new Historial()
                     {
+                        Urgencia = (dr["Urgencia"].ToString()),
                         Folio = (dr["Folio"].ToString()),
                         Container = (dr["Container"].ToString()),
                         Origen = (dr["Origen"].ToString()),

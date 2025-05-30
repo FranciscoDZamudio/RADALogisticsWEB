@@ -32,7 +32,7 @@
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("EntryContainer", "RADA")'">
+            <button class="animated-button" onclick="location.href='@Url.Action("MoreOptions","RADA", new { ID = @ViewBag.ID})'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
                     <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
                 </svg>
@@ -63,7 +63,7 @@
             <p style="text-align: center;">&nbsp;</p>
 
             <div class="group">
-                <input type="text" id="NewContainer" name="NewContainer" required>
+                <input style="background-color: #E8E8E8" type="text" id="NewContainer" name="NewContainer" required>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Numero de contenedor (NUEVO):</label>
@@ -74,7 +74,7 @@
 
             <p style="text-align: center;">&nbsp;</p>
             <button type="button" class="Bto_saved" onclick="confirmarGuardar()">
-                ✅ Guardar Cambios
+                 Guardar Cambios
             </button>
             <p style="text-align: center;">&nbsp;</p>
         </form>

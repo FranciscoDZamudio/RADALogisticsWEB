@@ -16,6 +16,10 @@
     <link href="~/Stylee/mainStylee.css" rel="stylesheet" />
 
     <style>
+        body, h1, h2, h3, h4, h5, h6, p, a, span, div, li, td, th, input, button {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         .sidebar-section-title {
             font-size: 12px;
             font-weight: 700;
@@ -38,100 +42,100 @@
         var showTopBar = !(controller == "Login" && action == "LogIn");
     }
 
-   @if (showTopBar)
+    @if (showTopBar)
     {
-<div id="sidebar" class="sidebar">
-    <div class="sidebar-header" style="text-align: center; padding: 15px;">
-        <img src="~/Pictures/logo_radas-removebg-preview.png" class="logo-img" alt="Logo" />
+        <div id="sidebar" class="sidebar">
+            <div class="sidebar-header" style="text-align: center; padding: 15px;">
+                <img src="~/Pictures/logo_radas-removebg-preview.png" class="logo-img" alt="Logo" />
 
-        <p class="description" style="font-size: 13px; font-weight: 700; margin-top: 10px; color: #555;">
-            Rol de Usuario: <span style="color: #007bff;">@ViewBag.Type</span>
-        </p>
+                <p class="description" style="font-size: 13px; font-weight: 700; margin-top: 10px; color: #555;">
+                    Usuario Activo: <span style="color: #007bff;"><br /> @ViewBag.Type</span>
+                </p>
 
-        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()" style="position: absolute; top: 10px; right: 15px; font-size: 24px;">&times;</a>
-    </div>
+                <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()" style="position: absolute; top: 10px; right: 15px; font-size: 24px;">&times;</a>
+            </div>
 
-    @if (ViewBag.Type == "HISENSE")
-    {
-        <hr class="hr-divider" />
-        <p class="sidebar-section-title">Permisos de Usuario</p>
-        <hr class="hr-divider" />
+            @if (ViewBag.Type == "HISENSE")
+            {
+                <hr class="hr-divider" />
+                <p class="sidebar-section-title">Permisos de Usuario</p>
+                <hr class="hr-divider" />
 
-        @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
-            <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Permisos de Usuario</p>
-            <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
+                @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+                    <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Permisos de Usuario</p>
+                    <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
 
-        @Html.ActionLink("📤 Solicitud de Carga", "RequestContainer", "HISENSE")
-        @Html.ActionLink("🗂️ Historial de Registros", "HRecord", "History")
-    }
-    else if (ViewBag.Type == "RADA")
-    {
-        <hr class="hr-divider" />
-        <p class="sidebar-section-title">Permisos de Usuario</p>
-        <hr class="hr-divider" />
-
-        @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
-            <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Permisos de Usuario</p>
-            <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
-
-        @Html.ActionLink("📥 Contenedores", "EntryContainer", "RADA")
-        @Html.ActionLink("🏗️ Control de Inventario", "Inventory", "RADA")
-        @Html.ActionLink("🗂️ Historial de Registros", "Records", "History")
-        @Html.ActionLink("‍📊 Panel de Control", "Dashboard", "History")
-    }
-    else if (ViewBag.Type == "ADMINISTRATOR")
-    {
-        <hr class="hr-divider" />
-        <p class="sidebar-section-title">Permisos de Administrador</p>
-        <hr class="hr-divider" />
-
-        @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
-            <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Administrador</p>
-            <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
-
-        @Html.ActionLink("👷 Control de Usuarios", "Home", "Users")
-        @Html.ActionLink("‍🗳️ Control de Areas", "Area", "Users")
-        @Html.ActionLink("🗂️ Historial de Registros", "Records", "History")
-        @Html.ActionLink("‍🔴 Historial de Bajas", "Cancellation", "Home")
-
-        <hr class="hr-divider" />
-        <p class="sidebar-section-title">Permisos de Hisense</p>
-        <hr class="hr-divider" />
-
-        @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
-            <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Hisense</p>
-            <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
-
-        @Html.ActionLink("📤 Solicitud de Carga", "RequestContainer", "HISENSE")
-
-        <hr class="hr-divider" />
-        <p class="sidebar-section-title">Permisos de Rada</p>
-        <hr class="hr-divider" />
-
-        @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
-            <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Rada</p>
-            <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
-
-        @Html.ActionLink("📊 Panel de Control", "Dashboard", "History")
-        @Html.ActionLink("📥 Contenedores", "EntryContainer", "RADA")
-        @Html.ActionLink("🏗️ Control de Inventario", "Inventory", "RADA")
-    }
-
-    <!-- Logout Link Always at the Bottom -->
-    <div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">
-        @Html.ActionLink(
-            "⛔ Cerrar Sesion",
-            "LogIn",
-            "Login",
-            null,
-            new
-                {
-                @style = "display: block; font-weight: bold; color: black; padding: 10px 0; border-radius: 6px; width: 80%; margin: 0 auto; text-decoration: none;"
+                @Html.ActionLink("📤 Solicitud de Carga", "RequestContainer", "HISENSE")
+                @Html.ActionLink("🗂️ Historial de Registros", "HRecord", "History")
             }
-        )
-    </div>
+            else if (ViewBag.Type == "RADA")
+            {
+                <hr class="hr-divider" />
+                <p class="sidebar-section-title">Permisos de Usuario</p>
+                <hr class="hr-divider" />
 
-</div>
+                @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+                    <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Permisos de Usuario</p>
+                    <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
+
+                @Html.ActionLink("📥 Contenedores", "EntryContainer", "RADA")
+                @Html.ActionLink("🏗️ Control de Inventario", "Inventory", "RADA")
+                @Html.ActionLink("🗂️ Historial de Registros", "Records", "History")
+                @Html.ActionLink("‍📊 Panel de Control", "Dashboard", "History")
+            }
+            else if (ViewBag.Type == "ADMINISTRATOR")
+            {
+                <hr class="hr-divider" />
+                <p class="sidebar-section-title">Permisos de Administrador</p>
+                <hr class="hr-divider" />
+
+                @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+                    <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Administrador</p>
+                    <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
+
+                @Html.ActionLink("👷 Control de Usuarios", "Home", "Users")
+                @Html.ActionLink("‍🗳️ Control de Areas", "Area", "Users")
+                @Html.ActionLink("🗂️ Historial de Registros", "Records", "History")
+                @Html.ActionLink("‍🔴 Historial de Bajas", "Cancellation", "Home")
+
+                <hr class="hr-divider" />
+                <p class="sidebar-section-title">Permisos de Hisense</p>
+                <hr class="hr-divider" />
+
+                @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+                    <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Hisense</p>
+                    <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
+
+                @Html.ActionLink("📤 Solicitud de Carga", "RequestContainer", "HISENSE")
+
+                <hr class="hr-divider" />
+                <p class="sidebar-section-title">Permisos de Rada</p>
+                <hr class="hr-divider" />
+
+                @*<hr style="border: none; height: 2px; background-color: #B6B8BB;" />
+                    <p class="description" style="font-size: 13px; font-weight: 700; text-align: center;">Opciones de Rada</p>
+                    <hr style="border: none; height: 2px; background-color: #B6B8BB;" />*@
+
+                @Html.ActionLink("📊 Panel de Control", "Dashboard", "History")
+                @Html.ActionLink("📥 Contenedores", "EntryContainer", "RADA")
+                @Html.ActionLink("🏗️ Control de Inventario", "Inventory", "RADA")
+            }
+
+            <!-- Logout Link Always at the Bottom -->
+            <div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">
+                @Html.ActionLink(
+                    "⛔ Cerrar Sesion",
+                    "LogIn",
+                    "Login",
+                    null,
+                    new
+                        {
+                        @style = "display: block; font-weight: bold; color: black; padding: 10px 0; border-radius: 6px; width: 80%; margin: 0 auto; text-decoration: none;"
+                    }
+                )
+            </div>
+
+        </div>
 
         <div class="topbar">
             <span class="menu-icon" onclick="openMenu()">&#9776;</span>

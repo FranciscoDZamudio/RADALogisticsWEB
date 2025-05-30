@@ -22,9 +22,95 @@ namespace RADALogisticsWEB.Controllers
         SqlDataReader dr;
 
         // GET: HISENSE
-        public ActionResult Index()
+        public ActionResult ChangeStatus(string ID, string Page, string data)
         {
-            return View();
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
+            }
+
+
+            ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                ViewBag.data = data;
+                ViewBag.Page = Page;
+                ViewBag.ID = ID;
+                return View();
+            }
+        }
+
+        public ActionResult NewConcept(string id, string NivelUrgencia, string MotivoUrgencia, string Page, string data)
+        {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                //query message
+                string updateQuery = "UPDATE RADAERmpire_AMessagesUrgent SET Description = @Description,Status = @Status  WHERE Folio = @ID";
+                using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
+                {
+                    DBSPP.Open();
+                    command.Parameters.AddWithValue("@Status", NivelUrgencia.ToString());
+                    command.Parameters.AddWithValue("@Description", MotivoUrgencia.ToString());
+                    command.Parameters.AddWithValue("@ID", id);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                //query message
+                string Updt = "UPDATE RADAEmpire_BRequestContainers SET Urgencia = @Urgencia WHERE Folio = @ID";
+                using (SqlCommand drUpdt = new SqlCommand(Updt, DBSPP))
+                {
+                    DBSPP.Open();
+                    drUpdt.Parameters.AddWithValue("@Urgencia", NivelUrgencia.ToString());
+                    drUpdt.Parameters.AddWithValue("@ID", id);
+                    int rowsAffected = drUpdt.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+
+                if (Page == "Hisense" && data == "iNDEX")
+                {
+                    return RedirectToAction("EntryContainer", "RADA");
+                }
+                else
+                {
+                    if (Page == "Hisense" && data == "RADASers")
+                    {
+                        return RedirectToAction("Records", "History");
+                    }
+                    else
+                    {
+                        return RedirectToAction("RequestContainer", "HISENSE");
+                    }
+                }
+            }
         }
 
         public ActionResult Details(string ID, string Record)
@@ -81,7 +167,7 @@ namespace RADALogisticsWEB.Controllers
                 DBSPP.Close();
 
                 //create generate randoms int value
-                string ReasonMT = null;
+                string ReasonMT = null, datetime = null;
                 SqlCommand reason = new SqlCommand("Select * from RADAEmpires_DRemoves where Active = '1' and Folio = '" + ID.ToString() + "'", DBSPP);
                 DBSPP.Open();
                 SqlDataReader drreason = reason.ExecuteReader();
@@ -90,14 +176,40 @@ namespace RADALogisticsWEB.Controllers
                     while (drreason.Read())
                     {
                         ReasonMT = drreason["Reason"].ToString();
+                        datetime = drreason["Datetime"].ToString();
                     }
                 }
                 else
                 {
                     ReasonMT = "Report not canceled";
+                    datetime = "0000-00-00 00:00:00.000";
                 }
                 DBSPP.Close();
 
+                //create generate randoms int value
+                string Desc = null, sts = null;
+                SqlCommand QuerySq = new SqlCommand("Select * from RADAERmpire_AMessagesUrgent where Active = '1' and Folio = '" + ID.ToString() + "'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drQuerySq = QuerySq.ExecuteReader();
+                if (drQuerySq.HasRows)
+                {
+                    while (drQuerySq.Read())
+                    {
+                        Desc = drQuerySq["Description"].ToString();
+                        sts = drQuerySq["Status"].ToString();
+                    }
+                }
+                else
+                {
+                    Desc = "REPORTE SIN MOTIVO DE URGENCIA";
+                    sts = "Normal";
+                }
+                DBSPP.Close();
+
+                ViewBag.ID = ID;
+                ViewBag.Desc = Desc;  
+                ViewBag.sts = sts;
+                ViewBag.DateCancel = datetime;
                 ViewBag.Container = container;
                 ViewBag.Status = status;
                 ViewBag.Solicitud = solicitud;
@@ -254,357 +366,156 @@ namespace RADALogisticsWEB.Controllers
             return PartialView("table", ViewBag.Records);
         }
 
-        public ActionResult ProcessData(string ActivoRampa , string User, string Type, string Container, string Origins, string Destination, string Area, string ActivoHidden)
+        public ActionResult ProcessData(string ActivoRampa, string User, string Type, string Container, string Origins, string Destination, string Area, string ActivoHidden, string NivelUrgencia , string MotivoUrgencia)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            try
             {
-                Session["Username"] = Request.Cookies["UserCookie"].Value;
-            }
+                if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+                    Session["Username"] = Request.Cookies["UserCookie"].Value;
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
-            {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
-            }
+                if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+                    Session["Type"] = Request.Cookies["UserCookie"].Value;
 
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
+                if (Session.Count <= 0)
+                    return RedirectToAction("LogIn", "Login");
 
-            if (Session.Count <= 0)
-            {
-                return RedirectToAction("LogIn", "Login");
-            }
-            else
-            {
                 if (Area == null)
-                {
                     return RedirectToAction("RequestContainer", "HISENSE");
-                }
-                else
+
+                ViewBag.User = Session["Username"];
+                ViewBag.Type = Session["Type"];
+
+                List<string> lista = new List<string>();
+
+                using (SqlConnection conn = new SqlConnection(DBSPP.ConnectionString))
                 {
-                   
-                    //create generate randoms int value
-                    string randomval = null;
-                    SqlCommand conse = new SqlCommand("Select top (1) ID from RADAEmpire_BRequestContainers order by ID desc", DBSPP);
-                    DBSPP.Open();
-                    SqlDataReader drconse = conse.ExecuteReader();
-                    if (drconse.HasRows)
+                    conn.Open();
+
+                    // Obtener lista de pasos
+                    using (SqlCommand cmd = new SqlCommand("SELECT * FROM RADAEmpire_AAreasAsign WHERE Active = 1 AND Status = @Status AND AreaAssign = @AreaAssign AND GruaRequest = @GruaRequest AND RaR = @RaR ORDER BY NumberOrder ASC", conn))
                     {
-                        while (drconse.Read())
+                        cmd.Parameters.AddWithValue("@Status", Type);
+                        cmd.Parameters.AddWithValue("@AreaAssign", Area);
+                        cmd.Parameters.AddWithValue("@GruaRequest", ActivoHidden);
+                        cmd.Parameters.AddWithValue("@RaR", ActivoRampa);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            randomval = drconse[0].ToString();//234 + 1216 + 
-                        }
-                    }
-                    else
-                    {
-                        randomval = "0";
-                    }
-                    DBSPP.Close();
+                            if (!reader.HasRows)
+                                return RedirectToAction("RequestContainer", "HISENSE");
 
-                    int sum = int.Parse(randomval) + 1;
-
-                    //Random folio = new Random();
-                    //int val = folio.Next(1, 1000000000);
-                    string Folio = null;
-                    Folio = "MOV" + sum.ToString();
-
-                    // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
-                    DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
-
-                    // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
-                    TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-                    DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
-
-                    // Formatear la fecha para que sea adecuada para la base de datos
-                    string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-
-                    //Guardar informacion a la base de datos del proyecto
-                    DBSPP.Open();
-                    SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
-                        "(Urgencia,Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest, RaRRequest) values " +
-                        "(@Urgencia,@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest, @RaRRequest) ", DBSPP);
-                    //--------------------------------------------------------------------------------------------------------------------------------
-                    PalletControl.Parameters.AddWithValue("@Urgencia", "Normal");
-                    PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
-                    PalletControl.Parameters.AddWithValue("@Who_Send", User.ToString());
-                    PalletControl.Parameters.AddWithValue("@Container", Container.ToUpper());
-                    PalletControl.Parameters.AddWithValue("@Destination_Location", Destination.ToUpper());
-                    PalletControl.Parameters.AddWithValue("@Origins_Location", Origins.ToUpper());
-                    PalletControl.Parameters.AddWithValue("@Status", Type.ToString());
-                    PalletControl.Parameters.AddWithValue("@message", "PENDING");
-                    PalletControl.Parameters.AddWithValue("@shift", Area.ToString());
-                    PalletControl.Parameters.AddWithValue("@Date", usTime.ToString());
-                    PalletControl.Parameters.AddWithValue("@Datetime", usTime.ToString("HH:mm:ss"));
-                    PalletControl.Parameters.AddWithValue("@Active", true);
-                    PalletControl.Parameters.AddWithValue("@GruaRequest", ActivoHidden);
-                    PalletControl.Parameters.AddWithValue("@RaRRequest", ActivoRampa.ToString());
-                    PalletControl.ExecuteNonQuery();
-                    DBSPP.Close();
-                    //--------------------------------------------------------------------------------------------------------------------------------
-
-                    //Guardar informacion a la base de datos del proyecto
-                    DBSPP.Open();
-                    SqlCommand RADAdocument = new SqlCommand("insert into RADAEmpire_CEntryContrainers" +
-                        "(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date,AreaWork, Active,Cancel) values " +
-                        "(@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date,@AreaWork, @Active, @Cancel) ", DBSPP);
-                    //--------------------------------------------------------------------------------------------------------------------------------
-                    RADAdocument.Parameters.AddWithValue("@Folio_Request", Folio.ToString());
-                    RADAdocument.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
-                    RADAdocument.Parameters.AddWithValue("@Time_Confirm", "00:00:00");
-                    RADAdocument.Parameters.AddWithValue("@Choffer", "PENDNING CONFIRM");
-                    RADAdocument.Parameters.AddWithValue("@FastCard", "PENDNING CONFIRM");
-                    RADAdocument.Parameters.AddWithValue("@Time_Finished", "00:00:00");
-                    RADAdocument.Parameters.AddWithValue("@Date", usTime.ToString());
-                    RADAdocument.Parameters.AddWithValue("@AreaWork", "RADALogistics");
-                    RADAdocument.Parameters.AddWithValue("@Active", true);
-                    RADAdocument.Parameters.AddWithValue("@Cancel", false);
-                    RADAdocument.ExecuteNonQuery();
-                    DBSPP.Close();
-                    //--------------------------------------------------------------------------------------------------------------------------------
-                   
-                    //Generar una lista por areas
-                    List<string> lista = new List<string>();
-
-                    if (Area == "ENVIOS" && Type == "CAR" && ActivoRampa == "NO")
-                    {
-                        lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                        lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                        lista.Add("CHOFER EN PROCESO DE ESTACIONAMIENTO CAJA");
-                        lista.Add("CHOFER SOLTANDO CAJA");
-                        lista.Add("CHOFER TERMINA MOVIMIENTO");
-                    }
-                    else
-                    {
-                        if (Area == "ENVIOS" && Type == "VAC" && ActivoRampa == "NO")
-                        {
-                            lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                            lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                            lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
-                            lista.Add("CHOFER SOLTANDO CAJA");
-                            lista.Add("CHOFER TERMINA MOVIMIENTO");
-                        }
-                        else
-                        {
-                            if (Area == "PT" && Type == "CAR" && ActivoRampa == "NO")
+                            while (reader.Read())
                             {
-                                lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                                lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                                lista.Add("CHOFER EN PROCESO DE ESTACIONAMIENTO CAJA");
-                                lista.Add("CHOFER SOLTANDO CAJA");
-                                lista.Add("CHOFER TERMINA MOVIMIENTO");
-                            }
-                            else
-                            {
-                                if (Area == "PT" && Type == "VAC" && ActivoRampa == "NO")
-                                {
-                                    lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                                    lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                                    lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
-                                    lista.Add("CHOFER SOLTANDO CAJA");
-                                    lista.Add("CHOFER TERMINA MOVIMIENTO");
-                                }
+                                lista.Add(reader["Message"].ToString()); // Puedes cambiar reader[0] por reader["NombreCampo"]
                             }
                         }
                     }
 
-                    //TIPO DE MOVIMIENTO DE RAMPA A RAMPA
-                    if (ActivoRampa == "SI" && ActivoHidden == "NO" && Type == "CAR")
+                    // Obtener último ID
+                    int lastId = 0;
+                    using (SqlCommand cmd = new SqlCommand("SELECT TOP (1) ID FROM RADAEmpire_BRequestContainers ORDER BY ID DESC", conn))
                     {
-                        lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                        lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                        lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
-                        lista.Add("CHOFER SOLTANDO CAJA");
-                        lista.Add("CHOFER TERMINA MOVIMIENTO");
+                        var result = cmd.ExecuteScalar();
+                        if (result != null)
+                            lastId = Convert.ToInt32(result);
                     }
-                    else
+
+                    string Folio = "MOV" + (lastId + 1);
+
+                    // Obtener hora en US (Rosarito - Pacific Time)
+                    TimeZoneInfo usTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, usTimeZone);
+                    string dateOnly = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                    string timeOnly = usTime.ToString("HH:mm:ss");
+
+                    // Insertar en RADAEmpire_BRequestContainers
+                    using (SqlCommand insertReq = new SqlCommand(@"INSERT INTO RADAEmpire_BRequestContainers 
+                (Urgencia, Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active, GruaRequest, RaRRequest)
+                VALUES (@Urgencia, @Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active, @GruaRequest, @RaRRequest)", conn))
                     {
-                        if (ActivoRampa == "SI" && ActivoHidden == "NO" && Type == "VAC")
+                        insertReq.Parameters.AddWithValue("@Urgencia", NivelUrgencia.ToString());
+                        insertReq.Parameters.AddWithValue("@Folio", Folio);
+                        insertReq.Parameters.AddWithValue("@Who_Send", User);
+                        insertReq.Parameters.AddWithValue("@Container", Container.ToUpper());
+                        insertReq.Parameters.AddWithValue("@Destination_Location", Destination.ToUpper());
+                        insertReq.Parameters.AddWithValue("@Origins_Location", Origins.ToUpper());
+                        insertReq.Parameters.AddWithValue("@Status", Type);
+                        insertReq.Parameters.AddWithValue("@message", "PENDING");
+                        insertReq.Parameters.AddWithValue("@shift", Area);
+                        insertReq.Parameters.AddWithValue("@Date", dateOnly);
+                        insertReq.Parameters.AddWithValue("@Datetime", timeOnly);
+                        insertReq.Parameters.AddWithValue("@Active", true);
+                        insertReq.Parameters.AddWithValue("@GruaRequest", ActivoHidden);
+                        insertReq.Parameters.AddWithValue("@RaRRequest", ActivoRampa);
+
+                        insertReq.ExecuteNonQuery();
+                    }
+
+                    // Insertar en RADAEmpire_BRequestContainers
+                    using (SqlCommand insertReq = new SqlCommand(@"INSERT INTO RADAERmpire_AMessagesUrgent 
+                     (Folio,Status,Description,Active,Dateadded,DateTimeadded)
+                       VALUES 
+                     (@Folio,@Status,@Description,@Active,@Dateadded,@DateTimeadded)", conn))
+                    {
+                        insertReq.Parameters.AddWithValue("@Folio", Folio.ToString());
+                        insertReq.Parameters.AddWithValue("@Status", NivelUrgencia.ToString());
+                        insertReq.Parameters.AddWithValue("@Description", MotivoUrgencia.ToUpper());
+                        insertReq.Parameters.AddWithValue("@Active", true);
+                        insertReq.Parameters.AddWithValue("@Dateadded", usTime.ToString());
+                        insertReq.Parameters.AddWithValue("@DateTimeadded", usTime.ToString());
+
+                        insertReq.ExecuteNonQuery();
+                    }
+
+                    // Insertar en RADAEmpire_CEntryContrainers
+                    using (SqlCommand insertEntry = new SqlCommand(@"INSERT INTO RADAEmpire_CEntryContrainers
+                (Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date, AreaWork, Active, Cancel)
+                VALUES (@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date, @AreaWork, @Active, @Cancel)", conn))
+                    {
+                        insertEntry.Parameters.AddWithValue("@Folio_Request", Folio);
+                        insertEntry.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
+                        insertEntry.Parameters.AddWithValue("@Time_Confirm", "00:00:00");
+                        insertEntry.Parameters.AddWithValue("@Choffer", "PENDNING CONFIRM");
+                        insertEntry.Parameters.AddWithValue("@FastCard", "PENDNING CONFIRM");
+                        insertEntry.Parameters.AddWithValue("@Time_Finished", "00:00:00");
+                        insertEntry.Parameters.AddWithValue("@Date", dateOnly);
+                        insertEntry.Parameters.AddWithValue("@AreaWork", "RADALogistics");
+                        insertEntry.Parameters.AddWithValue("@Active", true);
+                        insertEntry.Parameters.AddWithValue("@Cancel", false);
+
+                        insertEntry.ExecuteNonQuery();
+                    }
+
+                    // Insertar pasos en RADAEmpires_DZDetailsHisense
+                    foreach (var paso in lista)
+                    {
+                        using (SqlCommand insertPaso = new SqlCommand(@"INSERT INTO RADAEmpires_DZDetailsHisense 
+                    (Folio, Type_StatusContainer, GruaMov, Process_Movement, End_date, Status, Comment, Date_Process, Activo)
+                    VALUES (@Folio, @Type_StatusContainer, @GruaMov, @Process_Movement, @End_date, @Status, @Comment, GETDATE(), @Activo)", conn))
                         {
-                            lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                            lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                            lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
-                            lista.Add("CHOFER SOLTANDO CAJA");
-                            lista.Add("CHOFER TERMINA MOVIMIENTO");
+                            insertPaso.Parameters.AddWithValue("@Folio", Folio);
+                            insertPaso.Parameters.AddWithValue("@Type_StatusContainer", Type);
+                            insertPaso.Parameters.AddWithValue("@GruaMov", ActivoHidden);
+                            insertPaso.Parameters.AddWithValue("@Process_Movement", paso);
+                            insertPaso.Parameters.AddWithValue("@End_date", "00:00:00");
+                            insertPaso.Parameters.AddWithValue("@Status", "PENDIENTE");
+                            insertPaso.Parameters.AddWithValue("@Comment", "SIN COMENTARIOS");
+                            insertPaso.Parameters.AddWithValue("@Activo", true);
+
+                            insertPaso.ExecuteNonQuery();
                         }
                     }
 
-
-                    //AREA DE EMPAQUE
-                    if (Area == "EMPAQUE" && Type == "CAR" && ActivoHidden == "NO" && ActivoRampa == "NO")
-                    {
-                        lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                        lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                        lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
-                        lista.Add("CHOFER SOLTANDO CAJA");
-                        lista.Add("CHOFER TERMINA MOVIMIENTO");
-                    }
-                    else
-                    {
-                        if (Area == "EMPAQUE" && Type == "VAC" && ActivoHidden == "NO" && ActivoRampa == "NO")
-                        {
-                            lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                            lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                            lista.Add("CHOFER EN ESPERA DE SELLO");
-                            lista.Add("CHOFER EN ESPERA DE AREA DE VACIO");
-                            lista.Add("CHOFER TERMINA MOVIMIENTO");
-                        }
-                        else
-                        {
-                            if (Area == "EMPAQUE" && Type == "CAR" && ActivoHidden == "SI" && ActivoRampa == "NO")
-                            {
-                                lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                                lista.Add("CHOFER ENGANCHANDO CHASIS");
-                                lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
-                                //lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
-                                lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
-                                lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
-                                lista.Add("CHOFER SOLTANDO CAJA");
-                                lista.Add("CHOFER TERMINA MOVIMIENTO");
-                            }
-                            else
-                            {
-                                if (Area == "EMPAQUE" && Type == "VAC" && ActivoHidden == "SI" && ActivoRampa == "NO")
-                                {
-                                    lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                                    lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                                    lista.Add("CHOFER EN ESPERA DE SELLO");
-                                    lista.Add("CHOFER EN ESPERA DE ACCESO DE GRÚA");
-                                    //lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
-                                    //lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
-                                    lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
-                                    //lista.Add("CHOFER SOLTANDO CHASIS");
-                                    lista.Add("CHOFER TERMINA MOVIMIENTO");
-                                }
-                            }
-                        }
-                    }
-
-                    //AREA DE GENERALES
-                    if (Area == "GENERALES" && Type == "CAR" && ActivoHidden == "NO" && ActivoRampa == "NO")
-                    {
-                        lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                        lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                        lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
-                        lista.Add("CHOFER SOLTANDO CAJA");
-                        lista.Add("CHOFER TERMINA MOVIMIENTO");
-                    }
-                    else
-                    {
-                        if (Area == "GENERALES" && Type == "VAC" && ActivoHidden == "NO" && ActivoRampa == "NO")
-                        {
-                            lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                            lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                            lista.Add("CHOFER EN ESPERA DE SELLO");
-                            lista.Add("CHOFER EN ESPERA DE AREA DE VACIO");
-                            lista.Add("CHOFER TERMINA MOVIMIENTO");
-                        }
-                        else
-                        {
-                            if (Area == "GENERALES" && Type == "CAR" && ActivoHidden == "SI" && ActivoRampa == "NO")
-                            {
-                                lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                                lista.Add("CHOFER ENGANCHANDO CHASIS");
-                                lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
-                                //lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
-                                lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
-                                lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
-                                lista.Add("CHOFER SOLTANDO CAJA");
-                                lista.Add("CHOFER TERMINA MOVIMIENTO");
-                            }
-                            else
-                            {
-                                if (Area == "GENERALES" && Type == "VAC" && ActivoHidden == "SI" && ActivoRampa == "NO")
-                                {
-                                    lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                                    lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                                    lista.Add("CHOFER EN ESPERA DE SELLO");
-                                    lista.Add("CHOFER EN ESPERA DE ACCESO DE GRÚA");
-                                    //lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
-                                    //lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
-                                    lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
-                                    //lista.Add("CHOFER SOLTANDO CHASIS");
-                                    lista.Add("CHOFER TERMINA MOVIMIENTO");
-                                }
-                            }
-                        }
-                    }
-
-                    if (Area == "BODEGA 2" && Type == "CAR" && ActivoHidden == "NO" && ActivoRampa == "NO")
-                    {
-                        lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                        lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                        lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
-                        lista.Add("CHOFER SOLTANDO CAJA");
-                        lista.Add("CHOFER TERMINA MOVIMIENTO");
-                    }
-                    else
-                    {
-                        if (Area == "BODEGA 2" && Type == "VAC" && ActivoHidden == "NO" && ActivoRampa == "NO")
-                        {
-                            lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                            lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                            lista.Add("CHOFER EN ESPERA DE SELLO");
-                            lista.Add("CHOFER EN ESPERA DE AREA DE VACIO");
-                            lista.Add("CHOFER TERMINA MOVIMIENTO");
-                        }
-                        else
-                        {
-                            if (Area == "BODEGA 2" && Type == "CAR" && ActivoHidden == "SI" && ActivoRampa == "NO")
-                            {
-                                lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                                lista.Add("CHOFER EN CAMINO A PLANTA");
-                                lista.Add("CHOFER INGRESANDO A RECIBOS");
-                                //lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
-                                lista.Add("CHOFER ENGANCHANDO CHASIS");
-                                lista.Add("CHOFER EN ESPERA DE ACCESO A GRUA");
-                                //lista.Add("CHOFER EN ESPERA DE MANIOBRA EN GRUA");
-                                lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
-                                lista.Add("CHOFER EN RUTA A RAMPA DESTINO");
-                                lista.Add("CHOFER SOLTANDO CAJA");
-                                lista.Add("CHOFER TERMINA MOVIMIENTO");
-                            }
-                            else
-                            {
-                                if (Area == "BODEGA 2" && Type == "VAC" && ActivoHidden == "SI" && ActivoRampa == "NO")
-                                {
-                                    lista.Add("CHOFER ASIGNADO AL MOVIMIENTO");
-                                    lista.Add("CHOFER EN PROCESO DE ENGANCHE DE CAJA");
-                                    lista.Add("CHOFER EN ESPERA DE SELLO");
-                                    lista.Add("CHOFER EN ESPERA DE ACCESO DE GRUA");
-                                    //lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
-                                    //lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
-                                    lista.Add("CHOFER EN ESPERA DE MANIOBRA DE GRUA");
-                                    lista.Add("CHOFER EN ESPERA DE CARGADO DE GRUA");
-                                    lista.Add("CHOFER EN ESPERA DE SALIDA DE GRUA");
-                                    //lista.Add("CHOFER SOLTANDO CHASIS");
-                                    lista.Add("CHOFER TERMINA MOVIMIENTO");
-                                }
-                            }
-                        }
-                    }
-
-                    // Guardar información de cada paso en la base de datos
-                    DBSPP.Open();
-                    foreach (string paso in lista)
-                    {
-                        SqlCommand ProcessDB = new SqlCommand("INSERT INTO RADAEmpires_DZDetailsHisense " +
-                            "(Folio, Type_StatusContainer, GruaMov, Process_Movement, End_date, Status, Comment, Date_Process, Activo) " +
-                            "VALUES (@Folio, @Type_StatusContainer, @GruaMov, @Process_Movement, @End_date, @Status, @Comment, GETDATE(), @Activo)", DBSPP);
-
-                        ProcessDB.Parameters.AddWithValue("@Folio", Folio.ToString());
-                        ProcessDB.Parameters.AddWithValue("@Type_StatusContainer", Type.ToString());
-                        ProcessDB.Parameters.AddWithValue("@GruaMov", ActivoHidden);
-                        ProcessDB.Parameters.AddWithValue("@Process_Movement", paso); // Aquí se guarda cada paso de la lista
-                        ProcessDB.Parameters.AddWithValue("@End_date", "00:00:00");
-                        ProcessDB.Parameters.AddWithValue("@Status", "PENDIENTE");
-                        ProcessDB.Parameters.AddWithValue("@Comment", "SIN COMENTARIOS");
-                        ProcessDB.Parameters.AddWithValue("@Activo", true);
-
-                        ProcessDB.ExecuteNonQuery();
-                    }
-                    DBSPP.Close();
-
-                    return RedirectToAction("RequestContainer", "HISENSE");
+                    conn.Close();
                 }
+
+                return RedirectToAction("RequestContainer", "HISENSE");
+            }
+            catch (Exception ex)
+            {
+                // Log error aquí si tienes logger
+                ViewBag.Error = "Error al procesar la solicitud: " + ex.Message;
+                return View("Error");
             }
         }
 
@@ -675,18 +586,25 @@ namespace RADALogisticsWEB.Controllers
 
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = @"
-    SELECT * 
-    FROM RADAEmpire_BRequestContainers 
-    WHERE Active = '1' AND Date = @Date
-    ORDER BY 
-        CASE 
-            WHEN UPPER(message) = 'PENDING' THEN 0
-            WHEN UPPER(message) = 'CHOFER TERMINA MOVIMIENTO' THEN 2
-            WHEN UPPER(message) = 'CANCELED BY RADA' THEN 3
-            ELSE 1
-        END,
-        ID DESC";
+                con.CommandText = @"SELECT * 
+FROM RADAEmpire_BRequestContainers 
+WHERE Active = '1' AND Date = @Date
+ORDER BY 
+    -- Prioridad por Urgencia
+    CASE 
+        WHEN UPPER(Urgencia) = 'Critico' THEN 0
+        WHEN UPPER(Urgencia) = 'URGENTE' THEN 1
+        WHEN UPPER(Urgencia) = 'NORMAL' THEN 2
+        ELSE 3
+    END,
+    -- Prioridad por mensaje
+    CASE 
+        WHEN UPPER(message) = 'PENDING' THEN 0
+        WHEN UPPER(message) = 'CHOFER TERMINA MOVIMIENTO' THEN 2
+        WHEN UPPER(message) = 'CANCELED BY RADA' THEN 3
+        ELSE 1
+    END,
+    ID DESC;";
 
                 con.Parameters.Clear();
                 con.Parameters.AddWithValue("@Date", rosaritoDateOnly);
@@ -705,6 +623,7 @@ namespace RADALogisticsWEB.Controllers
 
                     GetListed.Add(new Solicitud_Contenedores()
                     {
+                        Urgencia = dr["Urgencia"].ToString(),
                         ID = int.Parse(dr["ID"].ToString()),
                         Folio = dr["Folio"].ToString(),
                         Who_Send = dr["Who_Send"].ToString(),

@@ -53,7 +53,7 @@
             <div class="form-row">
 
                 <div class="form-group col-md-6 text-center">
-                    <label for="TimeStart" style="font-family: 'Century Gothic'; display: block">Fecha Inicio:</label>
+                    <label for="TimeStart" style="font-family: 'Century Gothic'; display: block">Fecha Inicial:</label>
                     <input id="TimeStart" name="TimeStart" type="date" class="form-control mx-auto" style="max-width: 100%; display: block;" />
                 </div>
 
@@ -66,7 +66,7 @@
 
                 <div class="form-row" style="width: 100%; text-align: center">
                     <button id="Update" name="Update" type="submit" class="Bto_saved">
-                        🔎 Buscar . . . 
+                         Buscar 
                     </button>
                 </div>
 
@@ -78,7 +78,7 @@
 
 <p style="text-align: center;">&nbsp;</p>
 <h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Registros ingresados recientemente al sistema </h4>
-<h5 style="text-align:center" class="Tittlelabel"> Total: @ViewBag.Count</h5>
+<h5 style="text-align:center" class="Tittlelabel"> Total de Registros: @ViewBag.Count</h5>
 
 <div class="table-scroll">
     <ul class="responsive-table">
@@ -111,42 +111,43 @@
             <div class="col col-11" style="text-align:center">Date</div>
 
         </li>
-        @foreach (var person in ViewBag.Records)
+
+       @foreach (var person in ViewBag.Records)
         {
-    <li class="table-row" id="tblCustomers" style="color:black ; background-color:
+            <li class="table-row" id="tblCustomers" style="color:black ; background-color:
     @(person.Comment == "Canceled by Rada" ? "#E9B4B4" :
       person.Comment == "Canceled by Hisense" ? "#E9B4B4" :
       person.Comment == "PENDING" ? "#DDDCD4" :
       person.Comment == "CHOFER TERMINA MOVIMIENTO" ? "#C0E9B4" :
       person.Comment == "Movement in process" ? "#E5F8EC" : "#E9D8B4")">
 
-        <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
+                <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
 
-        <div class="col col-1" data-label="Container" style="text-align:center">@person.Container</div>
+                <div class="col col-1" data-label="Container" style="text-align:center">@person.Container</div>
 
-        <div class="col col-2" data-label="Origins" style="text-align:center">@person.Origen</div>
+                <div class="col col-2" data-label="Origins" style="text-align:center">@person.Origen</div>
 
-        <div class="col col-3" data-label="Destination" style="text-align:center"> @person.Destination</div>
+                <div class="col col-3" data-label="Destination" style="text-align:center"> @person.Destination</div>
 
-        <div class="col col-4" data-label="Status" style="text-align:center"> @person.Status</div>
+                <div class="col col-4" data-label="Status" style="text-align:center"> @person.Status</div>
 
-        <div class="col col-5" data-label="HRequest" style="text-align:center"> @person.HSolicitud</div>
+                <div class="col col-5" data-label="HRequest" style="text-align:center"> @person.HSolicitud</div>
 
-        <div class="col col-6" data-label="HConfirm" style="text-align:center"> @person.HConfirm</div>
+                <div class="col col-6" data-label="HConfirm" style="text-align:center"> @person.HConfirm</div>
 
-        <div class="col col-7" data-label="HFinish" style="text-align:center"> @person.HFinish</div>
+                <div class="col col-7" data-label="HFinish" style="text-align:center"> @person.HFinish</div>
 
-        <div class="col col-8" data-label="Who Request" style="text-align:center"> @person.WhoRequest</div>
+                <div class="col col-8" data-label="Who Request" style="text-align:center"> @person.WhoRequest</div>
 
-        <div class="col col-9" data-label="Choffer" style="text-align:center"> @person.Choffer</div>
+                <div class="col col-9" data-label="Choffer" style="text-align:center"> @person.Choffer</div>
 
-        <div class="col col-10" data-label="Comment" style="text-align:center"> @person.Comment</div>
+                <div class="col col-10" data-label="Comment" style="text-align:center"> @person.Comment</div>
 
-        <div class="col col-10" data-label="Area" style="text-align:center"> @person.Area</div>
+                <div class="col col-10" data-label="Area" style="text-align:center"> @person.Area</div>
 
-        <div class="col col-11" data-label="Date" style="text-align:center"> @person.Date</div>
+                <div class="col col-11" data-label="Date" style="text-align:center"> @person.Date</div>
 
-    </li>
+            </li>
         }
     </ul>
 

@@ -17,6 +17,7 @@ namespace RADALogisticsWEB.Controllers
         List<AsignacionDeAreas> Asignacion = new List<AsignacionDeAreas>();
         List<AsignacionDeAreas> Asignacions = new List<AsignacionDeAreas>();
         List<Choferes> GetChofers = new List<Choferes>();
+        List<AsignacionAreas> getAsignacionAreas = new List<AsignacionAreas>();
         //connection SQL server (database)
         SqlConnection DBSPP = new SqlConnection("Data Source=RADAEmpire.mssql.somee.com ;Initial Catalog=RADAEmpire ;User ID=RooRada; password=rada1311");
         SqlCommand con = new SqlCommand();
@@ -174,7 +175,7 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Assignment(string id, string star)
         {
-            if(Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
@@ -239,7 +240,7 @@ namespace RADALogisticsWEB.Controllers
                 return RedirectToAction("LogIn", "Login");
             }
             else
-            { 
+            {
                 string vl = null;
                 SqlCommand log = new SqlCommand("Select * from RADAEmpire_ARolesChoffer where Active = '1' and Areas = '" + Area + "' and Username = '" + username + "'", DBSPP);
                 DBSPP.Open();
@@ -511,7 +512,7 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Update(string Username, string Credentials, string Email, string Log, string Pass, string TypeUsers, string id)
         {
-            if(Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
@@ -701,7 +702,7 @@ namespace RADALogisticsWEB.Controllers
                     //--------------------------------------------------------------------------------------------
                     PalletControl.Parameters.AddWithValue("@Who_create", User.ToUpper());
                     PalletControl.Parameters.AddWithValue("@Username", Username.ToUpper());
-                    PalletControl.Parameters.AddWithValue("@Fastcard",FastCard.ToUpper());
+                    PalletControl.Parameters.AddWithValue("@Fastcard", FastCard.ToUpper());
                     PalletControl.Parameters.AddWithValue("@Area", "Assignments");
                     PalletControl.Parameters.AddWithValue("@Shift", Shift.ToString());
                     PalletControl.Parameters.AddWithValue("@Active", true);
@@ -903,6 +904,177 @@ namespace RADALogisticsWEB.Controllers
                 ViewBag.Records = GetArea;
                 return View();
             }
+        }
+
+        public ActionResult AreaAssignaments(string ID)
+        {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                ViewBag.ID = ID;
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public JsonResult GuardarEtapa(string AreaSelected, List<EtapaModel> etapas)
+        {
+            foreach (var etapaItem in etapas)
+            {
+                string etapa = etapaItem.Etapa;
+                string mensajeInput = etapaItem.Mensaje;
+
+                string status = null, GRUA = null, Rampa = null;
+
+                switch (mensajeInput)
+                {
+                    case "Contenedor Cargado":
+                        status = "CAR"; GRUA = "NO"; Rampa = "NO"; break;
+                    case "Contenedor Vacío":
+                        status = "VAC"; GRUA = "NO"; Rampa = "NO"; break;
+                    case "Contenedor Cargado con Grua":
+                        status = "CAR"; GRUA = "SI"; Rampa = "NO"; break;
+                    case "Contenedor Vacio con Grua":
+                        status = "VAC"; GRUA = "SI"; Rampa = "NO"; break;
+                    case "Contenedor Cargado Rampa a Rampa":
+                        status = "CAR"; GRUA = "NO"; Rampa = "SI"; break;
+                    case "Contenedor Vacio Rampa a Rampa":
+                        status = "VAC"; GRUA = "NO"; Rampa = "SI"; break;
+                }
+
+                string updateQuery = "UPDATE RADAEmpire_AAreasAsign SET Active = @Active " +
+                     "WHERE AreaAssign = @AreaAssign AND Status = @Status AND GruaRequest = @GruaRequest AND RaR = @RaR";
+
+                using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
+                {
+                    DBSPP.Open();
+                    command.Parameters.AddWithValue("@Active", false);
+                    command.Parameters.AddWithValue("@AreaAssign", AreaSelected.ToString());
+                    command.Parameters.AddWithValue("@Status", status);           // Asegúrate de definir 'statusValue'
+                    command.Parameters.AddWithValue("@GruaRequest", GRUA); // Asegúrate de definir 'gruaRequestValue'
+                    command.Parameters.AddWithValue("@RaR", Rampa);                 // Asegúrate de definir 'rarValue'
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                    DBSPP.Close();
+                }
+            }
+
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
+
+
+            // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+            DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+            // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+            TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+            // Formatear la fecha para que sea adecuada para la base de datos
+            string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+            int total = 0;
+
+            foreach (var etapaItem in etapas)
+            {
+                string etapa = etapaItem.Etapa;
+                string mensajeInput = etapaItem.Mensaje;
+
+                string status = null, GRUA = null, Rampa = null;
+
+                switch (mensajeInput)
+                {
+                    case "Contenedor Cargado":
+                        status = "CAR"; GRUA = "NO"; Rampa = "NO"; break;
+                    case "Contenedor Vacío":
+                        status = "VAC"; GRUA = "NO"; Rampa = "NO"; break;
+                    case "Contenedor Cargado con Grua":
+                        status = "CAR"; GRUA = "SI"; Rampa = "NO"; break;
+                    case "Contenedor Vacio con Grua":
+                        status = "VAC"; GRUA = "SI"; Rampa = "NO"; break;
+                    case "Contenedor Cargado Rampa a Rampa":
+                        status = "CAR"; GRUA = "NO"; Rampa = "SI"; break;
+                    case "Contenedor Vacio Rampa a Rampa":
+                        status = "VAC"; GRUA = "NO"; Rampa = "SI"; break;
+                }
+
+                total++;
+
+                DBSPP.Open();
+                SqlCommand PalletControl = new SqlCommand("INSERT INTO RADAEmpire_AAreasAsign " +
+                    "(AreaAssign, NumberOrder, Message, Status, GruaRequest, RaR, Active, DateTimeadded, Dateadded) " +
+                    "VALUES (@AreaAssign, @NumberOrder, @Message, @Status, @GruaRequest, @RaR, @Active, @DateTimeadded, @Dateadded)", DBSPP);
+
+                PalletControl.Parameters.AddWithValue("@AreaAssign", AreaSelected);
+                PalletControl.Parameters.AddWithValue("@NumberOrder", total);
+                PalletControl.Parameters.AddWithValue("@Message", etapa.ToUpper());
+                PalletControl.Parameters.AddWithValue("@Status", status);
+                PalletControl.Parameters.AddWithValue("@GruaRequest", GRUA);
+                PalletControl.Parameters.AddWithValue("@RaR", Rampa);
+                PalletControl.Parameters.AddWithValue("@Active", true);
+                PalletControl.Parameters.AddWithValue("@DateTimeadded", usTime);
+                PalletControl.Parameters.AddWithValue("@Dateadded", usTime);
+
+                PalletControl.ExecuteNonQuery();
+                DBSPP.Close();
+            }
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public JsonResult ObtenerDatosFiltrados(string status, string area, string grua, string rar)
+        {
+            DBSPP.Open();
+            con.Connection = DBSPP;
+            con.CommandText = "Select top (1000) * from RADAEmpire_AAreasAsign where " +
+                " Status = '" + status + "' and AreaAssign = '" + area + "' and GruaRequest = '" + grua + "' and RaR = '" + rar + "' and Active = '1' " +
+                " order by NumberOrder ASC";
+            dr = con.ExecuteReader();
+            while (dr.Read())
+            {
+                getAsignacionAreas.Add(new AsignacionAreas()
+                {
+                    id = (dr["ID"].ToString()),
+                    Area = (dr["AreaAssign"].ToString()),
+                    Order = (dr["NumberOrder"].ToString()),
+                    Message = (dr["Message"].ToString()),
+                    Status = (dr["Status"].ToString()),
+                    GruaRequest = (dr["GruaRequest"].ToString()),
+                    RaR = (dr["RaR"].ToString()),
+                    Date = (dr["DateTimeadded"].ToString()),
+                });
+            }
+            DBSPP.Close();
+
+            return Json(getAsignacionAreas, JsonRequestBehavior.AllowGet);
+
         }
 
         public ActionResult RemoveArea(string id)
@@ -1117,7 +1289,23 @@ namespace RADALogisticsWEB.Controllers
         //        ViewBag.Count = GetUsers.Count.ToString();
         //        return RedirectToAction("NewUser", "Users");
         //    }
+
         //}
+        [HttpPost]
+        public JsonResult Remove(int ID)
+        {
+            string updateQuery = "UPDATE RADAEmpire_AUsers SET Active = @Active WHERE ID = @ID";
+            using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
+            {
+                DBSPP.Open();
+                command.Parameters.AddWithValue("@Active", false);
+                command.Parameters.AddWithValue("@ID", ID);
+                int rowsAffected = command.ExecuteNonQuery();
+                DBSPP.Close();
+            }
+
+            return Json(new { success = true });
+        }
 
         [HttpPost]
         public JsonResult RemoveUser(int ID)

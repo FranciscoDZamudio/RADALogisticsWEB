@@ -3,6 +3,33 @@
     ViewBag.Title = "table";
 }
 
+<style>
+    .urgencia-box {
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-weight: bold;
+        display: inline-block;
+        color: white;
+        font-size: 0.9rem;
+    }
+
+    .urgencia-normal {
+        background-color: #363F4A; /* gris */
+        color: white;
+    }
+
+    .urgencia-urgente {
+        background-color: #f5d142; /* amarillo */
+        color: black;
+    }
+
+    .urgencia-critico {
+        background-color: #D42401; /* naranja con rojo */
+        color: white;
+    }
+
+</style>
+
 @foreach (var person in ViewBag.Records)
 {
 <li class="table-row" id="tblCustomers" style="color:black ; background-color:
@@ -11,6 +38,12 @@
       person.message == "PENDING" ? "#DDDCD4" :
       person.message == "CHOFER TERMINA MOVIMIENTO" ? "#C0E9B4" :
       person.message == "Movement in process" ? "#E5F8EC" : "#E9D8B4")">
+
+    <div class="col col-6" data-label="Folio" style="text-align:center">
+        <span class="urgencia-box @(person.Urgencia == "Normal" ? "urgencia-normal" : person.Urgencia == "Urgente" ? "urgencia-urgente" : person.Urgencia == "Critico" ? "urgencia-critico" : "")">
+            @person.Urgencia
+        </span>
+    </div>
 
     <div class="col col-4" data-label="Folio" style="text-align:center">@person.Folio</div>
 
@@ -33,7 +66,7 @@
     <div class="col col-4" data-label="Options" style="text-align:center">
 
         @*@Html.ActionLink("❌ Delete", "CancelContainer", new { ID = @person.Folio }) /*@
-        @Html.ActionLink("🎴 Detalles", "Details", new { ID = @person.Folio })
+        @Html.ActionLink("🎴 Detalles", "Details", new { ID = @person.Folio, Record = "CARGA" })
 
     </div>
 </li>

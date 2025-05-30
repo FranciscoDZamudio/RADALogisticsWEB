@@ -78,19 +78,19 @@
         <p style="text-align: center;">&nbsp;</p>
 
         @*<hr>
-        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-                <span class="text">Return to back</span>
-                <span class="circle"></span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
-                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-                </svg>
-            </button>
-        </div>
-        <hr>*@
+            <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+                <button class="animated-button" onclick="location.href='@Url.Action("RadaHome", "Home")'">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                    </svg>
+                    <span class="text">Return to back</span>
+                    <span class="circle"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                    </svg>
+                </button>
+            </div>
+            <hr>*@
 
     </div>
 </div>
@@ -117,12 +117,13 @@
 
     <div style="display: flex; justify-content: center; margin: 10px 0;">
         <button type="submit" class="Bto_saved" style="text-align: center;">
-            🔍 Buscar . . . 
+            Buscar
         </button>
     </div>
 }
 
 <p style="text-align: center;">&nbsp;</p>
+
 
 <h4 style="text-align: center; font-weight: 700;" class="Tittlelabel"> Solicitudes Recientres Registradas en el Sistema </h4>
 <h5 style="text-align:center" class="Tittlelabel"> Total: @ViewBag.Count</h5>
@@ -130,17 +131,18 @@
 <div class="table-scroll">
     <ul class="responsive-table">
         <li class="table-header" id="tableData">
-            <div class="col col-15" style="text-align:center">Comentario</div>
-            <div class="col col-1" style="text-align:center">Grua Mov.</div>
-            <div class="col col-1" style="text-align:center">R - R</div>
-            <div class="col col-1" style="text-align:center">Folio</div>
+            @*<div class="col col-15" style="text-align:center">Comentario</div>*@
+            <div class="col col-2" style="text-align:center">Estado</div>
+            <div class="col col-1" style="text-align: center; flex-basis: 15%">Grua</div>
+            <div class="col col-1" style="text-align: center; flex-basis: 15%">R - R</div>
+            <div class="col col-2" style="text-align:center">Folio</div>
             <div class="col col-2" style="text-align:center">Contenedor</div>
             <div class="col col-3" style="text-align:center">Origen</div>
             <div class="col col-4" style="text-align:center">Destino</div>
             <div class="col col-5" style="text-align:center">Estatus</div>
             <div class="col col-6" style="text-align:center">Solicita</div>
             <div class="col col-7" style="text-align:center">Confirma</div>
-            <div class="col col-8" style="text-align:center">Entrega</div>
+            @*<div class="col col-8" style="text-align:center">Entrega</div>*@
             <div class="col col-9" style="text-align:center">Solicitado por</div>
             <div class="col col-10" style="text-align:center">Chofer</div>
             <div class="col col-11" style="text-align:center">Comentatio</div>
@@ -156,13 +158,35 @@
 </div>
 
 <p style="text-align: center;">&nbsp;</p>
+<div style="text-align:center">
+    <button id="btnNotificaciones" class="btn btn-primary">
+        Activar notificaciones
+    </button>
+</div>
+
+<p style="text-align: center;">&nbsp;</p>
 <p style="text-align: center;">&nbsp;</p>
 
 <script>
   var query = '@ViewBag.User';
-  var countdown = 60;               // Duración del contador en segundos
+  var countdown = 60;
   var $countEl = $('#countdown');
+  var lastRecordCount = 0;
 
+  // Pedir permiso al cargar
+  document.addEventListener("DOMContentLoaded", function () {
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+  });
+
+  function showNotification(title, message) {
+    if (Notification.permission === "granted") {
+      new Notification(title, {
+        body: message,
+      });
+    }
+  }
 
   function actualizarTabla() {
     $.ajax({
@@ -171,7 +195,16 @@
       data: { name: query || "" },
       success: function (data) {
         $("#tabla-container").html(data);
-        console.log("Tabla actualizada.");
+
+        // Extraer valor del contador desde DOM después de insertar el HTML
+        var newCount = parseInt($("#tabla-container").find('#hiddenRecordCount').val());
+
+        if (!isNaN(newCount)) {
+          if (newCount > lastRecordCount) {
+              showNotification("Rada Logistics", "⚠️ Atención: Se ha registrado un nuevo movimiento en el sistema");
+          }
+          lastRecordCount = newCount;
+        }
       },
       error: function () {
         console.log("Error al actualizar la tabla.");
@@ -182,16 +215,16 @@
   function tick() {
     countdown--;
     if (countdown <= 0) {
-      actualizarTabla();            // Dispara la actualización AJAX
-      countdown = 60;                // Reinicia el contador
+      actualizarTabla();
+      countdown = 60;
     }
-    $countEl.text(countdown);       // Refresca el número en pantalla
+    $countEl.text(countdown);
   }
 
-  // Inicializar y arrancar el temporizador de 1 s
   $countEl.text(countdown);
   setInterval(tick, 1000);
 </script>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -279,3 +312,19 @@
 
 </script>
 
+<script>
+
+    document.getElementById("btnNotificaciones").addEventListener("click", function () {
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission().then(function (permission) {
+                if (permission === "granted") {
+                    alert("¡Notificaciones activadas!");
+                } else {
+                    alert("Permiso denegado para notificaciones.");
+                }
+            });
+        } else {
+            alert("Las notificaciones ya están activadas.");
+        }
+    });
+</script>

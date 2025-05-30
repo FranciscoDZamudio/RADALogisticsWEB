@@ -361,7 +361,7 @@ body {
     }
 
 .col-1 {
-    flex-basis: 25%;
+    flex-basis: 10%;
     text-align: left;
 }
 

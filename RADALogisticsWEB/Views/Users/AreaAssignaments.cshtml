@@ -1,0 +1,406 @@
+﻿
+@{
+    ViewBag.Title = "AreaAssignaments";
+}
+
+<link href="~/Stylee/NewUsersStylee.css" rel="stylesheet" />
+
+<div class="container" style="text-align: center; width: 100%; height: 100%">
+
+    <div style="text-align: center; min-width: 100%;">
+
+        <style>
+            .page-title {
+                text-align: center;
+                font-size: 21px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 15px;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                font-size: 17px;
+                font-weight: 500;
+                color: #555;
+                margin-bottom: 25px;
+            }
+
+            .botones {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+                max-width: 90%;
+                margin: 0 auto; /* Asegura que el contenedor esté centrado */
+            }
+
+            .btn {
+                display: inline-block;
+                width: 200px;
+                height: 50px;
+                background-color: #293B4F;
+                color: white;
+                text-align: center;
+                line-height: 50px; /* Ajustado para alinear el texto verticalmente */
+                text-decoration: none;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+                border: none;
+                cursor: pointer;
+            }
+
+                .btn:hover {
+                    background-color: #7F8A96;
+                }
+
+                .btn.rojo {
+                    background-color: #5F1011;
+                }
+
+                    .btn.rojo:hover {
+                        background-color: #9C7778;
+                    }
+        </style>
+
+        <h2 class="page-title">Asignación de Procesos de Movimiento</h2>
+        <h4 class="section-subtitle">Puedes crear, actualizar o eliminar cada etapa según tus necesidades</h4>
+
+        <hr>
+        <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+            <button class="animated-button" onclick="location.href='@Url.Action("Area","Users")'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+                <span class="text">Return to back</span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                </svg>
+            </button>
+        </div>
+        <hr>
+
+        <h5 class="Tittlelabel" style=" font-weight: 700;"> Area Seleccionada </h5>
+        <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
+
+        <div class="group">
+            <input style="font-size:14px" readonly="@true" type="text" id="AreaSelected" name="AreaSelected" value="@ViewBag.ID" required>
+            <span class="highlight"></span>
+            <span class="bar"></span>
+        </div>
+
+        <h5 class="Tittlelabel" style=" font-weight: 700;"> Selecciona uno de las siguiente situaciones: </h5>
+        <hr style="border: 1px solid #CECECE; width: 35vh; margin: 5px auto ">
+        <br>
+
+        @* Esto valida si ViewBag.ID es "PT" o "ENVIOS" *@
+        @if (ViewBag.ID == "PT" || ViewBag.ID == "ENVIOS")
+        {
+            <div class="contenedor">
+                <div class="botones">
+                    <button type="submit" class="Bto_saved" onclick="actualizarMensaje('Contenedor Cargado')">
+                        Contenedor Cargado
+                    </button>
+
+                    <button type="submit" class="Bto_saved" onclick="actualizarMensaje('Contenedor Vacío')">
+                        Contenedor Vacio
+                    </button>
+
+                    <button type="submit" class="Bto_saved" onclick="actualizarMensaje('Contenedor Cargado Rampa a Rampa')">
+                        Contenedor Cargado Rampa a Rampa
+                    </button>
+
+                    <button type="submit" class="Bto_saved" onclick="actualizarMensaje('Contenedor Vacio Rampa a Rampa')">
+                        Contenedor Vacio Rampa a Rampa
+                    </button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="contenedor">
+                <div class="botones">
+                    <button type="submit" class="Bto_saved" onclick="actualizarMensaje('Contenedor Cargado')">
+                        Contenedor Cargado
+                    </button>
+
+                    <button type="submit" class="Bto_saved" onclick="actualizarMensaje('Contenedor Vacío')">
+                        Contenedor Vacio
+                    </button>
+
+                    <button type="submit" class="Bto_saved" onclick="actualizarMensaje('Contenedor Cargado con Grua')">
+                        Contenedor Cargado con Grua
+                    </button>
+
+                    <button type="submit" class="Bto_saved" onclick="actualizarMensaje('Contenedor Vacio con Grua')">
+                        Contenedor Vacio con Grua
+                    </button>
+
+
+                    <button type="submit" class="Bto_saved" onclick="actualizarMensaje('Contenedor Cargado Rampa a Rampa')">
+                        Contenedor Cargado Rampa a Rampa
+                    </button>
+
+                    <button type="submit" class="Bto_saved" onclick="actualizarMensaje('Contenedor Vacio Rampa a Rampa')">
+                        Contenedor Vacio Rampa a Rampa
+                    </button>
+                </div>
+            </div>
+        }
+
+        <br>
+        <br>
+        <br>
+        <div class="group">
+            <input style="font-size: 15px; background-color: #F3F5F8;" type="text" id="etapa" name="etapa" required>
+            <span class="highlight"></span>
+            <span class="bar"></span>
+            <label>Ingresa etapa:</label>
+        </div>
+
+        <!-- Mensaje dinámico mostrado al usuario -->
+        <p id="mensajeLabel" style="font-weight: bold; display: block; margin-bottom: 10px; color: #5264AE">
+            Etapa Seleccionada:
+        </p>
+
+        <button type="button" class="Bto_saved" id="agregarEtapaBtn">
+            Agregar a lista
+        </button>
+
+        <br>
+        <!-- Lista visual de etapas -->
+        <ul id="listaEtapas" style="list-style: none; padding: 0; margin-top: 10px;"></ul>
+        <br>
+        <!-- Botón para guardar -->
+        <button type="button" class="Bto_saved" id="guardarBtn">
+            Guardar
+        </button>
+
+        <br>
+        <input type="hidden" id="mensajeInput" name="mensajeInput" />
+
+    </div>
+</div>
+
+<p style="text-align: center;">&nbsp;</p>
+<h4 style="text-align:center;font-weight: 700" class="Tittlelabel"> Etapas agregadas recientemente al sistema </h4>
+<h5 style="text-align:center" class="Tittlelabel"> Total: 0</h5>
+
+<div class="table-scroll">
+
+    <ul class="responsive-table">
+
+        <li class="table-header" id="tableData">
+
+            <div class="col col-4" style="text-align:center">Numero de Orden</div>
+
+            @*<div class="col col-2" style="text-align:center">Who Request</div>*@
+
+            <div class="col col-4" style="text-align:center"> Etapa / Proceso </div>
+
+            <div class="col col-4" style="text-align:center">Fecha</div>
+
+        </li>
+
+    </ul>
+
+</div>
+
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
+
+<script>
+    function actualizarMensaje(mensaje) {
+        // Limpiar la lista temporal
+        etapasTemp = [];
+        actualizarListaEtapas();
+
+        document.getElementById("mensajeInput").value = mensaje;
+        document.getElementById("mensajeLabel").textContent = "Mensaje: " + mensaje;
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#guardarBtn').click(function () {
+            const etapa = $('#etapa').val();
+            const mensaje = $('#mensajeInput').val();
+            const AreaSelected = $('#AreaSelected').val();
+
+            if (etapasTemp.length === 0) {
+                alert('Por favor agrega al menos una etapa antes de guardar.');
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/Users/GuardarEtapa',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    AreaSelected: AreaSelected,
+                    etapas: etapasTemp
+                }),
+                success: function (response) {
+                    alert('Registro guardado exitosamente.');
+                    $('#etapa').val('');
+                    $('#mensajeLabel').text('Etapa Seleccionada:');
+                    $('#mensajeInput').val('');
+                    etapasTemp = []; // Limpia lista temporal
+                    actualizarListaEtapas();
+                },
+                error: function () {
+                    alert('Ocurrió un error al guardar.');
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    function actualizarMensaje(mensaje) {
+        $('#mensajeInput').val(mensaje);
+        $('#mensajeLabel').text("Mensaje: " + mensaje);
+
+        etapasTemp = []; // Reinicia la lista temporal
+        actualizarListaEtapas();
+
+        const filtros = {
+            status: '',
+            grua: 'NO',
+            rar: 'NO'
+        };
+
+        switch (mensaje) {
+            case 'Contenedor Cargado':
+                filtros.status = 'CAR';
+                break;
+            case 'Contenedor Vacío':
+                filtros.status = 'VAC';
+                break;
+            case 'Contenedor Cargado con Grua':
+                filtros.status = 'CAR';
+                filtros.grua = 'SI';
+                break;
+            case 'Contenedor Vacio con Grua':
+                filtros.status = 'VAC';
+                filtros.grua = 'SI';
+                break;
+            case 'Contenedor Cargado Rampa a Rampa':
+                filtros.status = 'CAR';
+                filtros.rar = 'SI';
+                break;
+            case 'Contenedor Vacio Rampa a Rampa':
+                filtros.status = 'VAC';
+                filtros.rar = 'SI';
+                break;
+        }
+
+        const area = $('#AreaSelected').val();
+
+        $.ajax({
+            url: '/Users/ObtenerDatosFiltrados',
+            method: 'POST',
+            data: {
+                status: filtros.status,
+                area: area,
+                grua: filtros.grua,
+                rar: filtros.rar
+            },
+            success: function (data) {
+                mostrarDatosFiltrados(data);
+            },
+            error: function () {
+                alert("Error al cargar datos.");
+            }
+        });
+    }
+
+    function mostrarDatosFiltrados(data) {
+        const lista = $(".responsive-table");
+        lista.find(".table-data").remove();
+
+        if (data.length === 0) {
+            lista.append('<li class="table-data"><div class="col col-12" style="text-align:center;">No hay resultados</div></li>');
+        }
+
+        data.forEach(item => {
+            lista.append(`
+                <li class="table-data">
+                    <div class="col col-4" style="text-align:center">${item.Order}</div>
+                    <div class="col col-4" style="text-align:center">${item.Message}</div>
+                    <div class="col col-4" style="text-align:center">${item.Date}</div>
+                </li>
+            `);
+        });
+
+        $('.Tittlelabel:contains("Total")').text('Total: ' + data.length);
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $(".delete-user").click(function (e) {
+            e.preventDefault();
+            const userId = $(this).data("id");
+
+            $.ajax({
+                url: '@Url.Action("RemoveUser", "Users")',
+                type: 'POST',
+                data: { ID: userId },
+                success: function (response) {
+                    alert("Usuario eliminado correctamente.");
+                    location.reload(); // O mejor: quitar el elemento sin recargar
+                },
+                error: function () {
+                    alert("Ocurrió un error al eliminar al chofer.");
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    let etapasTemp = [];
+
+    $(document).ready(function () {
+        $('#agregarEtapaBtn').click(function () {
+            const etapa = $('#etapa').val().trim();
+            const mensaje = $('#mensajeInput').val().trim();
+
+            if (etapa === '' || mensaje === '') {
+                alert('Por favor ingresa una etapa y selecciona un mensaje.');
+                return;
+            }
+
+            etapasTemp.push({ etapa, mensaje });
+            actualizarListaEtapas();
+            $('#etapa').val('');
+        });
+    });
+
+    function actualizarListaEtapas() {
+        const lista = $('#listaEtapas');
+        lista.empty();
+
+        etapasTemp.forEach((e, index) => {
+            lista.append(`
+                <hr>
+                <li>
+                    ${index + 1}. <strong>${e.etapa}</strong> (${e.mensaje})
+                    <button onclick="eliminarEtapa(${index})" style="margin-left:10px;"> Eliminar </button>
+                </li>
+            `);
+        });
+    }
+
+    function eliminarEtapa(index) {
+        etapasTemp.splice(index, 1);
+        actualizarListaEtapas();
+    }
+</script>
+

@@ -32,7 +32,7 @@
 
         <hr>
         <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
-            <button class="animated-button" onclick="location.href='@Url.Action("Records", "History")'">
+            <button class="animated-button" onclick="location.href='@Url.Action("MoreOptions","RADA", new { ID = @ViewBag.ID,Comment = @ViewBag.Status })'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
                     <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
                 </svg>
@@ -80,7 +80,7 @@
 
             <p style="text-align: center;">&nbsp;</p>
             <button type="submit" class="Bto_saved">
-                ✅ Guardar Cambios
+                 Guardar Cambios
             </button>
             <p style="text-align: center;">&nbsp;</p>
         }
