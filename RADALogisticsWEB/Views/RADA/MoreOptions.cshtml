@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "RADA Logistics - Options";
+    ViewBag.Title = "RADA Logistics | Options";
 }
 
 <link href="~/Stylee/HisensePages.css" rel="stylesheet" />
@@ -120,6 +120,11 @@
                            new { ID = ViewBag.ID },
                            new { @class = "btn rojo" })
 
+                        @*@Html.ActionLink("♻️ Cambiar Area", "ChangeArea", "RADA",
+                new { ID = ViewBag.ID },
+                new { @class = "btn" })*@
+
+                        <a class="btn disabled" title="No disponible mientras está en PENDING">♻️ Cambiar Area</a>
                         <a class="btn disabled" title="No disponible mientras está en PENDING">♻️ Cambiar Chofer</a>
                         <a class="btn disabled" title="No disponible mientras está en PENDING">✔️ Verificación de Estado</a>
 
@@ -137,6 +142,10 @@
                         @Html.ActionLink("🚫 Cancelar Movimiento", "CancelContainerR", "History",
                          new { ID = ViewBag.ID },
                          new { @class = "btn rojo" })
+
+                        @Html.ActionLink("♻️ Cambiar Area", "ChangeArea", "RADA",
+                        new { ID = ViewBag.ID },
+                        new { @class = "btn" })
 
                         <a class="btn disabled" title="No disponible mientras está en PENDING">♻️ Cambiar Chofer</a>
 
@@ -158,6 +167,12 @@
                         @Html.ActionLink("🚫 Cancelar Movimiento", "CancelContainerR", "History",
                          new { ID = ViewBag.ID },
                          new { @class = "btn rojo" })
+
+                        @*@Html.ActionLink("♻️ Cambiar Area", "ChangeArea", "RADA",
+                        new { ID = ViewBag.ID },
+                        new { @class = "btn" })*@
+
+                        <a class="btn disabled" title="No disponible mientras está en PENDING">♻️ Cambiar Area</a>
 
                         @Html.ActionLink("♻️ Cambiar Chofer", "ChangesCHR", "History",
                             new { ID = id },

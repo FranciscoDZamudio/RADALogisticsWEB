@@ -1001,7 +1001,7 @@ namespace RADALogisticsWEB.Controllers
                     }
                     else
                     {
-                        sqlTimeend = " and '" + Timeend + "'";
+                        sqlTimeend = " and '" + Timeend + "' and a.Active = '1'";
                     }
                 }
                 else
@@ -1200,7 +1200,7 @@ namespace RADALogisticsWEB.Controllers
                     }
                     else
                     {
-                        sqlTimeend = " and '" + Timeend + "'";
+                        sqlTimeend = " and '" + Timeend + "' and a.Active = '1'";
                     }
                 }
                 else
@@ -1672,7 +1672,7 @@ namespace RADALogisticsWEB.Controllers
                 con.CommandText = "  Select top (500) " +
                     " a.Urgencia AS Urgencia, b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
-                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio ORDER by a.Folio desc";
+                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio and a.Active = '1'  ORDER by a.Folio desc";
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {
@@ -1793,7 +1793,7 @@ namespace RADALogisticsWEB.Controllers
                 con.CommandText = "  Select top (500) " +
                     " a.Urgencia AS Urgencia,b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
-                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio ORDER by a.Folio desc";
+                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio and a.Active = '1' ORDER by a.Folio desc";
                 dr = con.ExecuteReader();
                 while (dr.Read())
                 {

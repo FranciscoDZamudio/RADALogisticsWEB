@@ -932,9 +932,35 @@ namespace RADALogisticsWEB.Controllers
             }
         }
 
+        //public void AgregarNuevaEtapa(List<EtapaModel> etapas, string nuevoMensaje)
+        //{
+        //    // Obtener el último número de etapa actual (si hay alguna)
+        //    int cantidadEtapas = etapas.Count;
+        //    int siguienteEtapa = cantidadEtapas;
+
+        //    if (etapas.Any())
+        //    {
+        //        // Convertir el campo Etapa a entero y obtener el máximo
+        //        siguienteEtapa = etapas
+        //            .Select(e => int.TryParse(e.Etapa, out int num) ? num : 0)
+        //            .Max() + 1;
+        //    }
+
+        //    // Crear la nueva etapa
+        //    EtapaModel nuevaEtapa = new EtapaModel
+        //    {
+        //        Etapa = siguienteEtapa.ToString(),
+        //        Mensaje = nuevoMensaje
+        //    };
+
+        //    // Agregarla a la lista
+        //    etapas.Add(nuevaEtapa);
+        //}
+
         [HttpPost]
-        public JsonResult GuardarEtapa(string AreaSelected, List<EtapaModel> etapas)
+        public JsonResult GuardarEtapa(List<EtapaModel> etapas, string AreaSelected)
         {
+            string mensaje = null;
             foreach (var etapaItem in etapas)
             {
                 string etapa = etapaItem.Etapa;
@@ -958,6 +984,8 @@ namespace RADALogisticsWEB.Controllers
                         status = "VAC"; GRUA = "NO"; Rampa = "SI"; break;
                 }
 
+                mensaje = mensajeInput;
+
                 string updateQuery = "UPDATE RADAEmpire_AAreasAsign SET Active = @Active " +
                      "WHERE AreaAssign = @AreaAssign AND Status = @Status AND GruaRequest = @GruaRequest AND RaR = @RaR";
 
@@ -974,6 +1002,12 @@ namespace RADALogisticsWEB.Controllers
                     DBSPP.Close();
                 }
             }
+
+            etapas.Add(new EtapaModel
+            {
+                Etapa = "CHOFER TERMINA MOVIMIENTO",
+                Mensaje = mensaje
+            });
 
             if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
             {
@@ -1074,7 +1108,6 @@ namespace RADALogisticsWEB.Controllers
             DBSPP.Close();
 
             return Json(getAsignacionAreas, JsonRequestBehavior.AllowGet);
-
         }
 
         public ActionResult RemoveArea(string id)

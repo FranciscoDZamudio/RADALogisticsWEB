@@ -21,6 +21,29 @@ namespace RADALogisticsWEB.Controllers
         SqlCommand con = new SqlCommand();
         SqlDataReader dr;
 
+        [HttpGet]
+        public JsonResult GetGruaRequest(string area)
+        {
+            string validation = null;
+            using (SqlConnection conn = new SqlConnection("Data Source=RADAEmpire.mssql.somee.com ;Initial Catalog=RADAEmpire ;User ID=RooRada; password=rada1311"))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT GruaRequest FROM RADAEmpire_AAreas WHERE Active = '1' AND Name = @Area", conn);
+                cmd.Parameters.AddWithValue("@Area", area);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        validation = reader[0].ToString();
+                    }
+                }
+            }
+
+            return Json(new { gruaRequest = validation }, JsonRequestBehavior.AllowGet);
+        }
+
+
         // GET: HISENSE
         public ActionResult ChangeStatus(string ID, string Page, string data)
         {
@@ -135,10 +158,10 @@ namespace RADALogisticsWEB.Controllers
             }
             else
             {
-                string Area = null,container = null, origins = null, destination = null, status = null, solicitud = null, confirmacion = null, entrega = null, request = null, choffer = null, comment = null, date = null;
+                string placas = null, Area = null,container = null, origins = null, destination = null, status = null, solicitud = null, confirmacion = null, entrega = null, request = null, choffer = null, comment = null, date = null;
                 //create generate randoms int value
                 SqlCommand conse = new SqlCommand("Select " +
-                    " a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                    " a.Container as Container, a.Placa as Placa,a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.shift as Area, a.Date as Date  " +
                     " from " +
                     " RADAEmpire_BRequestContainers as a " +
@@ -150,6 +173,7 @@ namespace RADALogisticsWEB.Controllers
                 {
                     while (drconse.Read())
                     {
+                        placas = drconse["Placa"].ToString();//234 + 1216 + 
                         container = drconse["Container"].ToString();//234 + 1216 + 
                         origins = drconse["Origen"].ToString();
                         destination = drconse["Destination"].ToString();
@@ -206,6 +230,7 @@ namespace RADALogisticsWEB.Controllers
                 }
                 DBSPP.Close();
 
+                ViewBag.Placa = placas;
                 ViewBag.ID = ID;
                 ViewBag.Desc = Desc;  
                 ViewBag.sts = sts;
@@ -366,21 +391,32 @@ namespace RADALogisticsWEB.Controllers
             return PartialView("table", ViewBag.Records);
         }
 
-        public ActionResult ProcessData(string ActivoRampa, string User, string Type, string Container, string Origins, string Destination, string Area, string ActivoHidden, string NivelUrgencia , string MotivoUrgencia)
+        public ActionResult ProcessData(string ActivoRampa, string User, string Type, string Container, string Origins, string Destination, string Area, string ActivoHidden, string NivelUrgencia , string MotivoUrgencia, string Placa)
         {
             try
             {
                 if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+                {
                     Session["Username"] = Request.Cookies["UserCookie"].Value;
+                }
+                    
 
                 if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+                {
                     Session["Type"] = Request.Cookies["UserCookie"].Value;
+                }
+                    
 
                 if (Session.Count <= 0)
+                {
                     return RedirectToAction("LogIn", "Login");
+                }
+                    
 
                 if (Area == null)
+                {
                     return RedirectToAction("RequestContainer", "HISENSE");
+                }
 
                 ViewBag.User = Session["Username"];
                 ViewBag.Type = Session["Type"];
@@ -430,10 +466,11 @@ namespace RADALogisticsWEB.Controllers
 
                     // Insertar en RADAEmpire_BRequestContainers
                     using (SqlCommand insertReq = new SqlCommand(@"INSERT INTO RADAEmpire_BRequestContainers 
-                (Urgencia, Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active, GruaRequest, RaRRequest)
-                VALUES (@Urgencia, @Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active, @GruaRequest, @RaRRequest)", conn))
+                (Placa,Urgencia, Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active, GruaRequest, RaRRequest)
+                VALUES (@Placa,@Urgencia, @Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active, @GruaRequest, @RaRRequest)", conn))
                     {
                         insertReq.Parameters.AddWithValue("@Urgencia", NivelUrgencia.ToString());
+                        insertReq.Parameters.AddWithValue("@Placa", Placa?.ToString() ?? "NO SE REGISTRO");
                         insertReq.Parameters.AddWithValue("@Folio", Folio);
                         insertReq.Parameters.AddWithValue("@Who_Send", User);
                         insertReq.Parameters.AddWithValue("@Container", Container.ToUpper());
@@ -590,21 +627,28 @@ namespace RADALogisticsWEB.Controllers
 FROM RADAEmpire_BRequestContainers 
 WHERE Active = '1' AND Date = @Date
 ORDER BY 
-    -- Prioridad por Urgencia
+    -- Cancelados al final
     CASE 
-        WHEN UPPER(Urgencia) = 'Critico' THEN 0
+        WHEN UPPER(message) = 'CANCELED BY RADA' THEN 1 ELSE 0
+    END,
+    
+    -- Prioridad por urgencia (solo si NO está cancelado)
+    CASE 
+        WHEN UPPER(Urgencia) = 'CRITICO' THEN 0
         WHEN UPPER(Urgencia) = 'URGENTE' THEN 1
         WHEN UPPER(Urgencia) = 'NORMAL' THEN 2
         ELSE 3
     END,
+
     -- Prioridad por mensaje
     CASE 
         WHEN UPPER(message) = 'PENDING' THEN 0
         WHEN UPPER(message) = 'CHOFER TERMINA MOVIMIENTO' THEN 2
-        WHEN UPPER(message) = 'CANCELED BY RADA' THEN 3
         ELSE 1
     END,
-    ID DESC;";
+
+    ID DESC;
+";
 
                 con.Parameters.Clear();
                 con.Parameters.AddWithValue("@Date", rosaritoDateOnly);
@@ -633,8 +677,7 @@ ORDER BY
                         Status = dr["Status"].ToString(),
                         shift = dr["shift"].ToString(),
                         message = dr["message"].ToString(),
-                        Date = rosaritoDate,
-                        Datetime = rosaritoDateTime
+                        Datetime = Convert.ToDateTime(dr["Date"].ToString()).ToString("d"),
                     });
                 }
                 DBSPP.Close();

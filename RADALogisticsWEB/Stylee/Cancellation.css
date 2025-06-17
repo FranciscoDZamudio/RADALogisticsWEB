@@ -233,11 +233,11 @@ label {
 
     /* Agregado para filas alternadas */
     .table-row:nth-child(even) {
-        background-color: #F6C2C2;
+        background-color: #F7F0F0;
     }
 
     .table-row:nth-child(odd) {
-        background-color: #ECA1A1;
+        background-color: #FAE3E3;
     }
 
 .col-1 {

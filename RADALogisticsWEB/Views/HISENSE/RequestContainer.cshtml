@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "RADA Logistics - Request Container";
+    ViewBag.Title = "RADA Logistics | Request Container";
 }
 
 <link href="~/Stylee/HisensePages.css" rel="stylesheet" />
@@ -134,13 +134,13 @@
             </div>
 
             @*<div id="checkboxContainer2">
-                    <h5 class="Tittlelabel" style="font-weight: 700; color: #5264AE">
-                        ¿El movimiento es de Rampa a Rampa?
-                    </h5>
-                    @Html.CheckBox("ActivoRampa", new { id = "chkActivoRampa" })
-                    <label for="chkActivoRampa">Activo</label>
-                </div>
-                <input type="hidden" name="ActivoRampa" id="ResultRampa" value="NO" />*@
+                <h5 class="Tittlelabel" style="font-weight: 700; color: #5264AE">
+                    ¿El movimiento es de Rampa a Rampa?
+                </h5>
+                @Html.CheckBox("ActivoRampa", new { id = "chkActivoRampa" })
+                <label for="chkActivoRampa">Activo</label>
+            </div>
+            <input type="hidden" name="ActivoRampa" id="ResultRampa" value="NO" />*@
 
 
             <p style="text-align: center;">&nbsp;</p>
@@ -151,6 +151,13 @@
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Ingresa numero de contenedor:</label>
+            </div>
+
+            <div class="group">
+                <input style="font-size: 15px; background-color: #F3F5F8; " type="text" id="Placa" name="Placa" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Ingresa Placa:</label>
             </div>
 
             <div class="group">
@@ -239,41 +246,92 @@
 <script>
     $(document).ready(function () {
 
-        // Checkbox de GRÚA
+        // Ejecutar cuando cambie el área
+        $('#Area').on('change', function () {
+            var selectedArea = $(this).val();
+
+            fetch('/HISENSE/GetGruaRequest?area=' + encodeURIComponent(selectedArea))
+                .then(response => response.json())
+                .then(data => {
+                    const gruaRequest = (data.gruaRequest || '').toUpperCase();
+
+                    if (gruaRequest === 'FALSE') {
+                        $('#checkboxContainer1').hide(); // Ocultar
+                        $('#chkActivoGrua').prop('checked', false);
+                        $('#ActivoHidden').val('NO');
+                    } else {
+                        $('#checkboxContainer1').show(); // Mostrar
+                    }
+                })
+                .catch(err => {
+                    console.error("Error al consultar GruaRequest:", err);
+                });
+        });
+
+        // Ejecutar al cargar la página
+        $('#Area').trigger('change');
+
+        // Checkbox GRÚA
         $('#chkActivoGrua').on('change', function () {
             if (this.checked) {
                 $('#chkActivoRampa').prop('checked', false);
-                $('#ResultRampa').val('NO'); // aseguramos que rampa quede en NO
+                $('#ResultRampa').val('NO');
             }
             $('#ActivoHidden').val(this.checked ? 'SI' : 'NO');
         });
 
-        // Checkbox de RAMPA
+        // Checkbox RAMPA
         $('#chkActivoRampa').on('change', function () {
             if (this.checked) {
                 $('#chkActivoGrua').prop('checked', false);
-                $('#ActivoHidden').val('NO'); // desactiva GRÚA
+                $('#ActivoHidden').val('NO');
             }
             $('#ResultRampa').val(this.checked ? 'SI' : 'NO');
         });
 
-        // Mostrar u ocultar solo el checkbox de grúa según el área
-        $('#Area').on('change', function () {
-            var selected = $(this).val().toUpperCase();
-
-            if (selected === 'ENVIOS' || selected === 'PT') {
-                $('#checkboxContainer1').hide();
-                $('#chkActivoGrua').prop('checked', false);
-                $('#ActivoHidden').val('NO');
-            } else {
-                $('#checkboxContainer1').show();
-            }
-        });
-
-        // Ejecutar la lógica inicial al cargar
-        $('#Area').trigger('change');
     });
 </script>
+
+
+
+@*<script>
+        $(document).ready(function () {
+
+            // Checkbox de GRÚA
+            $('#chkActivoGrua').on('change', function () {
+                if (this.checked) {
+                    $('#chkActivoRampa').prop('checked', false);
+                    $('#ResultRampa').val('NO'); // aseguramos que rampa quede en NO
+                }
+                $('#ActivoHidden').val(this.checked ? 'SI' : 'NO');
+            });
+
+            // Checkbox de RAMPA
+            $('#chkActivoRampa').on('change', function () {
+                if (this.checked) {
+                    $('#chkActivoGrua').prop('checked', false);
+                    $('#ActivoHidden').val('NO'); // desactiva GRÚA
+                }
+                $('#ResultRampa').val(this.checked ? 'SI' : 'NO');
+            });
+
+            // Mostrar u ocultar solo el checkbox de grúa según el área
+            $('#Area').on('change', function () {
+                var selected = $(this).val().toUpperCase();
+
+                if (selected === 'ENVIOS' || selected === 'PT') {
+                    $('#checkboxContainer1').hide();
+                    $('#chkActivoGrua').prop('checked', false);
+                    $('#ActivoHidden').val('NO');
+                } else {
+                    $('#checkboxContainer1').show();
+                }
+            });
+
+            // Ejecutar la lógica inicial al cargar
+            $('#Area').trigger('change');
+        });
+    </script>*@
 
 <script>
     function toggleMotivoUrgencia() {

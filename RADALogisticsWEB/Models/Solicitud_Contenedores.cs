@@ -18,6 +18,6 @@ namespace RADALogisticsWEB.Models
         public string message { get; set; }
         public string shift { get; set; }
         public DateTime Date { get; set; }
-        public DateTime Datetime { get; set; }
+        public string Datetime { get; set; }
     }
 }

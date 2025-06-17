@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "AreaAssignaments";
+    ViewBag.Title = "RADA Logistics | Areas";
 }
 
 <link href="~/Stylee/NewUsersStylee.css" rel="stylesheet" />
@@ -97,7 +97,7 @@
         <br>
 
         @* Esto valida si ViewBag.ID es "PT" o "ENVIOS" *@
-        @if (ViewBag.ID == "PT" || ViewBag.ID == "ENVIOS")
+        @if (ViewBag.cvonsa == "False")
         {
             <div class="contenedor">
                 <div class="botones">
@@ -253,8 +253,13 @@
                     etapasTemp = []; // Limpia lista temporal
                     actualizarListaEtapas();
                 },
-                error: function () {
-                    alert('Ocurrió un error al guardar.');
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error al guardar:");
+                    console.error("Status: " + textStatus);
+                    console.error("Error Thrown: " + errorThrown);
+                    console.error("Response Text: " + jqXHR.responseText);
+
+                    alert('Ocurrió un error al guardar. Revisa la consola (F12).');
                 }
             });
         });

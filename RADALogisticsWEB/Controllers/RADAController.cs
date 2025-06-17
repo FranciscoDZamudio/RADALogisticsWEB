@@ -24,12 +24,262 @@ namespace RADALogisticsWEB.Controllers
         List<UsuarioRada> UsuarioRadasss = new List<UsuarioRada>();
 
         List<string> filtroAreas = new List<string>();
+        List<Areas> getAreas = new List<Areas>();
 
         //connection SQL server (database)
         SqlConnection DBSPP = new SqlConnection("Data Source=RADAEmpire.mssql.somee.com ;Initial Catalog=RADAEmpire ;User ID=RooRada; password=rada1311");
         SqlCommand con = new SqlCommand();
         SqlDataReader dr;
         // GET: RADA
+
+
+        [HttpGet]
+        public JsonResult GetGruaRequest(string area)
+        {
+            string validation = null;
+            using (SqlConnection conn = new SqlConnection("Data Source=RADAEmpire.mssql.somee.com ;Initial Catalog=RADAEmpire ;User ID=RooRada; password=rada1311"))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT GruaRequest FROM RADAEmpire_AAreas WHERE Active = '1' AND Name = @Area", conn);
+                cmd.Parameters.AddWithValue("@Area", area);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        validation = reader[0].ToString();
+                    }
+                }
+            }
+
+            return Json(new { gruaRequest = validation }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Changes(string ID, string oldArea, string Area, string Type, string ActivoRampa,
+             string Container,string ActivoHidden) 
+        {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
+            }
+          
+            ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                using (SqlConnection conn = new SqlConnection("Data Source=RADAEmpire.mssql.somee.com ;Initial Catalog=RADAEmpire ;User ID=RooRada; password=rada1311"))
+                {
+                    conn.Open();
+                    //Delete process
+                    string deleteQuery = @"DELETE FROM [RADAEmpire].[dbo].[RADAEmpires_DZDetailsHisense]
+                           WHERE Folio = @Folio";
+
+                    using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Folio", "MOV1658");
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                    conn.Close();
+
+                    List<string> lista = new List<string>();
+
+                    conn.Open();
+                    // Obtener lista de pasos
+                    using (SqlCommand cmd = new SqlCommand("SELECT * FROM RADAEmpire_AAreasAsign WHERE Active = 1 AND Status = @Status AND AreaAssign = @AreaAssign AND GruaRequest = @GruaRequest AND RaR = @RaR ORDER BY NumberOrder ASC", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Status", Type);
+                        cmd.Parameters.AddWithValue("@AreaAssign", Area);
+                        cmd.Parameters.AddWithValue("@GruaRequest", ActivoHidden);
+                        cmd.Parameters.AddWithValue("@RaR", ActivoRampa);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (!reader.HasRows)
+                                return RedirectToAction("RequestContainer", "HISENSE");
+
+                            while (reader.Read())
+                            {
+                                lista.Add(reader["Message"].ToString()); // Puedes cambiar reader[0] por reader["NombreCampo"]
+                            }
+                        }
+                    }
+                    conn.Close();
+                    ViewBag.ID = ID;
+
+                    // Obtener hora en US (Rosarito - Pacific Time)
+                    TimeZoneInfo usTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, usTimeZone);
+                    string dateOnly = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                    string timeOnly = usTime.ToString("HH:mm:ss");
+
+                    //query message ------------------------------------------------------------------------------------------------------------------
+                    string updateQuery = "UPDATE RADAEmpire_BRequestContainers SET shift = @shift WHERE Folio = @ID";
+                    using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
+                    {
+                        DBSPP.Open();
+                        command.Parameters.AddWithValue("@shift", Area.ToUpper());
+                        command.Parameters.AddWithValue("@ID", ID.ToString());
+                        int rowsAffected = command.ExecuteNonQuery();
+                        DBSPP.Close();
+                    }
+
+                    //    // Insertar en RADAEmpire_BRequestContainers
+                    //    using (SqlCommand insertReq = new SqlCommand(@"INSERT INTO RADAEmpire_BRequestContainers 
+                    //(Placa,Urgencia, Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active, GruaRequest, RaRRequest)
+                    //VALUES (@Placa,@Urgencia, @Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active, @GruaRequest, @RaRRequest)", conn))
+                    //    {
+                    //        insertReq.Parameters.AddWithValue("@Urgencia", NivelUrgencia.ToString());
+                    //        insertReq.Parameters.AddWithValue("@Placa", Placa?.ToString() ?? "NO SE REGISTRO");
+                    //        insertReq.Parameters.AddWithValue("@Folio", Folio);
+                    //        insertReq.Parameters.AddWithValue("@Who_Send", User);
+                    //        insertReq.Parameters.AddWithValue("@Container", Container.ToUpper());
+                    //        insertReq.Parameters.AddWithValue("@Destination_Location", Destination.ToUpper());
+                    //        insertReq.Parameters.AddWithValue("@Origins_Location", Origins.ToUpper());
+                    //        insertReq.Parameters.AddWithValue("@Status", Type);
+                    //        insertReq.Parameters.AddWithValue("@message", "PENDING");
+                    //        insertReq.Parameters.AddWithValue("@shift", Area);
+                    //        insertReq.Parameters.AddWithValue("@Date", dateOnly);
+                    //        insertReq.Parameters.AddWithValue("@Datetime", timeOnly);
+                    //        insertReq.Parameters.AddWithValue("@Active", true);
+                    //        insertReq.Parameters.AddWithValue("@GruaRequest", ActivoHidden);
+                    //        insertReq.Parameters.AddWithValue("@RaRRequest", ActivoRampa);
+
+                    //        insertReq.ExecuteNonQuery();
+                    //    }
+
+                    //// Insertar en RADAEmpire_BRequestContainers
+                    //using (SqlCommand insertReq = new SqlCommand(@"INSERT INTO RADAERmpire_AMessagesUrgent 
+                    // (Folio,Status,Description,Active,Dateadded,DateTimeadded)
+                    //   VALUES 
+                    // (@Folio,@Status,@Description,@Active,@Dateadded,@DateTimeadded)", conn))
+                    //{
+                    //    insertReq.Parameters.AddWithValue("@Folio", Folio.ToString());
+                    //    insertReq.Parameters.AddWithValue("@Status", NivelUrgencia.ToString());
+                    //    insertReq.Parameters.AddWithValue("@Description", MotivoUrgencia.ToUpper());
+                    //    insertReq.Parameters.AddWithValue("@Active", true);
+                    //    insertReq.Parameters.AddWithValue("@Dateadded", usTime.ToString());
+                    //    insertReq.Parameters.AddWithValue("@DateTimeadded", usTime.ToString());
+
+                    //    insertReq.ExecuteNonQuery();
+                    //}
+
+                    //    // Insertar en RADAEmpire_CEntryContrainers
+                    //    using (SqlCommand insertEntry = new SqlCommand(@"INSERT INTO RADAEmpire_CEntryContrainers
+                    //(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date, AreaWork, Active, Cancel)
+                    //VALUES (@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date, @AreaWork, @Active, @Cancel)", conn))
+                    //    {
+                    //        insertEntry.Parameters.AddWithValue("@Folio_Request", Folio);
+                    //        insertEntry.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
+                    //        insertEntry.Parameters.AddWithValue("@Time_Confirm", "00:00:00");
+                    //        insertEntry.Parameters.AddWithValue("@Choffer", "PENDNING CONFIRM");
+                    //        insertEntry.Parameters.AddWithValue("@FastCard", "PENDNING CONFIRM");
+                    //        insertEntry.Parameters.AddWithValue("@Time_Finished", "00:00:00");
+                    //        insertEntry.Parameters.AddWithValue("@Date", dateOnly);
+                    //        insertEntry.Parameters.AddWithValue("@AreaWork", "RADALogistics");
+                    //        insertEntry.Parameters.AddWithValue("@Active", true);
+                    //        insertEntry.Parameters.AddWithValue("@Cancel", false);
+
+                    //        insertEntry.ExecuteNonQuery();
+                    //    }
+
+                    // Insertar pasos en RADAEmpires_DZDetailsHisense
+
+                    conn.Open();
+                    foreach (var paso in lista)
+                    {
+                        using (SqlCommand insertPaso = new SqlCommand(@"INSERT INTO RADAEmpires_DZDetailsHisense 
+                    (Folio, Type_StatusContainer, GruaMov, Process_Movement, End_date, Status, Comment, Date_Process, Activo)
+                    VALUES (@Folio, @Type_StatusContainer, @GruaMov, @Process_Movement, @End_date, @Status, @Comment, GETDATE(), @Activo)", conn))
+                        {
+                            insertPaso.Parameters.AddWithValue("@Folio", ID);
+                            insertPaso.Parameters.AddWithValue("@Type_StatusContainer", Type);
+                            insertPaso.Parameters.AddWithValue("@GruaMov", ActivoHidden);
+                            insertPaso.Parameters.AddWithValue("@Process_Movement", paso);
+                            insertPaso.Parameters.AddWithValue("@End_date", "00:00:00");
+                            insertPaso.Parameters.AddWithValue("@Status", "PENDIENTE");
+                            insertPaso.Parameters.AddWithValue("@Comment", "SIN COMENTARIOS");
+                            insertPaso.Parameters.AddWithValue("@Activo", true);
+
+                            insertPaso.ExecuteNonQuery();
+                        }
+                    }
+
+                    conn.Close();
+
+                }
+
+                return RedirectToAction("EntryContainer", "RADA");
+            }
+        }
+
+        public ActionResult ChangeArea(string ID)
+        {
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Type"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
+
+            if (Session.Count <= 0)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                string Status = null, shif = null;
+                SqlCommand asiggne = new SqlCommand("Select * from RADAEmpire_BRequestContainers " +
+                    " where Active = '1' and Folio = '" + ID + "'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drasiggne = asiggne.ExecuteReader();
+                if (drasiggne.HasRows)
+                {
+                    while (drasiggne.Read())
+                    {
+                        shif = drasiggne["shift"].ToString();
+                    }
+                }
+                DBSPP.Close();
+
+                DBSPP.Open();
+                con.Connection = DBSPP;
+                con.CommandText = "Select top (100) * from RADAEmpire_AAreas where Active = '1' order by ID desc";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {
+                    getAreas.Add(new Areas()
+                    {
+                        id = (dr["ID"].ToString()),
+                        Who_create = (dr["Who_create"].ToString()),
+                        Name = (dr["Name"].ToString()),
+                        Datetime = (dr["Datetime"].ToString()),
+                    });
+                }
+                DBSPP.Close();
+
+                ViewBag.Records = getAreas;
+                ViewBag.Shiftws = shif.ToUpper();
+                ViewBag.ID = ID.ToString();
+                return View();
+            }
+        }
+
         public ActionResult ChangeStatus(string ID)
         {
             if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
@@ -180,9 +430,8 @@ ORDER BY A.[Foio] DESC;
             }
             else
             {
-                List<string> Areas = new List<string>();
-
                 // Paso 1: Obtener áreas del usuario
+                List<string> Areas = new List<string>();
                 string queryAreas = "SELECT Areas FROM RADAEmpire_ARoles WHERE Active = '1' AND Username = @username";
                 using (SqlCommand RadaAreas = new SqlCommand(queryAreas, DBSPP))
                 {
@@ -198,43 +447,42 @@ ORDER BY A.[Foio] DESC;
                     DBSPP.Close();
                 }
 
-                // Paso 2: Obtener usuarios por áreas
                 List<UsuarioRada> usuarios = new List<UsuarioRada>();
 
                 if (Areas.Any())
                 {
-                    //string queryUsers = "SELECT DISTINCT r.Username AS Choffer,a.Status,m.Foio AS Folio,m.Message " +
-                    //    " FROM RADAEmpire_ARolesChoffer r  " +
-                    //    "" +
-                    //    " LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1' " +
-                    //    " LEFT JOIN ( SELECT Choffer, Foio, Message, ROW_NUMBER() OVER (PARTITION BY Choffer ORDER BY Datetime DESC)  " +
-                    //    " AS rn FROM RADAEmpires_DZChofferMovement WHERE Active = 1 ) m ON r.Username = m.Choffer AND m.rn = 1 WHERE r.Active = '1' " +
-                    //    " AND r.Areas IN ({0}) AND (a.Status = 'CHOFFER EN MOVIMIENTO' OR a.Status IS NULL) ORDER BY r.Username ASC";
-
                     string queryUsers = @"
-                                SELECT DISTINCT
-                                  A.[Foio] AS Folio,
-                                  A.[Choffer] AS Chofer,
-                                  B.[message]
-                                FROM 
-                                [RADAEmpire].[dbo].[RADAEmpires_DZChofferMovement] A
-                                LEFT JOIN 
-                                [RADAEmpire].[dbo].[RADAEmpire_BRequestContainers] B 
-                                ON A.[Foio] = B.[Folio]
-                                INNER JOIN 
-                                [RADAEmpire].[dbo].[RADAEmpire_ARolesChoffer] R 
-                                ON A.[Choffer] = R.[Username]
-                                WHERE 
-                                A.[Active] = '1'
-                                AND R.[Areas] IN ({0})  -- Reemplazar dinámicamente por parámetros
-                                ORDER BY  
-                                 A.[Foio] DESC;"
-                    ;
+    WITH UltimosMovimientos AS (
+        SELECT 
+            A.Foio AS Folio,
+            A.Choffer AS Chofer,
+            ROW_NUMBER() OVER (PARTITION BY A.Choffer ORDER BY A.Datetime DESC) AS rn
+        FROM RADAEmpires_DZChofferMovement A
+        INNER JOIN RADAEmpire_ARolesChoffer R ON A.Choffer = R.Username
+        WHERE A.Active = 1 AND R.Areas IN ({0})
+    )
+    SELECT 
+        UM.Folio,
+        UM.Chofer,
+        B.message
+    FROM UltimosMovimientos UM
+    LEFT JOIN (
+        SELECT Folio, message
+        FROM (
+            SELECT Folio, message,
+                   ROW_NUMBER() OVER (PARTITION BY Folio ORDER BY FechaRegistro DESC) AS rn
+            FROM RADAEmpire_BRequestContainers
+        ) t
+        WHERE rn = 1
+    ) B ON UM.Folio = B.Folio
+    WHERE UM.rn = 1
+    ORDER BY UM.Folio DESC;
+    ";
 
                     List<string> parametros = new List<string>();
                     for (int i = 0; i < Areas.Count; i++)
                     {
-                        parametros.Add("@area" + i);
+                        parametros.Add($"@area{i}");
                     }
 
                     string inClause = string.Join(", ", parametros);
@@ -255,8 +503,8 @@ ORDER BY A.[Foio] DESC;
                                 usuarios.Add(new UsuarioRada
                                 {
                                     Username = reader["Chofer"].ToString(),
-                                    message = reader["message"].ToString(),
-                                    Mov = reader["Folio"].ToString()
+                                    message = reader["message"]?.ToString(),
+                                    Mov = reader["Folio"]?.ToString()
                                 });
                             }
                         }
@@ -265,6 +513,7 @@ ORDER BY A.[Foio] DESC;
                 }
 
                 ViewBag.RadaUsers = usuarios;
+
             }
 
             string validation = null;
@@ -326,7 +575,7 @@ ORDER BY A.[Foio] DESC;
             con.CommandText = "  Select top (100) " +
                 " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                 " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area,a.GruaRequest as Grua,  a.RaRRequest as RaR " +
-                " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Folio = '" + Folio.ToString() + "' ORDER by a.Folio desc";
+                " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Folio = '" + Folio.ToString() + "' and a.Active = '1' ORDER by a.Folio desc";
             dr = con.ExecuteReader();
             while (dr.Read())
             {
@@ -1043,39 +1292,42 @@ ORDER BY A.[Foio] DESC;
                         con.Connection = DBSPP;
                         con.CommandText = @"
         SELECT TOP (500)
-            a.Urgencia AS Urgencia, 
-            a.Folio AS Folio, 
-            a.Container AS Container, 
-            a.Origins_Location AS Origen, 
-            a.Destination_Location AS Destination, 
-            a.Status AS Status, 
-            a.Datetime AS HSolicitud, 
-            b.Time_Confirm AS HConfirm, 
-            b.Time_Finished AS HFinish, 
-            a.Who_Send AS WhoRequest, 
-            b.Choffer AS Choffer, 
-            a.message AS Comment, 
-            a.Date AS Date, 
-            a.shift AS Area, 
-            a.GruaRequest AS Grua, 
-            a.RaRRequest AS RaR
-        FROM RADAEmpire_BRequestContainers AS a
-        INNER JOIN RADAEmpire_CEntryContrainers AS b ON b.Folio_Request = a.Folio
-        WHERE  a.Date = @Date
-        ORDER BY 
-            CASE 
-                WHEN UPPER(a.Urgencia) = 'Critico' THEN 0
-                WHEN UPPER(a.Urgencia) = 'URGENTE' THEN 1
-                WHEN UPPER(a.Urgencia) = 'NORMAL' THEN 2
-                ELSE 3
-            END,
-            CASE 
-                WHEN a.message = 'PENDING' THEN 1
-                WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3
-                WHEN a.message = 'Canceled by Rada' THEN 4
-                ELSE 2
-            END,
-            a.Folio DESC;
+    a.Urgencia AS Urgencia, 
+    a.Folio AS Folio, 
+    a.Container AS Container, 
+    a.Origins_Location AS Origen, 
+    a.Destination_Location AS Destination, 
+    a.Status AS Status, 
+    a.Datetime AS HSolicitud, 
+    b.Time_Confirm AS HConfirm, 
+    b.Time_Finished AS HFinish, 
+    a.Who_Send AS WhoRequest, 
+    b.Choffer AS Choffer, 
+    a.message AS Comment, 
+    a.Date AS Date, 
+    a.shift AS Area, 
+    a.GruaRequest AS Grua, 
+    a.RaRRequest AS RaR
+FROM RADAEmpire_BRequestContainers AS a
+INNER JOIN RADAEmpire_CEntryContrainers AS b ON b.Folio_Request = a.Folio
+WHERE a.Date = @Date and a.Active = '1'
+ORDER BY 
+    CASE 
+        WHEN a.message = 'Canceled by Rada' THEN 1 ELSE 0
+    END,
+    CASE 
+        WHEN UPPER(a.Urgencia) = 'CRITICO' THEN 0
+        WHEN UPPER(a.Urgencia) = 'URGENTE' THEN 1
+        WHEN UPPER(a.Urgencia) = 'NORMAL' THEN 2
+        ELSE 3
+    END,
+    CASE 
+        WHEN a.message = 'PENDING' THEN 1
+        WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3
+        ELSE 2
+    END,
+    a.Folio DESC;
+;
     ";
 
                         // Parámetro para evitar SQL Injection
@@ -1417,6 +1669,12 @@ ORDER BY A.[Foio] DESC;
             }
 
             if (Comment == "CHOFER TERMINA MOVIMIENTO")
+            {
+                return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
+            }
+
+
+            if (Comment == "Canceled by Rada")
             {
                 return Json(new { success = false, redirectUrl = Url.Action("EntryContainer", "RADA") });
             }
@@ -2253,39 +2511,42 @@ ORDER BY A.[Foio] DESC;
                 con.Connection = DBSPP;
                 con.CommandText = @"
         SELECT TOP (500)
-            a.Urgencia AS Urgencia, 
-            a.Folio AS Folio, 
-            a.Container AS Container, 
-            a.Origins_Location AS Origen, 
-            a.Destination_Location AS Destination, 
-            a.Status AS Status, 
-            a.Datetime AS HSolicitud, 
-            b.Time_Confirm AS HConfirm, 
-            b.Time_Finished AS HFinish, 
-            a.Who_Send AS WhoRequest, 
-            b.Choffer AS Choffer, 
-            a.message AS Comment, 
-            a.Date AS Date, 
-            a.shift AS Area, 
-            a.GruaRequest AS Grua, 
-            a.RaRRequest AS RaR
-        FROM RADAEmpire_BRequestContainers AS a
-        INNER JOIN RADAEmpire_CEntryContrainers AS b ON b.Folio_Request = a.Folio
-        WHERE a.Date = @Date
-        ORDER BY 
-            CASE 
-                WHEN UPPER(a.Urgencia) = 'Critico' THEN 0
-                WHEN UPPER(a.Urgencia) = 'URGENTE' THEN 1
-                WHEN UPPER(a.Urgencia) = 'NORMAL' THEN 2
-                ELSE 3
-            END,
-            CASE 
-                WHEN a.message = 'PENDING' THEN 1
-                WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3
-                WHEN a.message = 'Canceled by Rada' THEN 4
-                ELSE 2
-            END,
-            a.Folio DESC;
+    a.Urgencia AS Urgencia, 
+    a.Folio AS Folio, 
+    a.Container AS Container, 
+    a.Origins_Location AS Origen, 
+    a.Destination_Location AS Destination, 
+    a.Status AS Status, 
+    a.Datetime AS HSolicitud, 
+    b.Time_Confirm AS HConfirm, 
+    b.Time_Finished AS HFinish, 
+    a.Who_Send AS WhoRequest, 
+    b.Choffer AS Choffer, 
+    a.message AS Comment, 
+    a.Date AS Date, 
+    a.shift AS Area, 
+    a.GruaRequest AS Grua, 
+    a.RaRRequest AS RaR
+FROM RADAEmpire_BRequestContainers AS a
+INNER JOIN RADAEmpire_CEntryContrainers AS b ON b.Folio_Request = a.Folio
+WHERE a.Date = @Date and a.Active = '1'
+ORDER BY 
+    CASE 
+        WHEN a.message = 'Canceled by Rada' THEN 1 ELSE 0
+    END,
+    CASE 
+        WHEN UPPER(a.Urgencia) = 'CRITICO' THEN 0
+        WHEN UPPER(a.Urgencia) = 'URGENTE' THEN 1
+        WHEN UPPER(a.Urgencia) = 'NORMAL' THEN 2
+        ELSE 3
+    END,
+    CASE 
+        WHEN a.message = 'PENDING' THEN 1
+        WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3
+        ELSE 2
+    END,
+    a.Folio DESC;
+;
     ";
                 // Parámetro para evitar SQL Injection
                 con.Parameters.Clear();
@@ -2369,39 +2630,42 @@ ORDER BY A.[Foio] DESC;
                 con.Connection = DBSPP;
                 con.CommandText = @"
         SELECT TOP (500)
-            a.Urgencia AS Urgencia, 
-            a.Folio AS Folio, 
-            a.Container AS Container, 
-            a.Origins_Location AS Origen, 
-            a.Destination_Location AS Destination, 
-            a.Status AS Status, 
-            a.Datetime AS HSolicitud, 
-            b.Time_Confirm AS HConfirm, 
-            b.Time_Finished AS HFinish, 
-            a.Who_Send AS WhoRequest, 
-            b.Choffer AS Choffer, 
-            a.message AS Comment, 
-            a.Date AS Date, 
-            a.shift AS Area, 
-            a.GruaRequest AS Grua, 
-            a.RaRRequest AS RaR
-        FROM RADAEmpire_BRequestContainers AS a
-        INNER JOIN RADAEmpire_CEntryContrainers AS b ON b.Folio_Request = a.Folio
-        WHERE a.Date = @Date
-        ORDER BY 
-            CASE 
-                WHEN UPPER(a.Urgencia) = 'Critico' THEN 0
-                WHEN UPPER(a.Urgencia) = 'URGENTE' THEN 1
-                WHEN UPPER(a.Urgencia) = 'NORMAL' THEN 2
-                ELSE 3
-            END,
-            CASE 
-                WHEN a.message = 'PENDING' THEN 1
-                WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3
-                WHEN a.message = 'Canceled by Rada' THEN 4
-                ELSE 2
-            END,
-            a.Folio DESC;
+    a.Urgencia AS Urgencia, 
+    a.Folio AS Folio, 
+    a.Container AS Container, 
+    a.Origins_Location AS Origen, 
+    a.Destination_Location AS Destination, 
+    a.Status AS Status, 
+    a.Datetime AS HSolicitud, 
+    b.Time_Confirm AS HConfirm, 
+    b.Time_Finished AS HFinish, 
+    a.Who_Send AS WhoRequest, 
+    b.Choffer AS Choffer, 
+    a.message AS Comment, 
+    a.Date AS Date, 
+    a.shift AS Area, 
+    a.GruaRequest AS Grua, 
+    a.RaRRequest AS RaR
+FROM RADAEmpire_BRequestContainers AS a
+INNER JOIN RADAEmpire_CEntryContrainers AS b ON b.Folio_Request = a.Folio
+WHERE a.Date = @Date and a.Active = '1'
+ORDER BY 
+    CASE 
+        WHEN a.message = 'Canceled by Rada' THEN 1 ELSE 0
+    END,
+    CASE 
+        WHEN UPPER(a.Urgencia) = 'CRITICO' THEN 0
+        WHEN UPPER(a.Urgencia) = 'URGENTE' THEN 1
+        WHEN UPPER(a.Urgencia) = 'NORMAL' THEN 2
+        ELSE 3
+    END,
+    CASE 
+        WHEN a.message = 'PENDING' THEN 1
+        WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3
+        ELSE 2
+    END,
+    a.Folio DESC;
+;
     ";
                 // Parámetro para evitar SQL Injection
                 con.Parameters.Clear();

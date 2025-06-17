@@ -255,6 +255,7 @@
     <Content Include="Views\RADA\MoreOptions.cshtml" />
     <Content Include="Views\Users\AreaAssignaments.cshtml" />
     <Content Include="Views\HISENSE\ChangeStatus.cshtml" />
+    <Content Include="Views\RADA\ChangeArea.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
