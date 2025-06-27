@@ -55,8 +55,7 @@ namespace RADALogisticsWEB.Controllers
             return Json(new { gruaRequest = validation }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Changes(string ID, string oldArea, string Area, string Type, string ActivoRampa,
-             string Container,string ActivoHidden) 
+        public ActionResult Changes(string ID, string oldArea, string Area, string Type, string ActivoRampa, string Container,string ActivoHidden) 
         {
             if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
             {
@@ -430,90 +429,104 @@ ORDER BY A.[Foio] DESC;
             }
             else
             {
-                // Paso 1: Obtener áreas del usuario
-                List<string> Areas = new List<string>();
-                string queryAreas = "SELECT Areas FROM RADAEmpire_ARoles WHERE Active = '1' AND Username = @username";
-                using (SqlCommand RadaAreas = new SqlCommand(queryAreas, DBSPP))
+                try
                 {
-                    RadaAreas.Parameters.AddWithValue("@username", UsuarioRada);
-                    DBSPP.Open();
-                    using (SqlDataReader drRadaAreas = RadaAreas.ExecuteReader())
+                    // Paso 1: Obtener áreas del usuario
+                    List<string> Areas = new List<string>();
+                    string queryAreas = "SELECT Areas FROM RADAEmpire_ARoles WHERE Active = '1' AND Username = @username";
+                    using (SqlCommand RadaAreas = new SqlCommand(queryAreas, DBSPP))
                     {
-                        while (drRadaAreas.Read())
-                        {
-                            Areas.Add(drRadaAreas["Areas"].ToString());
-                        }
-                    }
-                    DBSPP.Close();
-                }
-
-                List<UsuarioRada> usuarios = new List<UsuarioRada>();
-
-                if (Areas.Any())
-                {
-                    string queryUsers = @"
-    WITH UltimosMovimientos AS (
-        SELECT 
-            A.Foio AS Folio,
-            A.Choffer AS Chofer,
-            ROW_NUMBER() OVER (PARTITION BY A.Choffer ORDER BY A.Datetime DESC) AS rn
-        FROM RADAEmpires_DZChofferMovement A
-        INNER JOIN RADAEmpire_ARolesChoffer R ON A.Choffer = R.Username
-        WHERE A.Active = 1 AND R.Areas IN ({0})
-    )
-    SELECT 
-        UM.Folio,
-        UM.Chofer,
-        B.message
-    FROM UltimosMovimientos UM
-    LEFT JOIN (
-        SELECT Folio, message
-        FROM (
-            SELECT Folio, message,
-                   ROW_NUMBER() OVER (PARTITION BY Folio ORDER BY FechaRegistro DESC) AS rn
-            FROM RADAEmpire_BRequestContainers
-        ) t
-        WHERE rn = 1
-    ) B ON UM.Folio = B.Folio
-    WHERE UM.rn = 1
-    ORDER BY UM.Folio DESC;
-    ";
-
-                    List<string> parametros = new List<string>();
-                    for (int i = 0; i < Areas.Count; i++)
-                    {
-                        parametros.Add($"@area{i}");
-                    }
-
-                    string inClause = string.Join(", ", parametros);
-                    queryUsers = string.Format(queryUsers, inClause);
-
-                    using (SqlCommand cmd = new SqlCommand(queryUsers, DBSPP))
-                    {
-                        for (int i = 0; i < Areas.Count; i++)
-                        {
-                            cmd.Parameters.AddWithValue(parametros[i], Areas[i]);
-                        }
-
+                        RadaAreas.Parameters.AddWithValue("@username", UsuarioRada);
                         DBSPP.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader drRadaAreas = RadaAreas.ExecuteReader())
                         {
-                            while (reader.Read())
+                            while (drRadaAreas.Read())
                             {
-                                usuarios.Add(new UsuarioRada
-                                {
-                                    Username = reader["Chofer"].ToString(),
-                                    message = reader["message"]?.ToString(),
-                                    Mov = reader["Folio"]?.ToString()
-                                });
+                                Areas.Add(drRadaAreas["Areas"].ToString());
                             }
                         }
                         DBSPP.Close();
                     }
+
+                    List<UsuarioRada> usuarios = new List<UsuarioRada>();
+
+                    if (Areas.Any())
+                    {
+                        // Construcción dinámica de parámetros para IN
+                        List<string> parametros = new List<string>();
+                        for (int i = 0; i < Areas.Count; i++)
+                        {
+                            parametros.Add($"@area{i}");
+                        }
+
+                        string inClause = string.Join(", ", parametros);  // Ej: "@area0, @area1"
+
+                        string queryUsers = $@"
+WITH UltimosMovimientos AS (
+    SELECT 
+        A.Foio AS Folio,
+        A.Choffer AS Chofer,
+        ROW_NUMBER() OVER (PARTITION BY A.Choffer ORDER BY A.Datetime DESC) AS rn
+    FROM RADAEmpires_DZChofferMovement A
+    INNER JOIN RADAEmpire_ARolesChoffer R ON A.Choffer = R.Username
+    WHERE A.Active = 1 AND R.Areas IN ({inClause})
+)
+SELECT 
+    UM.Folio,
+    UM.Chofer,
+    B.message
+FROM UltimosMovimientos UM
+LEFT JOIN (
+    SELECT Folio, message
+    FROM (
+        SELECT Folio, message,
+               ROW_NUMBER() OVER (PARTITION BY Folio ORDER BY Date DESC) AS rn
+        FROM RADAEmpire_BRequestContainers
+    ) t
+    WHERE rn = 1
+) B ON UM.Folio = B.Folio
+WHERE UM.rn = 1
+ORDER BY UM.Folio DESC;
+";
+                        using (SqlCommand cmd = new SqlCommand(queryUsers, DBSPP))
+                        {
+                            for (int i = 0; i < Areas.Count; i++)
+                            {
+                                cmd.Parameters.AddWithValue(parametros[i], Areas[i]);
+                            }
+
+                            DBSPP.Open();
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    usuarios.Add(new UsuarioRada
+                                    {
+                                        Username = reader["Chofer"].ToString(),
+                                        message = reader["message"]?.ToString(),
+                                        Mov = reader["Folio"]?.ToString()
+                                    });
+                                }
+                            }
+                            DBSPP.Close();
+                        }
+
+                        // Eliminar duplicados por si acaso
+                        ViewBag.RadaUsers = usuarios
+                            .GroupBy(u => new { u.Username, u.Mov })
+                            .Select(g => g.First())
+                            .ToList();
+                    }
+                    else
+                    {
+                        ViewBag.RadaUsers = new List<UsuarioRada>(); // Ninguna área asignada
+                    }
                 }
-
-                ViewBag.RadaUsers = usuarios;
-
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Error en bloque usuario común: " + ex.Message);
+                    ViewBag.RadaUsers = new List<UsuarioRada>(); // evita que falle la vista
+                }
             }
 
             string validation = null;
@@ -573,7 +586,7 @@ ORDER BY A.[Foio] DESC;
             DBSPP.Open();
             con.Connection = DBSPP;
             con.CommandText = "  Select top (100) " +
-                " a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                " a.Urgencia as Urgencia,a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                 " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area,a.GruaRequest as Grua,  a.RaRRequest as RaR " +
                 " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio where a.Folio = '" + Folio.ToString() + "' and a.Active = '1' ORDER by a.Folio desc";
             dr = con.ExecuteReader();
@@ -581,6 +594,7 @@ ORDER BY A.[Foio] DESC;
             {
                 GetRecords.Add(new Historial()
                 {
+                    Urgencia = (dr["Urgencia"].ToString()),
                     RequestGrua = (dr["Grua"].ToString()),
                     Folio = (dr["Folio"].ToString()),
                     Container = (dr["Container"].ToString()),
@@ -1216,42 +1230,30 @@ ORDER BY A.[Foio] DESC;
 
                         if (Areas.Any())
                         {
-                            string queryUsers = @"
-                                SELECT 
-                                  A.[Foio] AS Folio,
-                                  A.[Choffer] AS Chofer,
-                                  B.[message]
-                                FROM 
-                                [RADAEmpire].[dbo].[RADAEmpires_DZChofferMovement] A
-                                LEFT JOIN 
-                                [RADAEmpire].[dbo].[RADAEmpire_BRequestContainers] B 
-                                ON A.[Foio] = B.[Folio]
-                                INNER JOIN 
-                                [RADAEmpire].[dbo].[RADAEmpire_ARolesChoffer] R 
-                                ON A.[Choffer] = R.[Username]
-                                WHERE 
-                                A.[Active] = '1'
-                                AND R.[Areas] IN ({0})  -- Reemplazar dinámicamente por parámetros
-                                ORDER BY  
-                                 A.[Foio] DESC;"
-                            ;
+                            // Construir cláusula IN segura y sanitizada
+                            string inClause = string.Join(", ", Areas.Select(a => $"'{a.Replace("'", "''")}'"));
 
-                            List<string> parametros = new List<string>();
-                            for (int i = 0; i < Areas.Count; i++)
-                            {
-                                parametros.Add("@area" + i);
-                            }
-
-                            string inClause = string.Join(", ", parametros);
-                            queryUsers = string.Format(queryUsers, inClause);
+                            string queryUsers = $@"
+        SELECT DISTINCT
+            A.[Foio] AS Folio,
+            A.[Choffer] AS Chofer,
+            B.[message]
+        FROM 
+            [RADAEmpire].[dbo].[RADAEmpires_DZChofferMovement] A
+        LEFT JOIN 
+            [RADAEmpire].[dbo].[RADAEmpire_BRequestContainers] B 
+            ON A.[Foio] = B.[Folio]
+        INNER JOIN 
+            [RADAEmpire].[dbo].[RADAEmpire_ARolesChoffer] R 
+            ON A.[Choffer] = R.[Username]
+        WHERE 
+            A.[Active] = '1'
+            AND R.[Areas] IN ({inClause})
+        ORDER BY  
+            A.[Foio] DESC;";
 
                             using (SqlCommand cmd = new SqlCommand(queryUsers, DBSPP))
                             {
-                                for (int i = 0; i < Areas.Count; i++)
-                                {
-                                    cmd.Parameters.AddWithValue(parametros[i], Areas[i]);
-                                }
-
                                 DBSPP.Open();
                                 using (SqlDataReader reader = cmd.ExecuteReader())
                                 {
@@ -1392,38 +1394,82 @@ ORDER BY
                         }
                         DBSPP.Close();
 
-                        
+                        DBSPP.Open();
+                        con.Connection = DBSPP;
+                        con.CommandText = @"
+    SELECT TOP (500)
+        a.Urgencia AS Urgencia, 
+        a.Folio AS Folio, 
+        a.Container AS Container, 
+        a.Origins_Location AS Origen, 
+        a.Destination_Location AS Destination, 
+        a.Status AS Status, 
+        a.Datetime AS HSolicitud, 
+        b.Time_Confirm AS HConfirm, 
+        b.Time_Finished AS HFinish, 
+        a.Who_Send AS WhoRequest, 
+        b.Choffer AS Choffer, 
+        a.message AS Comment, 
+        a.Date AS Date, 
+        a.shift AS Area, 
+        a.GruaRequest AS Grua, 
+        a.RaRRequest AS RaR
+    FROM RADAEmpire_BRequestContainers AS a
+    INNER JOIN RADAEmpire_CEntryContrainers AS b ON b.Folio_Request = a.Folio
+    WHERE a.Date = @Date and a.Active = '1'
+    ORDER BY 
+        CASE WHEN a.message = 'Canceled by Rada' THEN 1 ELSE 0 END,
+        CASE 
+            WHEN UPPER(a.Urgencia) = 'CRITICO' THEN 0
+            WHEN UPPER(a.Urgencia) = 'URGENTE' THEN 1
+            WHEN UPPER(a.Urgencia) = 'NORMAL' THEN 2
+            ELSE 3
+        END,
+        CASE 
+            WHEN a.message = 'PENDING' THEN 1
+            WHEN a.message = 'CHOFER TERMINA MOVIMIENTO' THEN 3
+            ELSE 2
+        END,
+        a.Folio DESC;
+";
+                        con.Parameters.Clear();
+                        con.Parameters.AddWithValue("@Date", date);
 
-                        while (dr.Read())
+                        // Ejecutar y abrir el SqlDataReader correctamente
+                        using (SqlDataReader dr = con.ExecuteReader())
                         {
-                            string areaActual = dr["Area"].ToString();
-
-                            if (filtroAreas.Contains(areaActual))
+                            while (dr.Read())
                             {
-                                GetRecordsQuery.Add(new Historial()
+                                string areaActual = dr["Area"].ToString();
+
+                                if (filtroAreas.Contains(areaActual))
                                 {
-                                    Urgencia = (dr["Urgencia"].ToString()),
-                                    RequestGrua = (dr["Grua"].ToString()),
-                                    Folio = (dr["Folio"].ToString()),
-                                    Container = (dr["Container"].ToString()),
-                                    Origen = (dr["Origen"].ToString()),
-                                    Destination = (dr["Destination"].ToString()),
-                                    Status = (dr["Status"].ToString()),
-                                    HSolicitud = (dr["HSolicitud"].ToString()),
-                                    HConfirm = (dr["HConfirm"].ToString()),
-                                    HFinish = (dr["HFinish"].ToString()),
-                                    WhoRequest = (dr["WhoRequest"].ToString()),
-                                    Choffer = (dr["Choffer"].ToString()),
-                                    Comment = (dr["Comment"].ToString()),
-                                    Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
-                                    Area = (dr["Area"].ToString()),
-                                    RaR = (dr["RaR"].ToString()),
-                                });
+                                    GetRecordsQuery.Add(new Historial()
+                                    {
+                                        Urgencia = dr["Urgencia"].ToString(),
+                                        RequestGrua = dr["Grua"].ToString(),
+                                        Folio = dr["Folio"].ToString(),
+                                        Container = dr["Container"].ToString(),
+                                        Origen = dr["Origen"].ToString(),
+                                        Destination = dr["Destination"].ToString(),
+                                        Status = dr["Status"].ToString(),
+                                        HSolicitud = dr["HSolicitud"].ToString(),
+                                        HConfirm = dr["HConfirm"].ToString(),
+                                        HFinish = dr["HFinish"].ToString(),
+                                        WhoRequest = dr["WhoRequest"].ToString(),
+                                        Choffer = dr["Choffer"].ToString(),
+                                        Comment = dr["Comment"].ToString(),
+                                        Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                                        Area = dr["Area"].ToString(),
+                                        RaR = dr["RaR"].ToString(),
+                                    });
+                                }
                             }
                         }
                         DBSPP.Close();
                         ViewBag.Records = GetRecordsQuery;
                         ViewBag.Count = GetRecordsQuery.Count.ToString();
+
                         return View();
                     }
                 }
@@ -1816,7 +1862,6 @@ ORDER BY
                 Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
-
             ViewBag.User = Session["Username"];
             ViewBag.Type = Session["Type"];
 
@@ -1881,10 +1926,14 @@ ORDER BY
 
                     if (Areas.Any())
                     {
-                        string queryUsers = "SELECT DISTINCT   r.Username,  r.Areas,  a.Status,  a.Fastcard, a.Shift, a.Date, a.Datetime " +
-                            " FROM RADAEmpire_ARolesChoffer r LEFT JOIN RADAEmpire_AChoffer a  ON r.Username = a.Username AND a.Active = '1' " +
-                            " WHERE r.Active = '1' AND r.Areas IN ({0}) AND (a.Status = 'SIN MOVIMIENTO' OR a.Status IS NULL)" +
-                            " ORDER BY r.Username ASC";
+                        string queryUsers = @"
+        SELECT DISTINCT r.Username
+        FROM RADAEmpire_ARolesChoffer r
+        LEFT JOIN RADAEmpire_AChoffer a ON r.Username = a.Username AND a.Active = '1'
+        WHERE r.Active = '1' 
+          AND r.Areas IN ({0}) 
+          AND (a.Status = 'SIN MOVIMIENTO' OR a.Status IS NULL)
+        ORDER BY r.Username ASC";
 
                         List<string> parametros = new List<string>();
                         for (int i = 0; i < Areas.Count; i++)
@@ -1907,7 +1956,10 @@ ORDER BY
                             {
                                 while (reader.Read())
                                 {
-                                    usuarios.Add(new UsuarioRada { Username = reader["Username"].ToString() });
+                                    usuarios.Add(new UsuarioRada
+                                    {
+                                        Username = reader["Username"].ToString()
+                                    });
                                 }
                             }
                             DBSPP.Close();

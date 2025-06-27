@@ -12,13 +12,25 @@ namespace RADALogisticsWEB.Controllers
     public class HistoryController : Controller
     {
         List<Historial> GetRecords = new List<Historial>();
+
+        List<Historial> GetRecordsDespachador = new List<Historial>();
+
+        List<Historial> GetRecordsDespachadorExcle2 = new List<Historial>();
+
+        List<Historial> GetRecordsExcel = new List<Historial>();
+
         List<Inventario> GetInventary = new List<Inventario>();
+
         List<Inventario> GetInventaryquery = new List<Inventario>();
+
         List<Historial> GetRecordsQeury = new List<Historial>();
+
         List<Historial> GetRecordsNow = new List<Historial>();
+
         List<Usuarios> GetChoffer = new List<Usuarios>();
 
         List<string> filtroAreas = new List<string>();
+
         List<UsuarioRada> UsuarioRadasss = new List<UsuarioRada>();
 
         //connection SQL server (database)
@@ -26,6 +38,7 @@ namespace RADALogisticsWEB.Controllers
         SqlCommand con = new SqlCommand();
         SqlDataReader dr;
         // GET: History
+
         public ActionResult ChangesProcess(string ID, string ChofferOld, string Choffers)
         {
             if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
@@ -785,7 +798,6 @@ namespace RADALogisticsWEB.Controllers
                 Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
-
             ViewBag.User = Session["Username"];
             ViewBag.Type = Session["Type"];
 
@@ -809,7 +821,7 @@ namespace RADALogisticsWEB.Controllers
                 }
                 DBSPP.Close();
 
-                GetRecord();
+                GetRecordHisense(filtroAreas);
                 ViewBag.Records = GetRecords;
                 ViewBag.Count = GetRecords.Count.ToString();
                 return View();
@@ -870,187 +882,46 @@ namespace RADALogisticsWEB.Controllers
 
                 if (count >= 2)
                 {
+                    string name = Session["Username"].ToString();
+                    DBSPP.Open();
+                    con.Connection = DBSPP;
+                    con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
+                    dr = con.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        if (dr["Username"].ToString() == name)
+                        {
+                            filtroAreas.Add(dr["Areas"].ToString());
+                        }
+                    }
+                    DBSPP.Close();
 
-                    GetRecord();
+                    GetRecordHisense(filtroAreas);
                     ViewBag.Records = GetRecords;
                     ViewBag.Count = GetRecords.Count.ToString();
                     return View();
                 }
                 else
                 {
+                    string name = Session["Username"].ToString();
+                    DBSPP.Open();
+                    con.Connection = DBSPP;
+                    con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
+                    dr = con.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        if (dr["Username"].ToString() == name)
+                        {
+                            filtroAreas.Add(dr["Areas"].ToString());
+                        }
+                    }
+                    DBSPP.Close();
+
                     DBSPP.Open();
                     con.Connection = DBSPP;
                     con.CommandText = "  Select " +
                         " a.Urgencia AS Urgencia, b.FastCard as FastCard, a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                         " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area " +
-                        " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
-                    dr = con.ExecuteReader();
-                    while (dr.Read())
-                    {
-                        GetRecordsQeury.Add(new Historial()
-                        {
-                            Urgencia = (dr["Urgencia"].ToString()),
-                            Folio = (dr["Folio"].ToString()),
-                            Container = (dr["Container"].ToString()),
-                            Origen = (dr["Origen"].ToString()),
-                            Destination = (dr["Destination"].ToString()),
-                            Status = (dr["Status"].ToString()),
-                            HSolicitud = (dr["HSolicitud"].ToString()),
-                            HConfirm = (dr["HConfirm"].ToString()),
-                            HFinish = (dr["HFinish"].ToString()),
-                            WhoRequest = (dr["WhoRequest"].ToString()),
-                            Choffer = (dr["Choffer"].ToString()),
-                            fastcard = dr["FastCard"].ToString(),
-                            Comment = (dr["Comment"].ToString()),
-                            Area = (dr["Area"].ToString()),
-                            Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
-                        });
-                    }
-                    DBSPP.Close();
-
-                    ViewBag.Records = GetRecordsQeury;
-                    ViewBag.Count = GetRecordsQeury.Count.ToString();
-                    return View();
-                }
-            }
-        }
-
-        public ActionResult Record()
-        {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
-            {
-                Session["Username"] = Request.Cookies["UserCookie"].Value;
-            }
-
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
-            {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
-            }
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
-            {
-                return RedirectToAction("LogIn", "Login");
-            }
-            else
-            {
-                string name = Session["Username"].ToString();
-                DBSPP.Open();
-                con.Connection = DBSPP;
-                con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
-                dr = con.ExecuteReader();
-                while (dr.Read())
-                {
-                    if (dr["Username"].ToString() == name)
-                    {
-                        filtroAreas.Add(dr["Areas"].ToString());
-                    }
-                }
-                DBSPP.Close();
-
-                GetRecord(filtroAreas);
-                ViewBag.Records = GetRecords;
-                ViewBag.Count = GetRecords.Count.ToString();
-                return View();
-            }
-        }
-
-        [HttpPost]
-        public ActionResult Record(string Timeend, string TimeStart)
-        {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
-            {
-                Session["Username"] = Request.Cookies["UserCookie"].Value;
-            }
-
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
-            {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
-            }
-
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
-            {
-                return RedirectToAction("LogIn", "Login");
-            }
-            else
-            {
-
-                int count = 0;
-                string sqlTimeStart = null;
-                string sqlTimeend = null;
-
-                if (Timeend != "" && TimeStart != "")
-                {
-                    if (TimeStart == "")
-                    {
-                        sqlTimeStart = "";
-                    }
-                    else
-                    {
-                        sqlTimeStart = " Where a.Date BETWEEN '" + TimeStart + "'";
-                    }
-
-                    if (Timeend == "")
-                    {
-                        sqlTimeend = "";
-                    }
-                    else
-                    {
-                        sqlTimeend = " and '" + Timeend + "' and a.Active = '1'";
-                    }
-                }
-                else
-                {
-                    count = count + 2;
-                }
-
-                if (count >= 2)
-                {
-                    string name = Session["Username"].ToString();
-                    DBSPP.Open();
-                    con.Connection = DBSPP;
-                    con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
-                    dr = con.ExecuteReader();
-                    while (dr.Read())
-                    {
-                        if (dr["Username"].ToString() == name)
-                        {
-                            filtroAreas.Add(dr["Areas"].ToString());
-                        }
-                    }
-                    DBSPP.Close();
-
-                    GetRecord(filtroAreas);
-                    ViewBag.Records = GetRecords;
-                    ViewBag.Count = GetRecords.Count.ToString();
-                    return View();
-                }
-                else
-                {
-                    string name = Session["Username"].ToString();
-                    DBSPP.Open();
-                    con.Connection = DBSPP;
-                    con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
-                    dr = con.ExecuteReader();
-                    while (dr.Read())
-                    {
-                        if (dr["Username"].ToString() == name)
-                        {
-                            filtroAreas.Add(dr["Areas"].ToString());
-                        }
-                    }
-                    DBSPP.Close();
-
-                    DBSPP.Open();
-                    con.Connection = DBSPP;
-                    con.CommandText = "  Select " +
-                        " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                        " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area " +
                         " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
                     dr = con.ExecuteReader();
                     while (dr.Read())
@@ -1061,6 +932,7 @@ namespace RADALogisticsWEB.Controllers
                         {
                             GetRecordsQeury.Add(new Historial()
                             {
+                                Urgencia = (dr["Urgencia"].ToString()),
                                 Folio = (dr["Folio"].ToString()),
                                 Container = (dr["Container"].ToString()),
                                 Origen = (dr["Origen"].ToString()),
@@ -1071,9 +943,10 @@ namespace RADALogisticsWEB.Controllers
                                 HFinish = (dr["HFinish"].ToString()),
                                 WhoRequest = (dr["WhoRequest"].ToString()),
                                 Choffer = (dr["Choffer"].ToString()),
+                                fastcard = dr["FastCard"].ToString(),
                                 Comment = (dr["Comment"].ToString()),
-                                Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
                                 Area = (dr["Area"].ToString()),
+                                Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
                             });
                         }
                     }
@@ -1085,6 +958,177 @@ namespace RADALogisticsWEB.Controllers
                 }
             }
         }
+
+        //public ActionResult Record()
+        //{
+        //    if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+        //    {
+        //        Session["Username"] = Request.Cookies["UserCookie"].Value;
+        //    }
+
+        //    if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+        //    {
+        //        Session["Type"] = Request.Cookies["UserCookie"].Value;
+        //    }
+        //    ViewBag.User = Session["Username"];
+        //    ViewBag.Type = Session["Type"];
+
+        //    if (Session.Count <= 0)
+        //    {
+        //        return RedirectToAction("LogIn", "Login");
+        //    }
+        //    else
+        //    {
+        //        string name = Session["Username"].ToString();
+        //        DBSPP.Open();
+        //        con.Connection = DBSPP;
+        //        con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
+        //        dr = con.ExecuteReader();
+        //        while (dr.Read())
+        //        {
+        //            if (dr["Username"].ToString() == name)
+        //            {
+        //                filtroAreas.Add(dr["Areas"].ToString());
+        //            }
+        //        }
+        //        DBSPP.Close();
+
+        //        //GetRecord(filtroAreas);
+        //        //ViewBag.Records = GetRecords;
+        //        //ViewBag.Count = GetRecords.Count.ToString();
+        //        //return View();
+        //    }
+        //}
+
+        //[HttpPost]
+        //public ActionResult Record(string Timeend, string TimeStart)
+        //{
+        //    if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+        //    {
+        //        Session["Username"] = Request.Cookies["UserCookie"].Value;
+        //    }
+
+        //    if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+        //    {
+        //        Session["Type"] = Request.Cookies["UserCookie"].Value;
+        //    }
+
+
+        //    ViewBag.User = Session["Username"];
+        //    ViewBag.Type = Session["Type"];
+
+        //    if (Session.Count <= 0)
+        //    {
+        //        return RedirectToAction("LogIn", "Login");
+        //    }
+        //    else
+        //    {
+
+        //        int count = 0;
+        //        string sqlTimeStart = null;
+        //        string sqlTimeend = null;
+
+        //        if (Timeend != "" && TimeStart != "")
+        //        {
+        //            if (TimeStart == "")
+        //            {
+        //                sqlTimeStart = "";
+        //            }
+        //            else
+        //            {
+        //                sqlTimeStart = " Where a.Date BETWEEN '" + TimeStart + "'";
+        //            }
+
+        //            if (Timeend == "")
+        //            {
+        //                sqlTimeend = "";
+        //            }
+        //            else
+        //            {
+        //                sqlTimeend = " and '" + Timeend + "' and a.Active = '1'";
+        //            }
+        //        }
+        //        else
+        //        {
+        //            count = count + 2;
+        //        }
+
+        //        if (count >= 2)
+        //        {
+        //            string name = Session["Username"].ToString();
+        //            DBSPP.Open();
+        //            con.Connection = DBSPP;
+        //            con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
+        //            dr = con.ExecuteReader();
+        //            while (dr.Read())
+        //            {
+        //                if (dr["Username"].ToString() == name)
+        //                {
+        //                    filtroAreas.Add(dr["Areas"].ToString());
+        //                }
+        //            }
+        //            DBSPP.Close();
+
+        //            GetRecordss(filtroAreas);
+        //            ViewBag.Records = GetRecords;
+        //            ViewBag.Count = GetRecords.Count.ToString();
+        //            return View();
+        //        }
+        //        else
+        //        {
+        //            string name = Session["Username"].ToString();
+        //            DBSPP.Open();
+        //            con.Connection = DBSPP;
+        //            con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
+        //            dr = con.ExecuteReader();
+        //            while (dr.Read())
+        //            {
+        //                if (dr["Username"].ToString() == name)
+        //                {
+        //                    filtroAreas.Add(dr["Areas"].ToString());
+        //                }
+        //            }
+        //            DBSPP.Close();
+
+        //            DBSPP.Open();
+        //            con.Connection = DBSPP;
+        //            con.CommandText = "  Select " +
+        //                " a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+        //                " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area " +
+        //                " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
+        //            dr = con.ExecuteReader();
+        //            while (dr.Read())
+        //            {
+        //                string areaActual = dr["Area"].ToString();
+
+        //                if (filtroAreas.Contains(areaActual))
+        //                {
+        //                    GetRecordsQeury.Add(new Historial()
+        //                    {
+        //                        Folio = (dr["Folio"].ToString()),
+        //                        Container = (dr["Container"].ToString()),
+        //                        Origen = (dr["Origen"].ToString()),
+        //                        Destination = (dr["Destination"].ToString()),
+        //                        Status = (dr["Status"].ToString()),
+        //                        HSolicitud = (dr["HSolicitud"].ToString()),
+        //                        HConfirm = (dr["HConfirm"].ToString()),
+        //                        HFinish = (dr["HFinish"].ToString()),
+        //                        WhoRequest = (dr["WhoRequest"].ToString()),
+        //                        Choffer = (dr["Choffer"].ToString()),
+        //                        Comment = (dr["Comment"].ToString()),
+        //                        Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+        //                        Area = (dr["Area"].ToString()),
+        //                    });
+        //                }
+        //            }
+        //            DBSPP.Close();
+
+        //            ViewBag.Records = GetRecordsQeury;
+        //            ViewBag.Count = GetRecordsQeury.Count.ToString();
+        //            return View();
+        //        }
+        //    }
+        //}
 
         public ActionResult Records()
         {
@@ -1129,7 +1173,12 @@ namespace RADALogisticsWEB.Controllers
                     GetRecord();
                     ViewBag.Records = GetRecords;
                     ViewBag.Count = GetRecords.Count.ToString();
+
+                    GetRecordexcel();
+                    ViewBag.RecordExcel = GetRecordsExcel;
+
                     return View();
+
                 }
                 else
                 {
@@ -1146,9 +1195,12 @@ namespace RADALogisticsWEB.Controllers
                     }
                     DBSPP.Close();
 
-                    GetRecord(filtroAreas);
-                    ViewBag.Records = GetRecords;
-                    ViewBag.Count = GetRecords.Count.ToString();
+                    GetRecordss(filtroAreas);
+                    ViewBag.Records = GetRecordsDespachador;
+                    ViewBag.Count = GetRecordsDespachador.Count.ToString();
+
+                    GetRecordExcel2(filtroAreas);
+                    ViewBag.RecordExcel = GetRecordsDespachadorExcle2;
                     return View();
                 }
             }
@@ -1226,9 +1278,20 @@ namespace RADALogisticsWEB.Controllers
 
                     if (validation == "ADMINISTRATOR")
                     {
+                        //GetRecord();
+                        //ViewBag.Records = GetRecords;
+                        //ViewBag.Count = GetRecords.Count.ToString();
+
+                        //GetRecordexcel();
+                        //ViewBag.RecordExcel = GetRecordsExcel;
+                        //return View();
+
                         GetRecord();
                         ViewBag.Records = GetRecords;
                         ViewBag.Count = GetRecords.Count.ToString();
+
+                        GetRecordexcel();
+                        ViewBag.RecordExcel = GetRecordsExcel;
                         return View();
                     }
                     else
@@ -1246,14 +1309,18 @@ namespace RADALogisticsWEB.Controllers
                         }
                         DBSPP.Close();
 
-                        GetRecord(filtroAreas);
-                        ViewBag.Records = GetRecords;
-                        ViewBag.Count = GetRecords.Count.ToString();
+                        GetRecordss(filtroAreas);
+                        ViewBag.Records = GetRecordsDespachador;
+                        ViewBag.Count = GetRecordsDespachador.Count.ToString();
+
+                        GetRecordExcel2(filtroAreas);
+                        ViewBag.RecordExcel = GetRecordsDespachadorExcle2;
                         return View();
+                        }
                     }
-                }
                 else
                 {
+
                     string validation = null;
                     //create generate randoms int value
                     SqlCommand conse = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + name + "'", DBSPP);
@@ -1270,10 +1337,138 @@ namespace RADALogisticsWEB.Controllers
 
                     if (validation == "ADMINISTRATOR")
                     {
-                        //GetRecord();
-                        //ViewBag.Records = GetRecords;
-                        //ViewBag.Count = GetRecords.Count.ToString();
-                        //return View();
+                        DBSPP.Open();
+                        con.Connection = DBSPP;
+                        con.CommandText = @"
+WITH EtapasNumeradas AS (
+    SELECT
+        dz.Folio,
+        ROW_NUMBER() OVER (PARTITION BY dz.Folio ORDER BY TRY_CAST(dz.Date_Process AS datetime)) AS EtapaNum,
+        CONCAT(
+            '[', dz.Type_StatusContainer, '] ',
+            'Status: ', dz.Status, ', ',
+            'Comentario: ', dz.Comment, ', ',
+            'Grúa: ', dz.GruaMov, ', ',
+            'Proceso: ', dz.Process_Movement, ', ',
+            'Fecha: ', FORMAT(TRY_CAST(dz.Date_Process AS date), 'yyyy-MM-dd'), ', ',
+            'Hora: ', CONVERT(varchar, dz.End_date, 108)
+        ) AS DetalleEtapa
+    FROM RADAEmpires_DZDetailsHisense dz
+    WHERE dz.Activo = 1
+)
+
+SELECT
+    a.Urgencia,
+    b.FastCard,
+    a.Folio,
+    a.Container,
+    a.Origins_Location AS Origen,
+    a.Destination_Location AS Destination,
+    a.Status,
+    a.Datetime AS HSolicitud,
+    b.Time_Confirm AS HConfirm,
+    b.Time_Finished AS HFinish,
+    a.Who_Send AS WhoRequest,
+    b.Choffer,
+    a.Message AS Comment,
+    a.Date,
+    a.Shift AS Area,
+
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 1 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_1,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 2 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_2,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 3 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_3,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 4 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_4,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 5 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_5,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 6 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_6,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 7 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_7,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 8 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_8,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 9 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_9,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 10 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_10,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 11 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_11,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 12 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_12,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 13 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_13,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 14 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_14,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 15 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_15,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 16 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_16,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 17 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_17,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 18 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_18,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 19 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_19,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 20 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_20
+
+FROM RADAEmpire_BRequestContainers a
+INNER JOIN RADAEmpire_CEntryContrainers b ON b.Folio_Request = a.Folio
+LEFT JOIN EtapasNumeradas e ON e.Folio = a.Folio
+WHERE a.Active = '1'
+  AND a.Date BETWEEN @FechaInicio AND @FechaFin
+GROUP BY
+    a.Urgencia,
+    b.FastCard,
+    a.Folio,
+    a.Container,
+    a.Origins_Location,
+    a.Destination_Location,
+    a.Status,
+    a.Datetime,
+    b.Time_Confirm,
+    b.Time_Finished,
+    a.Who_Send,
+    b.Choffer,
+    a.Message,
+    a.Date,
+    a.Shift
+ORDER BY a.Folio DESC;
+";
+
+                        // Agrega los parámetros de fecha
+                        con.Parameters.Clear();
+                        con.Parameters.AddWithValue("@FechaInicio", TimeStart);
+                        con.Parameters.AddWithValue("@FechaFin", Timeend);
+
+                        dr = con.ExecuteReader();
+                        while (dr.Read())
+                        {
+                            GetRecordsExcel.Add(new Historial()
+                            {
+                                Urgencia = dr["Urgencia"].ToString(),
+                                Folio = dr["Folio"].ToString(),
+                                Container = dr["Container"].ToString(),
+                                Origen = dr["Origen"].ToString(),
+                                Destination = dr["Destination"].ToString(),
+                                Status = dr["Status"].ToString(),
+                                HSolicitud = dr["HSolicitud"].ToString(),
+                                HConfirm = dr["HConfirm"].ToString(),
+                                HFinish = dr["HFinish"].ToString(),
+                                WhoRequest = dr["WhoRequest"].ToString(),
+                                Choffer = dr["Choffer"].ToString(),
+                                fastcard = dr["FastCard"].ToString(),
+                                Comment = dr["Comment"].ToString(),
+                                Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                                Area = dr["Area"].ToString(),
+
+                                Etapa_1 = dr["Etapa_1"].ToString(),
+                                Etapa_2 = dr["Etapa_2"].ToString(),
+                                Etapa_3 = dr["Etapa_3"].ToString(),
+                                Etapa_4 = dr["Etapa_4"].ToString(),
+                                Etapa_5 = dr["Etapa_5"].ToString(),
+                                Etapa_6 = dr["Etapa_6"].ToString(),
+                                Etapa_7 = dr["Etapa_7"].ToString(),
+                                Etapa_8 = dr["Etapa_8"].ToString(),
+                                Etapa_9 = dr["Etapa_9"].ToString(),
+                                Etapa_10 = dr["Etapa_10"].ToString(),
+                                Etapa_11 = dr["Etapa_11"].ToString(),
+                                Etapa_12 = dr["Etapa_12"].ToString(),
+                                Etapa_13 = dr["Etapa_13"].ToString(),
+                                Etapa_14 = dr["Etapa_14"].ToString(),
+                                Etapa_15 = dr["Etapa_15"].ToString(),
+                                Etapa_16 = dr["Etapa_16"].ToString(),
+                                Etapa_17 = dr["Etapa_17"].ToString(),
+                                Etapa_18 = dr["Etapa_18"].ToString(),
+                                Etapa_19 = dr["Etapa_19"].ToString(),
+                                Etapa_20 = dr["Etapa_20"].ToString()
+                            });
+                        }
+                        DBSPP.Close();
+
 
                         DBSPP.Open();
                         con.Connection = DBSPP;
@@ -1306,42 +1501,212 @@ namespace RADALogisticsWEB.Controllers
 
                         ViewBag.Records = GetRecordsQeury;
                         ViewBag.Count = GetRecordsQeury.Count.ToString();
-                        return View();
 
+                        ViewBag.RecordExcel = GetRecordsExcel;
+                        return View();
                     }
                     else
                     {
                         DBSPP.Open();
                         con.Connection = DBSPP;
-                        con.CommandText = "  Select " +
-                            " a.Urgencia AS Urgencia, a.Folio as Folio, a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
-                            " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date, a.shift as Area " +
-                            " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio " + sqlTimeStart + sqlTimeend + " ORDER by a.Folio desc";
+                        con.CommandText = "Select * from RADAEmpire_ARoles where Active = '1' order by ID desc";
                         dr = con.ExecuteReader();
                         while (dr.Read())
                         {
-                            GetRecordsQeury.Add(new Historial()
+                            if (dr["Username"].ToString() == name)
                             {
-                                Urgencia = (dr["Urgencia"].ToString()),
-                                Folio = (dr["Folio"].ToString()),
-                                Container = (dr["Container"].ToString()),
-                                Origen = (dr["Origen"].ToString()),
-                                Destination = (dr["Destination"].ToString()),
-                                Status = (dr["Status"].ToString()),
-                                HSolicitud = (dr["HSolicitud"].ToString()),
-                                HConfirm = (dr["HConfirm"].ToString()),
-                                HFinish = (dr["HFinish"].ToString()),
-                                WhoRequest = (dr["WhoRequest"].ToString()),
-                                Choffer = (dr["Choffer"].ToString()),
-                                Comment = (dr["Comment"].ToString()),
-                                Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
-                                Area = (dr["Area"].ToString()),
-                            });
+                                filtroAreas.Add(dr["Areas"].ToString());
+                            }
                         }
                         DBSPP.Close();
 
-                        ViewBag.Records = GetRecordsQeury;
-                        ViewBag.Count = GetRecordsQeury.Count.ToString();
+                        if (GetRecordsDespachador.Count > 0)
+                        {
+                            GetRecordsDespachador.Clear();
+                        }
+                        else
+                        {
+                            DBSPP.Open();
+                            con.Connection = DBSPP;
+                            con.CommandText = "Select top (500) " +
+                               " a.Urgencia AS Urgencia, b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                               " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
+                               " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio and a.Active = '1'  " + sqlTimeStart + sqlTimeend + "  ORDER by a.Folio desc"; 
+                            dr = con.ExecuteReader();
+                            while (dr.Read())
+                            {
+                                string areaActual = dr["Area"].ToString();
+
+                                if (filtroAreas.Contains(areaActual))
+                                {
+                                    GetRecordsDespachador.Add(new Historial()
+                                    {
+                                        Urgencia = (dr["Urgencia"].ToString()),
+                                        Folio = (dr["Folio"].ToString()),
+                                        Container = (dr["Container"].ToString()),
+                                        Origen = (dr["Origen"].ToString()),
+                                        Destination = (dr["Destination"].ToString()),
+                                        Status = (dr["Status"].ToString()),
+                                        HSolicitud = (dr["HSolicitud"].ToString()),
+                                        HConfirm = (dr["HConfirm"].ToString()),
+                                        HFinish = (dr["HFinish"].ToString()),
+                                        WhoRequest = (dr["WhoRequest"].ToString()),
+                                        Choffer = dr["Choffer"].ToString(),
+                                        fastcard = dr["FastCard"].ToString(),
+                                        Comment = (dr["Comment"].ToString()),
+                                        Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                                        Area = (dr["Area"].ToString()),
+                                    });
+                                }
+                            }
+                            DBSPP.Close();
+                        }
+
+                        ViewBag.Records = GetRecordsDespachador;
+                        ViewBag.Count = GetRecordsDespachador.Count.ToString();
+
+                        if (GetRecordsDespachadorExcle2.Count > 0)
+                        {
+                            GetRecordsDespachadorExcle2.Clear();
+                        }
+                        else
+                        {
+                            DBSPP.Open();
+                            con.Connection = DBSPP;
+                            con.CommandText = @"WITH EtapasNumeradas AS (
+    SELECT
+        dz.Folio,
+        ROW_NUMBER() OVER (PARTITION BY dz.Folio ORDER BY TRY_CAST(dz.Date_Process AS datetime)) AS EtapaNum,
+        CONCAT(
+            '[', dz.Type_StatusContainer, '] ',
+            'Status: ', dz.Status, ', ',
+            'Comentario: ', dz.Comment, ', ',
+            'Grúa: ', dz.GruaMov, ', ',
+            'Proceso: ', dz.Process_Movement, ', ',
+            'Fecha: ', FORMAT(TRY_CAST(dz.Date_Process AS date), 'yyyy-MM-dd'), ', ',
+            'Hora: ', CONVERT(varchar, dz.End_date, 108)
+        ) AS DetalleEtapa
+    FROM RADAEmpires_DZDetailsHisense dz
+    WHERE dz.Activo = 1
+)
+
+SELECT top (500)
+    a.Urgencia,
+    b.FastCard,
+    a.Folio,
+    a.Container,
+    a.Origins_Location AS Origen,
+    a.Destination_Location AS Destination,
+    a.Status,
+    a.Datetime AS HSolicitud,
+    b.Time_Confirm AS HConfirm,
+    b.Time_Finished AS HFinish,
+    a.Who_Send AS WhoRequest,
+    b.Choffer,
+    a.Message AS Comment,
+    a.Date,
+    a.Shift AS Area,
+
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 1 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_1,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 2 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_2,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 3 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_3,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 4 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_4,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 5 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_5,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 6 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_6,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 7 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_7,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 8 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_8,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 9 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_9,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 10 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_10,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 11 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_11,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 12 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_12,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 13 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_13,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 14 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_14,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 15 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_15,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 16 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_16,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 17 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_17,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 18 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_18,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 19 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_19,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 20 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_20
+
+FROM RADAEmpire_BRequestContainers a
+INNER JOIN RADAEmpire_CEntryContrainers b ON b.Folio_Request = a.Folio
+LEFT JOIN EtapasNumeradas e ON e.Folio = a.Folio
+WHERE a.Active = '1'
+  AND a.Date BETWEEN @FechaInicio AND @FechaFin
+GROUP BY
+    a.Urgencia,
+    b.FastCard,
+    a.Folio,
+    a.Container,
+    a.Origins_Location,
+    a.Destination_Location,
+    a.Status,
+    a.Datetime,
+    b.Time_Confirm,
+    b.Time_Finished,
+    a.Who_Send,
+    b.Choffer,
+    a.Message,
+    a.Date,
+    a.Shift
+ORDER BY a.Folio DESC;";
+                            // Agrega los parámetros de fecha
+                            con.Parameters.Clear();
+                            con.Parameters.AddWithValue("@FechaInicio", TimeStart);
+                            con.Parameters.AddWithValue("@FechaFin", Timeend);
+
+                            dr = con.ExecuteReader();
+                            while (dr.Read())
+                            {
+                                string areaActual = dr["Area"].ToString();
+
+                                if (filtroAreas.Contains(areaActual))
+                                {
+                                    GetRecordsDespachadorExcle2.Add(new Historial()
+                                    {
+                                        Urgencia = dr["Urgencia"].ToString(),
+                                        Folio = dr["Folio"].ToString(),
+                                        Container = dr["Container"].ToString(),
+                                        Origen = dr["Origen"].ToString(),
+                                        Destination = dr["Destination"].ToString(),
+                                        Status = dr["Status"].ToString(),
+                                        HSolicitud = dr["HSolicitud"].ToString(),
+                                        HConfirm = dr["HConfirm"].ToString(),
+                                        HFinish = dr["HFinish"].ToString(),
+                                        WhoRequest = dr["WhoRequest"].ToString(),
+                                        Choffer = dr["Choffer"].ToString(),
+                                        fastcard = dr["FastCard"].ToString(),
+                                        Comment = dr["Comment"].ToString(),
+                                        Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                                        Area = dr["Area"].ToString(),
+
+                                        Etapa_1 = dr["Etapa_1"].ToString(),
+                                        Etapa_2 = dr["Etapa_2"].ToString(),
+                                        Etapa_3 = dr["Etapa_3"].ToString(),
+                                        Etapa_4 = dr["Etapa_4"].ToString(),
+                                        Etapa_5 = dr["Etapa_5"].ToString(),
+                                        Etapa_6 = dr["Etapa_6"].ToString(),
+                                        Etapa_7 = dr["Etapa_7"].ToString(),
+                                        Etapa_8 = dr["Etapa_8"].ToString(),
+                                        Etapa_9 = dr["Etapa_9"].ToString(),
+                                        Etapa_10 = dr["Etapa_10"].ToString(),
+                                        Etapa_11 = dr["Etapa_11"].ToString(),
+                                        Etapa_12 = dr["Etapa_12"].ToString(),
+                                        Etapa_13 = dr["Etapa_13"].ToString(),
+                                        Etapa_14 = dr["Etapa_14"].ToString(),
+                                        Etapa_15 = dr["Etapa_15"].ToString(),
+                                        Etapa_16 = dr["Etapa_16"].ToString(),
+                                        Etapa_17 = dr["Etapa_17"].ToString(),
+                                        Etapa_18 = dr["Etapa_18"].ToString(),
+                                        Etapa_19 = dr["Etapa_19"].ToString(),
+                                        Etapa_20 = dr["Etapa_20"].ToString()
+                                    });
+                                }
+                            }
+                            DBSPP.Close();
+                        }
+
+                        ViewBag.RecordExcel = GetRecordsDespachadorExcle2;
                         return View();
                     }
                 }
@@ -1659,17 +2024,17 @@ namespace RADALogisticsWEB.Controllers
             }
         }
 
-        private void GetRecord(List<string> filtroAreas)
+        private void GetRecordss(List<string> filtroAreas)
         {
-            if (GetRecords.Count > 0)
+            if (GetRecordsDespachador.Count > 0)
             {
-                GetRecords.Clear();
+                GetRecordsDespachador.Clear();
             }
             else
             {
                 DBSPP.Open();
                 con.Connection = DBSPP;
-                con.CommandText = "  Select top (500) " +
+                con.CommandText = "Select top (500) " +
                     " a.Urgencia AS Urgencia, b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
                     " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
                     " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio and a.Active = '1'  ORDER by a.Folio desc";
@@ -1680,7 +2045,7 @@ namespace RADALogisticsWEB.Controllers
 
                     if (filtroAreas.Contains(areaActual))
                     {
-                        GetRecords.Add(new Historial()
+                        GetRecordsDespachador.Add(new Historial()
                         {
                             Urgencia = (dr["Urgencia"].ToString()),
                             Folio = (dr["Folio"].ToString()),
@@ -1701,6 +2066,144 @@ namespace RADALogisticsWEB.Controllers
                     }
                 }
             DBSPP.Close();
+            }
+        }
+
+        private void GetRecordExcel2(List<string> filtroAreas)
+        {
+            if (GetRecordsDespachadorExcle2.Count > 0)
+            {
+                GetRecordsDespachadorExcle2.Clear();
+            }
+            else
+            {
+                DBSPP.Open();
+                con.Connection = DBSPP;
+                con.CommandText = @"WITH EtapasNumeradas AS (
+    SELECT
+        dz.Folio,
+        ROW_NUMBER() OVER (PARTITION BY dz.Folio ORDER BY TRY_CAST(dz.Date_Process AS datetime)) AS EtapaNum,
+        CONCAT(
+            '[', dz.Type_StatusContainer, '] ',
+            'Status: ', dz.Status, ', ',
+            'Comentario: ', dz.Comment, ', ',
+            'Grúa: ', dz.GruaMov, ', ',
+            'Proceso: ', dz.Process_Movement, ', ',
+            'Fecha: ', FORMAT(TRY_CAST(dz.Date_Process AS date), 'yyyy-MM-dd'), ', ',
+            'Hora: ', CONVERT(varchar, dz.End_date, 108)
+        ) AS DetalleEtapa
+    FROM RADAEmpires_DZDetailsHisense dz
+    WHERE dz.Activo = 1
+)
+
+SELECT top (500)
+    a.Urgencia,
+    b.FastCard,
+    a.Folio,
+    a.Container,
+    a.Origins_Location AS Origen,
+    a.Destination_Location AS Destination,
+    a.Status,
+    a.Datetime AS HSolicitud,
+    b.Time_Confirm AS HConfirm,
+    b.Time_Finished AS HFinish,
+    a.Who_Send AS WhoRequest,
+    b.Choffer,
+    a.Message AS Comment,
+    a.Date,
+    a.Shift AS Area,
+
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 1 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_1,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 2 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_2,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 3 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_3,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 4 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_4,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 5 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_5,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 6 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_6,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 7 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_7,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 8 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_8,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 9 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_9,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 10 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_10,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 11 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_11,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 12 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_12,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 13 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_13,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 14 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_14,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 15 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_15,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 16 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_16,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 17 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_17,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 18 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_18,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 19 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_19,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 20 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_20
+
+FROM RADAEmpire_BRequestContainers a
+INNER JOIN RADAEmpire_CEntryContrainers b ON b.Folio_Request = a.Folio
+LEFT JOIN EtapasNumeradas e ON e.Folio = a.Folio
+WHERE a.Active = '1'
+GROUP BY
+    a.Urgencia,
+    b.FastCard,
+    a.Folio,
+    a.Container,
+    a.Origins_Location,
+    a.Destination_Location,
+    a.Status,
+    a.Datetime,
+    b.Time_Confirm,
+    b.Time_Finished,
+    a.Who_Send,
+    b.Choffer,
+    a.Message,
+    a.Date,
+    a.Shift
+ORDER BY a.Folio DESC;";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {
+                    string areaActual = dr["Area"].ToString();
+
+                    if (filtroAreas.Contains(areaActual))
+                    {
+                        GetRecordsDespachadorExcle2.Add(new Historial()
+                        {
+                            Urgencia = dr["Urgencia"].ToString(),
+                            Folio = dr["Folio"].ToString(),
+                            Container = dr["Container"].ToString(),
+                            Origen = dr["Origen"].ToString(),
+                            Destination = dr["Destination"].ToString(),
+                            Status = dr["Status"].ToString(),
+                            HSolicitud = dr["HSolicitud"].ToString(),
+                            HConfirm = dr["HConfirm"].ToString(),
+                            HFinish = dr["HFinish"].ToString(),
+                            WhoRequest = dr["WhoRequest"].ToString(),
+                            Choffer = dr["Choffer"].ToString(),
+                            fastcard = dr["FastCard"].ToString(),
+                            Comment = dr["Comment"].ToString(),
+                            Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                            Area = dr["Area"].ToString(),
+
+                            Etapa_1 = dr["Etapa_1"].ToString(),
+                            Etapa_2 = dr["Etapa_2"].ToString(),
+                            Etapa_3 = dr["Etapa_3"].ToString(),
+                            Etapa_4 = dr["Etapa_4"].ToString(),
+                            Etapa_5 = dr["Etapa_5"].ToString(),
+                            Etapa_6 = dr["Etapa_6"].ToString(),
+                            Etapa_7 = dr["Etapa_7"].ToString(),
+                            Etapa_8 = dr["Etapa_8"].ToString(),
+                            Etapa_9 = dr["Etapa_9"].ToString(),
+                            Etapa_10 = dr["Etapa_10"].ToString(),
+                            Etapa_11 = dr["Etapa_11"].ToString(),
+                            Etapa_12 = dr["Etapa_12"].ToString(),
+                            Etapa_13 = dr["Etapa_13"].ToString(),
+                            Etapa_14 = dr["Etapa_14"].ToString(),
+                            Etapa_15 = dr["Etapa_15"].ToString(),
+                            Etapa_16 = dr["Etapa_16"].ToString(),
+                            Etapa_17 = dr["Etapa_17"].ToString(),
+                            Etapa_18 = dr["Etapa_18"].ToString(),
+                            Etapa_19 = dr["Etapa_19"].ToString(),
+                            Etapa_20 = dr["Etapa_20"].ToString()
+                        });
+                    }
+                }
+                DBSPP.Close();
             }
         }
 
@@ -1814,6 +2317,184 @@ namespace RADALogisticsWEB.Controllers
                         Comment = (dr["Comment"].ToString()),
                         Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
                         Area = (dr["Area"].ToString()),
+                    });
+                }
+                DBSPP.Close();
+            }
+        }
+
+        private void GetRecordHisense(List<string> filtroAreas)
+        {
+            if (GetRecords.Count > 0)
+            {
+                GetRecords.Clear();
+            }
+            else
+            {
+                DBSPP.Open();
+                con.Connection = DBSPP;
+                con.CommandText = "  Select top (500) " +
+                    " a.Urgencia AS Urgencia,b.FastCard as FastCard, a.Folio as Folio,a.Container as Container, a.Origins_Location as Origen, a.Destination_Location as Destination, a.Status as Status, a.Datetime as HSolicitud, " +
+                    " b.Time_Confirm as HConfirm , b.Time_Finished as HFinish, a.Who_Send as WhoRequest, b.Choffer as Choffer, a.message as Comment, a.Date as Date,a.shift as Area  " +
+                    " from RADAEmpire_BRequestContainers as a inner join RADAEmpire_CEntryContrainers as b on b.Folio_Request = a.Folio and a.Active = '1' ORDER by a.Folio desc";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {
+                    string areaActual = dr["Area"].ToString();
+
+                    if (filtroAreas.Contains(areaActual))
+                    {
+                        GetRecords.Add(new Historial()
+                        {
+                            Urgencia = (dr["Urgencia"].ToString()),
+                            Folio = (dr["Folio"].ToString()),
+                            Container = (dr["Container"].ToString()),
+                            Origen = (dr["Origen"].ToString()),
+                            Destination = (dr["Destination"].ToString()),
+                            Status = (dr["Status"].ToString()),
+                            HSolicitud = (dr["HSolicitud"].ToString()),
+                            HConfirm = (dr["HConfirm"].ToString()),
+                            HFinish = (dr["HFinish"].ToString()),
+                            WhoRequest = (dr["WhoRequest"].ToString()),
+                            Choffer = dr["Choffer"].ToString(),
+                            fastcard = dr["FastCard"].ToString(),
+                            Comment = (dr["Comment"].ToString()),
+                            Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                            Area = (dr["Area"].ToString()),
+                        });
+                    }
+                }
+                DBSPP.Close();
+            }
+        }
+
+        private void GetRecordexcel()
+        {
+            if (GetRecordsExcel.Count > 0)
+            {
+                GetRecordsExcel.Clear();
+            }
+            else
+            {
+                DBSPP.Open();
+                con.Connection = DBSPP;
+                con.CommandText = @"WITH EtapasNumeradas AS (
+    SELECT
+        dz.Folio,
+        ROW_NUMBER() OVER (PARTITION BY dz.Folio ORDER BY TRY_CAST(dz.Date_Process AS datetime)) AS EtapaNum,
+        CONCAT(
+            '[', dz.Type_StatusContainer, '] ',
+            'Status: ', dz.Status, ', ',
+            'Comentario: ', dz.Comment, ', ',
+            'Grúa: ', dz.GruaMov, ', ',
+            'Proceso: ', dz.Process_Movement, ', ',
+            'Fecha: ', FORMAT(TRY_CAST(dz.Date_Process AS date), 'yyyy-MM-dd'), ', ',
+            'Hora: ', CONVERT(varchar, dz.End_date, 108)
+        ) AS DetalleEtapa
+    FROM RADAEmpires_DZDetailsHisense dz
+    WHERE dz.Activo = 1
+)
+
+SELECT top (500)
+    a.Urgencia,
+    b.FastCard,
+    a.Folio,
+    a.Container,
+    a.Origins_Location AS Origen,
+    a.Destination_Location AS Destination,
+    a.Status,
+    a.Datetime AS HSolicitud,
+    b.Time_Confirm AS HConfirm,
+    b.Time_Finished AS HFinish,
+    a.Who_Send AS WhoRequest,
+    b.Choffer,
+    a.Message AS Comment,
+    a.Date,
+    a.Shift AS Area,
+
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 1 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_1,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 2 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_2,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 3 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_3,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 4 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_4,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 5 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_5,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 6 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_6,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 7 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_7,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 8 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_8,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 9 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_9,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 10 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_10,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 11 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_11,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 12 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_12,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 13 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_13,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 14 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_14,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 15 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_15,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 16 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_16,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 17 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_17,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 18 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_18,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 19 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_19,
+    ISNULL(MAX(CASE WHEN e.EtapaNum = 20 THEN e.DetalleEtapa END), 'No hay etapa') AS Etapa_20
+
+FROM RADAEmpire_BRequestContainers a
+INNER JOIN RADAEmpire_CEntryContrainers b ON b.Folio_Request = a.Folio
+LEFT JOIN EtapasNumeradas e ON e.Folio = a.Folio
+WHERE a.Active = '1'
+GROUP BY
+    a.Urgencia,
+    b.FastCard,
+    a.Folio,
+    a.Container,
+    a.Origins_Location,
+    a.Destination_Location,
+    a.Status,
+    a.Datetime,
+    b.Time_Confirm,
+    b.Time_Finished,
+    a.Who_Send,
+    b.Choffer,
+    a.Message,
+    a.Date,
+    a.Shift
+ORDER BY a.Folio DESC;";
+                dr = con.ExecuteReader();
+                while (dr.Read())
+                {
+                    GetRecordsExcel.Add(new Historial()
+                    {
+                        Urgencia = dr["Urgencia"].ToString(),
+                        Folio = dr["Folio"].ToString(),
+                        Container = dr["Container"].ToString(),
+                        Origen = dr["Origen"].ToString(),
+                        Destination = dr["Destination"].ToString(),
+                        Status = dr["Status"].ToString(),
+                        HSolicitud = dr["HSolicitud"].ToString(),
+                        HConfirm = dr["HConfirm"].ToString(),
+                        HFinish = dr["HFinish"].ToString(),
+                        WhoRequest = dr["WhoRequest"].ToString(),
+                        Choffer = dr["Choffer"].ToString(),
+                        fastcard = dr["FastCard"].ToString(),
+                        Comment = dr["Comment"].ToString(),
+                        Date = Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy"),
+                        Area = dr["Area"].ToString(),
+
+                        Etapa_1 = dr["Etapa_1"].ToString(),
+                        Etapa_2 = dr["Etapa_2"].ToString(),
+                        Etapa_3 = dr["Etapa_3"].ToString(),
+                        Etapa_4 = dr["Etapa_4"].ToString(),
+                        Etapa_5 = dr["Etapa_5"].ToString(),
+                        Etapa_6 = dr["Etapa_6"].ToString(),
+                        Etapa_7 = dr["Etapa_7"].ToString(),
+                        Etapa_8 = dr["Etapa_8"].ToString(),
+                        Etapa_9 = dr["Etapa_9"].ToString(),
+                        Etapa_10 = dr["Etapa_10"].ToString(),
+                        Etapa_11 = dr["Etapa_11"].ToString(),
+                        Etapa_12 = dr["Etapa_12"].ToString(),
+                        Etapa_13 = dr["Etapa_13"].ToString(),
+                        Etapa_14 = dr["Etapa_14"].ToString(),
+                        Etapa_15 = dr["Etapa_15"].ToString(),
+                        Etapa_16 = dr["Etapa_16"].ToString(),
+                        Etapa_17 = dr["Etapa_17"].ToString(),
+                        Etapa_18 = dr["Etapa_18"].ToString(),
+                        Etapa_19 = dr["Etapa_19"].ToString(),
+                        Etapa_20 = dr["Etapa_20"].ToString()
                     });
                 }
                 DBSPP.Close();

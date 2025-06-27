@@ -141,146 +141,131 @@
             @*<div class="col col-1" style="text-align:center">Opciones</div>*@
 
         </li>
-       @foreach (var person in ViewBag.Records)
+        @foreach (var person in ViewBag.Records)
         {
-    <li class="table-row" id="tblCustomers" style="color:black ; background-color:
+            <li class="table-row" id="tblCustomers" style="color:black ; background-color:
     @(person.Comment == "Canceled by Rada" ? "#E9B4B4" :
       person.Comment == "Canceled by Hisense" ? "#E9B4B4" :
       person.Comment == "PENDING" ? "#DDDCD4" :
       person.Comment == "CHOFER TERMINA MOVIMIENTO" ? "#C0E9B4" :
       person.Comment == "Movement in process" ? "#E5F8EC" : "#E9D8B4")">
 
-        <div class="col col-1" data-label="Options" style="text-align:center">
+                <div class="col col-1" data-label="Options" style="text-align:center">
 
-            @Html.ActionLink("🎴 Detalles", "Details", "HISENSE", new { ID = person.Folio, Record = "RADASers" }, null)
+                    @Html.ActionLink("🎴 Detalles", "Details", "HISENSE", new { ID = person.Folio, Record = "RADASers" }, null)
 
-        </div>
+                </div>
 
-        <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
+                <div class="col col-1" data-label="Folio" style="text-align:center">@person.Folio</div>
 
-        <div class="col col-1" data-label="Container" style="text-align:center">@person.Container</div>
+                <div class="col col-1" data-label="Container" style="text-align:center">@person.Container</div>
 
-        <div class="col col-2" data-label="Origins" style="text-align:center">@person.Origen</div>
+                <div class="col col-2" data-label="Origins" style="text-align:center">@person.Origen</div>
 
-        <div class="col col-3" data-label="Destination" style="text-align:center"> @person.Destination</div>
+                <div class="col col-3" data-label="Destination" style="text-align:center"> @person.Destination</div>
 
-        <div class="col col-4" data-label="Status" style="text-align:center"> @person.Status</div>
+                <div class="col col-4" data-label="Status" style="text-align:center"> @person.Status</div>
 
-        <div class="col col-5" data-label="HRequest" style="text-align:center"> @person.HSolicitud</div>
+                <div class="col col-5" data-label="HRequest" style="text-align:center"> @person.HSolicitud</div>
 
-        <div class="col col-6" data-label="HConfirm" style="text-align:center"> @person.HConfirm</div>
+                <div class="col col-6" data-label="HConfirm" style="text-align:center"> @person.HConfirm</div>
 
-        <div class="col col-7" data-label="HFinish" style="text-align:center"> @person.HFinish</div>
+                <div class="col col-7" data-label="HFinish" style="text-align:center"> @person.HFinish</div>
 
-        <div class="col col-8" data-label="Who Request" style="text-align:center"> @person.WhoRequest</div>
+                <div class="col col-8" data-label="Who Request" style="text-align:center"> @person.WhoRequest</div>
 
-        <div class="col col-9" data-label="Choffer" style="text-align:center"> @person.Choffer</div>
+                <div class="col col-9" data-label="Choffer" style="text-align:center"> @person.Choffer</div>
 
-        <div class="col col-10" data-label="Comment" style="text-align:center"> @person.Comment</div>
+                <div class="col col-10" data-label="Comment" style="text-align:center"> @person.Comment</div>
 
-        <div class="col col-10" data-label="Area" style="text-align:center"> @person.Area</div>
+                <div class="col col-10" data-label="Area" style="text-align:center"> @person.Area</div>
 
-        <div class="col col-11" data-label="Date" style="text-align:center"> @person.Date</div>
+                <div class="col col-11" data-label="Date" style="text-align:center"> @person.Date</div>
 
-        <div class="col col-2" data-label="Folio" style="text-align:center">
-            <span class="urgencia-box @(person.Urgencia == "Normal" ? "urgencia-normal" : person.Urgencia == "Urgente" ? "urgencia-urgente" : person.Urgencia == "Critico" ? "urgencia-critico" : "")">
-                @person.Urgencia
-            </span>
-        </div>
+                <div class="col col-2" data-label="Folio" style="text-align:center">
+                    <span class="urgencia-box @(person.Urgencia == "Normal" ? "urgencia-normal" : person.Urgencia == "Urgente" ? "urgencia-urgente" : person.Urgencia == "Critico" ? "urgencia-critico" : "")">
+                        @person.Urgencia
+                    </span>
+                </div>
 
-    </li>
+            </li>
         }
     </ul>
 </div>
 
-<table id="myTable" class="table2excel" class="table table-striped table-responsive-xl table-hover" hidden="hidden">
-    <tr>
-
-        <th style="text-align:center">
-            <p> Container</p>
-        </th>
-        <th style="text-align:center">
-            <p>
-                Origins Loc
-            </p>
-        </th>
-        <th style="text-align:center">
-            <p>
-                Destination Loc
-            </p>
-        </th>
-        <th style="text-align:center">
-            <p>Status</p>
-        </th>
-        <th style="text-align:center">
-            <p>HRequest</p>
-        </th>
-        <th style="text-align:center">
-            <p>HConfirm</p>
-        </th>
-        <th style="text-align:center">
-            <p>HFinish</p>
-        </th>
-        <th style="text-align:center">
-            <p>
-                Who Request
-            </p>
-        </th>
-        <th style="text-align:center">
-            <p>Choffer</p>
-        </th>
-        <th style="text-align:center">
-            <p>Comment</p>
-        </th>
-        <th style="text-align:center">
-            <p>Area</p>
-        </th>
-        <th style="text-align:center">
-            <p>Date</p>
-        </th>
-
-    </tr>
+<table id="myTable" class="table2excel table table-striped table-responsive-xl table-hover" hidden="hidden">
+    <thead>
+        <tr>
+            <th style="text-align:center"><p>Container</p></th>
+            <th style="text-align:center"><p>Origins Loc</p></th>
+            <th style="text-align:center"><p>Destination Loc</p></th>
+            <th style="text-align:center"><p>Status</p></th>
+            <th style="text-align:center"><p>HRequest</p></th>
+            <th style="text-align:center"><p>HConfirm</p></th>
+            <th style="text-align:center"><p>HFinish</p></th>
+            <th style="text-align:center"><p>Who Request</p></th>
+            <th style="text-align:center"><p>Choffer</p></th>
+            <th style="text-align:center"><p>Comment</p></th>
+            <th style="text-align:center"><p>Area</p></th>
+            <th style="text-align:center"><p>Date</p></th>
+            <th style="text-align:center"><p>Etapa 1</p></th>
+            <th style="text-align:center"><p>Etapa 2</p></th>
+            <th style="text-align:center"><p>Etapa 3</p></th>
+            <th style="text-align:center"><p>Etapa 4</p></th>
+            <th style="text-align:center"><p>Etapa 5</p></th>
+            <th style="text-align:center"><p>Etapa 6</p></th>
+            <th style="text-align:center"><p>Etapa 7</p></th>
+            <th style="text-align:center"><p>Etapa 8</p></th>
+            <th style="text-align:center"><p>Etapa 9</p></th>
+            <th style="text-align:center"><p>Etapa 10</p></th>
+            <th style="text-align:center"><p>Etapa 11</p></th>
+            <th style="text-align:center"><p>Etapa 12</p></th>
+            <th style="text-align:center"><p>Etapa 13</p></th>
+            <th style="text-align:center"><p>Etapa 14</p></th>
+            <th style="text-align:center"><p>Etapa 15</p></th>
+            <th style="text-align:center"><p>Etapa 16</p></th>
+            <th style="text-align:center"><p>Etapa 17</p></th>
+            <th style="text-align:center"><p>Etapa 18</p></th>
+            <th style="text-align:center"><p>Etapa 19</p></th>
+            <th style="text-align:center"><p>Etapa 20</p></th>
+        </tr>
+    </thead>
     <tbody id="Table01">
-       @foreach (var person in ViewBag.Records)
+        @foreach (var person in ViewBag.RecordExcel)
         {
             <tr>
-
-                <td>
-                    @person.Container
-                </td>
-                <td>
-                    @person.Origen
-                </td>
-                <td>
-                    @person.Destination
-                </td>
-                <td>
-                    @person.Status
-                </td>
-                <td>
-                    @person.HSolicitud
-                </td>
-                <td>
-                    @person.HConfirm
-                </td>
-                <td>
-                    @person.HFinish
-                </td>
-                <td>
-                    @person.WhoRequest
-                </td>
-                <td>
-                    @person.Choffer
-                </td>
-                <td>
-                    @person.Comment
-                </td>
-                <td>
-                    @person.Area
-                </td>
-                <td>
-                    @person.Date
-                </td>
+                <td>@person.Container</td>
+                <td>@person.Origen</td>
+                <td>@person.Destination</td>
+                <td>@person.Status</td>
+                <td>@person.HSolicitud</td>
+                <td>@person.HConfirm</td>
+                <td>@person.HFinish</td>
+                <td>@person.WhoRequest</td>
+                <td>@person.Choffer</td>
+                <td>@person.Comment</td>
+                <td>@person.Area</td>
+                <td>@person.Date</td>
+                <td>@person.Etapa_1</td>
+                <td>@person.Etapa_2</td>
+                <td>@person.Etapa_3</td>
+                <td>@person.Etapa_4</td>
+                <td>@person.Etapa_5</td>
+                <td>@person.Etapa_6</td>
+                <td>@person.Etapa_7</td>
+                <td>@person.Etapa_8</td>
+                <td>@person.Etapa_9</td>
+                <td>@person.Etapa_10</td>
+                <td>@person.Etapa_11</td>
+                <td>@person.Etapa_12</td>
+                <td>@person.Etapa_13</td>
+                <td>@person.Etapa_14</td>
+                <td>@person.Etapa_15</td>
+                <td>@person.Etapa_16</td>
+                <td>@person.Etapa_17</td>
+                <td>@person.Etapa_18</td>
+                <td>@person.Etapa_19</td>
+                <td>@person.Etapa_20</td>
             </tr>
         }
     </tbody>

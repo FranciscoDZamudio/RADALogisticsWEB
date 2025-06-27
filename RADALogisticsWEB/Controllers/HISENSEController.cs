@@ -43,7 +43,6 @@ namespace RADALogisticsWEB.Controllers
             return Json(new { gruaRequest = validation }, JsonRequestBehavior.AllowGet);
         }
 
-
         // GET: HISENSE
         public ActionResult ChangeStatus(string ID, string Page, string data)
         {
@@ -391,10 +390,17 @@ namespace RADALogisticsWEB.Controllers
             return PartialView("table", ViewBag.Records);
         }
 
-        public ActionResult ProcessData(string ActivoRampa, string User, string Type, string Container, string Origins, string Destination, string Area, string ActivoHidden, string NivelUrgencia , string MotivoUrgencia, string Placa)
+        public ActionResult ProcessData(string ActivoRampa, string User, string Type, 
+            string Container, string Origins, string Destination, string Area, 
+            string ActivoHidden, string NivelUrgencia , string MotivoUrgencia, string Placa)
         {
             try
             {
+                if (Placa == "")
+                {
+                    Placa = "NO SE REGISTRO";
+                }
+
                 if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
                 {
                     Session["Username"] = Request.Cookies["UserCookie"].Value;
