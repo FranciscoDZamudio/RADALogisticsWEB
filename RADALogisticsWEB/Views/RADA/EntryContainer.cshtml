@@ -1,6 +1,12 @@
-﻿
+﻿@using RADALogisticsWEB.Models
+
 @{
     ViewBag.Title = "RADA Logistics | Entry Container";
+
+    var choferesUnicos = ((List<RADALogisticsWEB.Models.UsuarioRada>)ViewBag.RadaUsers)
+                         .GroupBy(c => c.Username)
+                         .Select(g => g.First())
+                         .ToList();
 }
 
 @*<link href="~/Stylee/PageRADAEntry.css" rel="stylesheet" />*@
@@ -67,9 +73,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (ViewBag.RadaUsers != null && ViewBag.RadaUsers.Count > 0)
+                            @if (choferesUnicos != null && choferesUnicos.Count > 0)
                             {
-                                foreach (var choffer in ViewBag.RadaUsers)
+                                foreach (var choffer in choferesUnicos)
                                 {
                                     <tr>
                                         <td>@choffer.Username</td>
@@ -91,6 +97,45 @@
                 </div>
             </div>
         </div>
+
+        @*<div class="choffer-float">
+                <div class="choffer-box">
+                    <h4 class="choffer-title">Choferes en Movimiento</h4>
+
+                    <div class="choffer-scroll">
+                        <table class="choffer-table">
+                            <thead>
+                                <tr>
+                                    <th>Choffer</th>
+                                    <th>Mensaje</th>
+                                    <th>Movimiento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.RadaUsers != null && ViewBag.RadaUsers.Count > 0)
+                                {
+                                    foreach (var choffer in ViewBag.RadaUsers)
+                                    {
+                                        <tr>
+                                            <td>@choffer.Username</td>
+                                            <td>@choffer.message</td>
+                                            <td>
+                                                <a href="#" class="folio-link" data-folio="@choffer.Mov">@choffer.Mov</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" style="padding: 6px; text-align: center;">No hay choferes en movimiento.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>*@
 
 
         <h2 class="page-title" style="font-weight: 700;">Entrada de Movmientos de Contenedores</h2>
@@ -147,7 +192,7 @@
             <div class="col col-5" style="text-align:center">Estatus</div>
             <div class="col col-6" style="text-align:center">Solicita</div>
             <div class="col col-7" style="text-align:center">Confirma</div>
-            <div class="col col-7" style="text-align:center">Confirma</div>
+            @*<div class="col col-7" style="text-align:center">Confirma</div>*@
             @*<div class="col col-8" style="text-align:center">Entrega</div>*@
             <div class="col col-9" style="text-align:center">Solicitado por</div>
             <div class="col col-10" style="text-align:center">Chofer</div>

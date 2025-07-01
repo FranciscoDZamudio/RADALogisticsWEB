@@ -93,9 +93,11 @@ namespace RADALogisticsWEB.Controllers
                         }
                         DBSPP.Close();
 
-                        // Crear cookie persistente
-                        HttpCookie userCookie = new HttpCookie("UserCookie", Usernames);
-                        userCookie.Expires = DateTime.Now.AddHours(8); // duración de la cookie
+                        // GUARDAR DATOS EN COOKIE (duración: 7 días)
+                        HttpCookie userCookie = new HttpCookie("UserInfo");
+                        userCookie["Username"] = Usernames;
+                        userCookie["Rol"] = TypeLog;
+                        userCookie.Expires = DateTime.Now.AddDays(7); // Puedes ajustar esto
                         Response.Cookies.Add(userCookie);
 
                         if (TypeLog == "ADMINISTRATOR")

@@ -57,25 +57,27 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Changes(string ID, string oldArea, string Area, string Type, string ActivoRampa, string Container,string ActivoHidden) 
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
-          
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
 
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 using (SqlConnection conn = new SqlConnection("Data Source=RADAEmpire.mssql.somee.com ;Initial Catalog=RADAEmpire ;User ID=RooRada; password=rada1311"))
                 {
                     conn.Open();
@@ -223,25 +225,27 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult ChangeArea(string ID)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
-            {
+            { 
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 string Status = null, shif = null;
                 SqlCommand asiggne = new SqlCommand("Select * from RADAEmpire_BRequestContainers " +
                     " where Active = '1' and Folio = '" + ID + "'", DBSPP);
@@ -281,25 +285,28 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult ChangeStatus(string ID)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+                ViewBag.Type = Session["Type"];
+
                 ViewBag.ID = ID.ToString();
                 return View();
             }
@@ -370,6 +377,19 @@ namespace RADALogisticsWEB.Controllers
 
         public PartialViewResult mov2(string Folio)
         {
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
+            {
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
+            }
+
+
             string name = Session["Username"].ToString();
 
             // Convertir hora si es necesario
@@ -570,6 +590,7 @@ ORDER BY UM.Folio DESC;
                 ViewBag.Count = GetRecords.Count.ToString();
                 return PartialView("table", ViewBag.Records);  // Luego, pasa la lista a la vista
             }
+
         }
 
         public PartialViewResult mov(string Folio)
@@ -621,26 +642,27 @@ ORDER BY UM.Folio DESC;
 
         public ActionResult Comments(string ID, string Status)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 ViewBag.Status = Status;
                 ViewBag.id = ID;
                 return View();
@@ -649,26 +671,27 @@ ORDER BY UM.Folio DESC;
 
         public ActionResult GetComments(string Status, string id, string Comment)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 if (Status == "PENDING")
                 {
                     return RedirectToAction("EntryContainer", "RADA");
@@ -694,25 +717,27 @@ ORDER BY UM.Folio DESC;
 
         public ActionResult Query(string fecha)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
-            {
+            { 
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 if (fecha == "")
                 {
                     string data = fecha.ToString();
@@ -728,434 +753,456 @@ ORDER BY UM.Folio DESC;
 
         public ActionResult Replace(string ID)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            string Contenedor = null;
-            SqlCommand asiggne = new SqlCommand("Select Container from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + ID.ToString() + "'", DBSPP);
-            DBSPP.Open();
-            SqlDataReader drasiggne = asiggne.ExecuteReader();
-            if (drasiggne.HasRows)
-            {
-                while (drasiggne.Read())
-                {
-                    Contenedor = drasiggne["Container"].ToString();
-                }
-            }
-            DBSPP.Close();
-
-            ViewBag.ID = ID.ToString();
-            ViewBag.Contenedor = Contenedor.ToString();
-
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult ReplaceProcess(string OldID, string OldContainer, string NewContainer, bool guardarAnterior)
-        {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
-            {
-                Session["Username"] = Request.Cookies["UserCookie"].Value;
-            }
-
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
-            {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
-            }
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (guardarAnterior == true)
-            {
-                //Generar nuevo reporte de contenedor anterior
-                string folio = null, whosend = null, destination = null, 
-                    origins = null, status = null, shift = null,
-                    date = null, datetimeadded = null, grua = null, rAR = null;
-
-                SqlCommand asiggne = new SqlCommand("Select * from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + OldID.ToString() + "'", DBSPP);
-                DBSPP.Open();
-                SqlDataReader drasiggne = asiggne.ExecuteReader();
-                if (drasiggne.HasRows)
-                {
-                    while (drasiggne.Read())
-                    {
-                        folio = drasiggne["Folio"].ToString();
-                        whosend = drasiggne["Who_Send"].ToString();
-                        //container = drasiggne["Container"].ToString();
-                        destination = drasiggne["Destination_Location"].ToString();
-                        origins = drasiggne["Origins_Location"].ToString();
-                        status = drasiggne["Status"].ToString();
-                        //message = drasiggne["Container"].ToString();
-                        shift = drasiggne["shift"].ToString();
-                        date = drasiggne["Date"].ToString();
-                        datetimeadded = drasiggne["Datetime"].ToString();
-                        //Active = drasiggne["Container"].ToString();
-                        grua = drasiggne["GruaRequest"].ToString();
-                        rAR = drasiggne["RaRRequest"].ToString();
-
-                    }
-                }
-                DBSPP.Close();
-
-                // Crear la lista
-                List<string> lista = new List<string>();
-
-                // Consulta SQL
-                string query = @"SELECT Process_Movement 
-                 FROM RADAEmpires_DZDetailsHisense 
-                 WHERE Activo = '1' AND Folio = '" + OldID.ToString() + "' ORDER BY ID ASC";
-
-                SqlCommand Moviments = new SqlCommand(query, DBSPP);
-
-                DBSPP.Open();
-                SqlDataReader drMoviments = Moviments.ExecuteReader();
-
-                // Leer y agregar a la lista
-                while (drMoviments.Read())
-                {
-                    string movimiento = drMoviments["Process_Movement"].ToString();
-                    lista.Add(movimiento);
-                }
-
-                drMoviments.Close(); // Cierra primero el lector
-                DBSPP.Close();
-
-                //create generate randoms int value
-                string randomval = null;
-                SqlCommand conse = new SqlCommand("Select top (1) ID from RADAEmpire_BRequestContainers order by ID desc", DBSPP);
-                DBSPP.Open();
-                SqlDataReader drconse = conse.ExecuteReader();
-                if (drconse.HasRows)
-                {
-                    while (drconse.Read())
-                    {
-                        randomval = drconse[0].ToString();//234 + 1216 + 
-                    }
-                }
-                else
-                {
-                    randomval = "0";
-                }
-                DBSPP.Close();
-
-                int sum = int.Parse(randomval) + 1;
-
-                //Random folio = new Random();
-                //int val = folio.Next(1, 1000000000);
-                string Folio = null;
-                Folio = "MOV" + sum.ToString();
-
-                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
-                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
-
-                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
-                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
-
-                // Formatear la fecha para que sea adecuada para la base de datos
-                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-
-
-                //Guardar informacion a la base de datos del proyecto
-                DBSPP.Open();
-                SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
-                    "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest,RaRRequest) values " +
-                    "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest,@RaRRequest) ", DBSPP);
-                //--------------------------------------------------------------------------------------------------------------------------------
-                PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
-                PalletControl.Parameters.AddWithValue("@Who_Send", whosend.ToString());
-                PalletControl.Parameters.AddWithValue("@Container", OldContainer.ToUpper());
-                PalletControl.Parameters.AddWithValue("@Destination_Location", destination.ToUpper());
-                PalletControl.Parameters.AddWithValue("@Origins_Location", origins.ToUpper());
-                PalletControl.Parameters.AddWithValue("@Status", status.ToString());
-                PalletControl.Parameters.AddWithValue("@message", "PENDING");
-                PalletControl.Parameters.AddWithValue("@shift", shift.ToString());
-                PalletControl.Parameters.AddWithValue("@Date", date.ToString());
-                PalletControl.Parameters.AddWithValue("@Datetime", datetimeadded.ToString());
-                PalletControl.Parameters.AddWithValue("@Active", true);
-                PalletControl.Parameters.AddWithValue("@GruaRequest", grua.ToString());
-                PalletControl.Parameters.AddWithValue("@RaRRequest", rAR.ToString());
-                PalletControl.ExecuteNonQuery();
-                DBSPP.Close();
-
-                //Guardar informacion a la base de datos del proyecto
-                DBSPP.Open();
-                SqlCommand RADAdocument = new SqlCommand("insert into RADAEmpire_CEntryContrainers" +
-                    "(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date,AreaWork, Active,Cancel) values " +
-                    "(@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date,@AreaWork, @Active, @Cancel) ", DBSPP);
-                //--------------------------------------------------------------------------------------------------------------------------------
-                RADAdocument.Parameters.AddWithValue("@Folio_Request", Folio.ToString());
-                RADAdocument.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
-                RADAdocument.Parameters.AddWithValue("@Time_Confirm", "00:00:00");
-                RADAdocument.Parameters.AddWithValue("@Choffer", "PENDNING CONFIRM");
-                RADAdocument.Parameters.AddWithValue("@FastCard", "PENDNING CONFIRM");
-                RADAdocument.Parameters.AddWithValue("@Time_Finished", "00:00:00");
-                RADAdocument.Parameters.AddWithValue("@Date", usTime.ToString());
-                RADAdocument.Parameters.AddWithValue("@AreaWork", "RADALogistics");
-                RADAdocument.Parameters.AddWithValue("@Active", true);
-                RADAdocument.Parameters.AddWithValue("@Cancel", false);
-                RADAdocument.ExecuteNonQuery();
-                DBSPP.Close();
-
-                // Guardar información de cada paso en la base de datos
-                DBSPP.Open();
-                foreach (string paso in lista)
-                {
-                    SqlCommand ProcessDB = new SqlCommand("INSERT INTO RADAEmpires_DZDetailsHisense " +
-                        "(Folio, Type_StatusContainer, GruaMov, Process_Movement, End_date, Status, Comment, Date_Process, Activo) " +
-                        "VALUES (@Folio, @Type_StatusContainer, @GruaMov, @Process_Movement, @End_date, @Status, @Comment, GETDATE(), @Activo)", DBSPP);
-
-                    ProcessDB.Parameters.AddWithValue("@Folio", Folio.ToString());
-                    ProcessDB.Parameters.AddWithValue("@Type_StatusContainer", status.ToString());
-                    ProcessDB.Parameters.AddWithValue("@GruaMov", grua.ToString());
-                    ProcessDB.Parameters.AddWithValue("@Process_Movement", paso); // Aquí se guarda cada paso de la lista
-                    ProcessDB.Parameters.AddWithValue("@End_date", "00:00:00");
-                    ProcessDB.Parameters.AddWithValue("@Status", "PENDIENTE");
-                    ProcessDB.Parameters.AddWithValue("@Comment", "SIN COMENTARIOS");
-                    ProcessDB.Parameters.AddWithValue("@Activo", true);
-
-                    ProcessDB.ExecuteNonQuery();
-                }
-                DBSPP.Close();
-
-                //Actualizar numero de contenedor
-                string updateQuery = "UPDATE RADAEmpire_BRequestContainers " +
-                    " SET Container = @Container WHERE Folio = @ID";
-                using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
-                {
-                    DBSPP.Open();
-                    command.Parameters.AddWithValue("@Container", NewContainer.ToUpper());
-                    command.Parameters.AddWithValue("@ID", OldID.ToString());
-                    int rowsAffected = command.ExecuteNonQuery();
-                    DBSPP.Close();
-                }
-
-            }
-            else
-            {
-                //Generar nuevo reporte de contenedor anterior
-                string folio = null, whosend = null, destination = null,
-                    origins = null, status = null, shift = null,
-                    date = null, datetimeadded = null, grua = null, rAR = null;
-
-                SqlCommand asiggne = new SqlCommand("Select * from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + OldID.ToString() + "'", DBSPP);
-                DBSPP.Open();
-                SqlDataReader drasiggne = asiggne.ExecuteReader();
-                if (drasiggne.HasRows)
-                {
-                    while (drasiggne.Read())
-                    {
-                        folio = drasiggne["Folio"].ToString();
-                        whosend = drasiggne["Who_Send"].ToString();
-                        //container = drasiggne["Container"].ToString();
-                        destination = drasiggne["Destination_Location"].ToString();
-                        origins = drasiggne["Origins_Location"].ToString();
-                        status = drasiggne["Status"].ToString();
-                        //message = drasiggne["Container"].ToString();
-                        shift = drasiggne["shift"].ToString();
-                        date = drasiggne["Date"].ToString();
-                        datetimeadded = drasiggne["Datetime"].ToString();
-                        //Active = drasiggne["Container"].ToString();
-                        grua = drasiggne["GruaRequest"].ToString();
-                        rAR = drasiggne["RaRRequest"].ToString();
-                    }
-                }
-                DBSPP.Close();
-
-                // Crear la lista
-                List<string> lista = new List<string>();
-
-                // Consulta SQL
-                string query = @"SELECT Process_Movement 
-                 FROM RADAEmpires_DZDetailsHisense 
-                 WHERE Activo = '1' AND Folio = '" + OldID.ToString() + "' ORDER BY ID ASC";
-
-                SqlCommand Moviments = new SqlCommand(query, DBSPP);
-
-                DBSPP.Open();
-                SqlDataReader drMoviments = Moviments.ExecuteReader();
-
-                // Leer y agregar a la lista
-                while (drMoviments.Read())
-                {
-                    string movimiento = drMoviments["Process_Movement"].ToString();
-                    lista.Add(movimiento);
-                }
-
-                drMoviments.Close(); // Cierra primero el lector
-                DBSPP.Close();
-
-                //create generate randoms int value
-                string randomval = null;
-                SqlCommand conse = new SqlCommand("Select top (1) ID from RADAEmpire_BRequestContainers order by ID desc", DBSPP);
-                DBSPP.Open();
-                SqlDataReader drconse = conse.ExecuteReader();
-                if (drconse.HasRows)
-                {
-                    while (drconse.Read())
-                    {
-                        randomval = drconse[0].ToString();//234 + 1216 + 
-                    }
-                }
-                else
-                {
-                    randomval = "0";
-                }
-                DBSPP.Close();
-
-                int sum = int.Parse(randomval) + 1;
-
-                //Random folio = new Random();
-                //int val = folio.Next(1, 1000000000);
-                string Folio = null;
-                Folio = "MOV" + sum.ToString();
-
-                // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
-                DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
-
-                // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
-                TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-                DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
-
-                // Formatear la fecha para que sea adecuada para la base de datos
-                string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-
-
-                //Guardar informacion a la base de datos del proyecto
-                DBSPP.Open();
-                SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
-                    "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest, RaRRequest) values " +
-                    "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest, @RaRRequest) ", DBSPP);
-                //--------------------------------------------------------------------------------------------------------------------------------
-                PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
-                PalletControl.Parameters.AddWithValue("@Who_Send", whosend.ToString());
-                PalletControl.Parameters.AddWithValue("@Container", OldContainer.ToUpper());
-                PalletControl.Parameters.AddWithValue("@Destination_Location", destination.ToUpper());
-                PalletControl.Parameters.AddWithValue("@Origins_Location", origins.ToUpper());
-                PalletControl.Parameters.AddWithValue("@Status", status.ToString());
-                PalletControl.Parameters.AddWithValue("@message", "Canceled by Rada");
-                PalletControl.Parameters.AddWithValue("@shift", shift.ToString());
-                PalletControl.Parameters.AddWithValue("@Date", date.ToString());
-                PalletControl.Parameters.AddWithValue("@Datetime", datetimeadded.ToString());
-                PalletControl.Parameters.AddWithValue("@Active", true);
-                PalletControl.Parameters.AddWithValue("@GruaRequest", grua.ToString());
-                PalletControl.Parameters.AddWithValue("@RaRRequest", rAR.ToString());
-                PalletControl.ExecuteNonQuery();
-                DBSPP.Close();
-
-                DBSPP.Open();
-                SqlCommand GuardaRegistro = new SqlCommand("insert into RADAEmpires_DRemoves" +
-                    "(Folio, Reason, Datetime, Active,Company) values " +
-                    "(@Folio, @Reason, @Datetime, @Active,@Company) ", DBSPP);
-                //--------------------------------------------------------------------------------------------------------------------------------
-                GuardaRegistro.Parameters.AddWithValue("@Folio", Folio.ToString());
-                GuardaRegistro.Parameters.AddWithValue("@Reason", "Movimiento Remplazado por un contenedor nuevo");
-                GuardaRegistro.Parameters.AddWithValue("@Datetime", usTime.ToString());
-                GuardaRegistro.Parameters.AddWithValue("@Active", true);
-                GuardaRegistro.Parameters.AddWithValue("@Company", "RADA");
-                GuardaRegistro.ExecuteNonQuery();
-                DBSPP.Close();
-
-                //query message
-                string updateQuer3y = "UPDATE RADAEmpire_CEntryContrainers SET Cancel = @Cancel WHERE Folio_Request = @ID";
-                using (SqlCommand comdmand = new SqlCommand(updateQuer3y, DBSPP))
-                {
-                    DBSPP.Open();
-                    comdmand.Parameters.AddWithValue("@ID", Folio);
-                    comdmand.Parameters.AddWithValue("@Cancel", true);
-                    int rowsAffected = comdmand.ExecuteNonQuery();
-                    DBSPP.Close();
-                }
-
-                //Guardar informacion a la base de datos del proyecto
-                DBSPP.Open();
-                SqlCommand RADAdocument = new SqlCommand("insert into RADAEmpire_CEntryContrainers" +
-                    "(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date,AreaWork, Active,Cancel) values " +
-                    "(@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date,@AreaWork, @Active, @Cancel) ", DBSPP);
-                //--------------------------------------------------------------------------------------------------------------------------------
-                RADAdocument.Parameters.AddWithValue("@Folio_Request", Folio.ToString());
-                RADAdocument.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
-                RADAdocument.Parameters.AddWithValue("@Time_Confirm", "00:00:00");
-                RADAdocument.Parameters.AddWithValue("@Choffer", "PENDNING CONFIRM");
-                RADAdocument.Parameters.AddWithValue("@FastCard", "PENDNING CONFIRM");
-                RADAdocument.Parameters.AddWithValue("@Time_Finished", "00:00:00");
-                RADAdocument.Parameters.AddWithValue("@Date", usTime.ToString());
-                RADAdocument.Parameters.AddWithValue("@AreaWork", "RADALogistics");
-                RADAdocument.Parameters.AddWithValue("@Active", true);
-                RADAdocument.Parameters.AddWithValue("@Cancel", false);
-                RADAdocument.ExecuteNonQuery();
-                DBSPP.Close();
-
-                // Guardar información de cada paso en la base de datos
-                DBSPP.Open();
-                foreach (string paso in lista)
-                {
-                    SqlCommand ProcessDB = new SqlCommand("INSERT INTO RADAEmpires_DZDetailsHisense " +
-                        "(Folio, Type_StatusContainer, GruaMov, Process_Movement, End_date, Status, Comment, Date_Process, Activo) " +
-                        "VALUES (@Folio, @Type_StatusContainer, @GruaMov, @Process_Movement, @End_date, @Status, @Comment, GETDATE(), @Activo)", DBSPP);
-
-                    ProcessDB.Parameters.AddWithValue("@Folio", Folio.ToString());
-                    ProcessDB.Parameters.AddWithValue("@Type_StatusContainer", status.ToString());
-                    ProcessDB.Parameters.AddWithValue("@GruaMov", grua.ToString());
-                    ProcessDB.Parameters.AddWithValue("@Process_Movement", paso); // Aquí se guarda cada paso de la lista
-                    ProcessDB.Parameters.AddWithValue("@End_date", "00:00:00");
-                    ProcessDB.Parameters.AddWithValue("@Status", "PENDIENTE");
-                    ProcessDB.Parameters.AddWithValue("@Comment", "SIN COMENTARIOS");
-                    ProcessDB.Parameters.AddWithValue("@Activo", true);
-
-                    ProcessDB.ExecuteNonQuery();
-                }
-                DBSPP.Close();
-
-                //Actualizar numero de contenedor
-                string updateQuery = "UPDATE RADAEmpire_BRequestContainers " +
-                    " SET Container = @Container WHERE Folio = @ID";
-                using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
-                {
-                    DBSPP.Open();
-                    command.Parameters.AddWithValue("@Container", NewContainer.ToUpper());
-                    command.Parameters.AddWithValue("@ID", OldID.ToString());
-                    int rowsAffected = command.ExecuteNonQuery();
-                    DBSPP.Close();
-                }
-
-            }
-
-            return RedirectToAction("EntryContainer", "RADA");
-        }
-
-        public ActionResult EntryContainer(string query, string date)
-        {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
-            {
-                Session["Username"] = Request.Cookies["UserCookie"].Value;
-            }
-
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
-            {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
-            }
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+                ViewBag.Type = Session["Type"];
+
+                string Contenedor = null;
+                SqlCommand asiggne = new SqlCommand("Select Container from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + ID.ToString() + "'", DBSPP);
+                DBSPP.Open();
+                SqlDataReader drasiggne = asiggne.ExecuteReader();
+                if (drasiggne.HasRows)
+                {
+                    while (drasiggne.Read())
+                    {
+                        Contenedor = drasiggne["Container"].ToString();
+                    }
+                }
+                DBSPP.Close();
+
+                ViewBag.ID = ID.ToString();
+                ViewBag.Contenedor = Contenedor.ToString();
+
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ReplaceProcess(string OldID, string OldContainer, string NewContainer, bool guardarAnterior)
+        {
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
+            {
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
+            }
+
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                ViewBag.User = Session["Username"];
+                ViewBag.Type = Session["Type"];
+
+                if (guardarAnterior == true)
+                {
+                    //Generar nuevo reporte de contenedor anterior
+                    string folio = null, whosend = null, destination = null,
+                        origins = null, status = null, shift = null,
+                        date = null, datetimeadded = null, grua = null, rAR = null;
+
+                    SqlCommand asiggne = new SqlCommand("Select * from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + OldID.ToString() + "'", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drasiggne = asiggne.ExecuteReader();
+                    if (drasiggne.HasRows)
+                    {
+                        while (drasiggne.Read())
+                        {
+                            folio = drasiggne["Folio"].ToString();
+                            whosend = drasiggne["Who_Send"].ToString();
+                            //container = drasiggne["Container"].ToString();
+                            destination = drasiggne["Destination_Location"].ToString();
+                            origins = drasiggne["Origins_Location"].ToString();
+                            status = drasiggne["Status"].ToString();
+                            //message = drasiggne["Container"].ToString();
+                            shift = drasiggne["shift"].ToString();
+                            date = drasiggne["Date"].ToString();
+                            datetimeadded = drasiggne["Datetime"].ToString();
+                            //Active = drasiggne["Container"].ToString();
+                            grua = drasiggne["GruaRequest"].ToString();
+                            rAR = drasiggne["RaRRequest"].ToString();
+
+                        }
+                    }
+                    DBSPP.Close();
+
+                    // Crear la lista
+                    List<string> lista = new List<string>();
+
+                    // Consulta SQL
+                    string query = @"SELECT Process_Movement 
+                 FROM RADAEmpires_DZDetailsHisense 
+                 WHERE Activo = '1' AND Folio = '" + OldID.ToString() + "' ORDER BY ID ASC";
+
+                    SqlCommand Moviments = new SqlCommand(query, DBSPP);
+
+                    DBSPP.Open();
+                    SqlDataReader drMoviments = Moviments.ExecuteReader();
+
+                    // Leer y agregar a la lista
+                    while (drMoviments.Read())
+                    {
+                        string movimiento = drMoviments["Process_Movement"].ToString();
+                        lista.Add(movimiento);
+                    }
+
+                    drMoviments.Close(); // Cierra primero el lector
+                    DBSPP.Close();
+
+                    //create generate randoms int value
+                    string randomval = null;
+                    SqlCommand conse = new SqlCommand("Select top (1) ID from RADAEmpire_BRequestContainers order by ID desc", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drconse = conse.ExecuteReader();
+                    if (drconse.HasRows)
+                    {
+                        while (drconse.Read())
+                        {
+                            randomval = drconse[0].ToString();//234 + 1216 + 
+                        }
+                    }
+                    else
+                    {
+                        randomval = "0";
+                    }
+                    DBSPP.Close();
+
+                    int sum = int.Parse(randomval) + 1;
+
+                    //Random folio = new Random();
+                    //int val = folio.Next(1, 1000000000);
+                    string Folio = null;
+                    Folio = "MOV" + sum.ToString();
+
+                    // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                    DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                    // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                    TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                    // Formatear la fecha para que sea adecuada para la base de datos
+                    string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+
+                    //Guardar informacion a la base de datos del proyecto
+                    DBSPP.Open();
+                    SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
+                        "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest,RaRRequest) values " +
+                        "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest,@RaRRequest) ", DBSPP);
+                    //--------------------------------------------------------------------------------------------------------------------------------
+                    PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
+                    PalletControl.Parameters.AddWithValue("@Who_Send", whosend.ToString());
+                    PalletControl.Parameters.AddWithValue("@Container", OldContainer.ToUpper());
+                    PalletControl.Parameters.AddWithValue("@Destination_Location", destination.ToUpper());
+                    PalletControl.Parameters.AddWithValue("@Origins_Location", origins.ToUpper());
+                    PalletControl.Parameters.AddWithValue("@Status", status.ToString());
+                    PalletControl.Parameters.AddWithValue("@message", "PENDING");
+                    PalletControl.Parameters.AddWithValue("@shift", shift.ToString());
+                    PalletControl.Parameters.AddWithValue("@Date", date.ToString());
+                    PalletControl.Parameters.AddWithValue("@Datetime", datetimeadded.ToString());
+                    PalletControl.Parameters.AddWithValue("@Active", true);
+                    PalletControl.Parameters.AddWithValue("@GruaRequest", grua.ToString());
+                    PalletControl.Parameters.AddWithValue("@RaRRequest", rAR.ToString());
+                    PalletControl.ExecuteNonQuery();
+                    DBSPP.Close();
+
+                    //Guardar informacion a la base de datos del proyecto
+                    DBSPP.Open();
+                    SqlCommand RADAdocument = new SqlCommand("insert into RADAEmpire_CEntryContrainers" +
+                        "(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date,AreaWork, Active,Cancel) values " +
+                        "(@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date,@AreaWork, @Active, @Cancel) ", DBSPP);
+                    //--------------------------------------------------------------------------------------------------------------------------------
+                    RADAdocument.Parameters.AddWithValue("@Folio_Request", Folio.ToString());
+                    RADAdocument.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
+                    RADAdocument.Parameters.AddWithValue("@Time_Confirm", "00:00:00");
+                    RADAdocument.Parameters.AddWithValue("@Choffer", "PENDNING CONFIRM");
+                    RADAdocument.Parameters.AddWithValue("@FastCard", "PENDNING CONFIRM");
+                    RADAdocument.Parameters.AddWithValue("@Time_Finished", "00:00:00");
+                    RADAdocument.Parameters.AddWithValue("@Date", usTime.ToString());
+                    RADAdocument.Parameters.AddWithValue("@AreaWork", "RADALogistics");
+                    RADAdocument.Parameters.AddWithValue("@Active", true);
+                    RADAdocument.Parameters.AddWithValue("@Cancel", false);
+                    RADAdocument.ExecuteNonQuery();
+                    DBSPP.Close();
+
+                    // Guardar información de cada paso en la base de datos
+                    DBSPP.Open();
+                    foreach (string paso in lista)
+                    {
+                        SqlCommand ProcessDB = new SqlCommand("INSERT INTO RADAEmpires_DZDetailsHisense " +
+                            "(Folio, Type_StatusContainer, GruaMov, Process_Movement, End_date, Status, Comment, Date_Process, Activo) " +
+                            "VALUES (@Folio, @Type_StatusContainer, @GruaMov, @Process_Movement, @End_date, @Status, @Comment, GETDATE(), @Activo)", DBSPP);
+
+                        ProcessDB.Parameters.AddWithValue("@Folio", Folio.ToString());
+                        ProcessDB.Parameters.AddWithValue("@Type_StatusContainer", status.ToString());
+                        ProcessDB.Parameters.AddWithValue("@GruaMov", grua.ToString());
+                        ProcessDB.Parameters.AddWithValue("@Process_Movement", paso); // Aquí se guarda cada paso de la lista
+                        ProcessDB.Parameters.AddWithValue("@End_date", "00:00:00");
+                        ProcessDB.Parameters.AddWithValue("@Status", "PENDIENTE");
+                        ProcessDB.Parameters.AddWithValue("@Comment", "SIN COMENTARIOS");
+                        ProcessDB.Parameters.AddWithValue("@Activo", true);
+
+                        ProcessDB.ExecuteNonQuery();
+                    }
+                    DBSPP.Close();
+
+                    //Actualizar numero de contenedor
+                    string updateQuery = "UPDATE RADAEmpire_BRequestContainers " +
+                        " SET Container = @Container WHERE Folio = @ID";
+                    using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
+                    {
+                        DBSPP.Open();
+                        command.Parameters.AddWithValue("@Container", NewContainer.ToUpper());
+                        command.Parameters.AddWithValue("@ID", OldID.ToString());
+                        int rowsAffected = command.ExecuteNonQuery();
+                        DBSPP.Close();
+                    }
+
+                }
+                else
+                {
+                    //Generar nuevo reporte de contenedor anterior
+                    string folio = null, whosend = null, destination = null,
+                        origins = null, status = null, shift = null,
+                        date = null, datetimeadded = null, grua = null, rAR = null;
+
+                    SqlCommand asiggne = new SqlCommand("Select * from RADAEmpire_BRequestContainers where Active = '1' and Folio = '" + OldID.ToString() + "'", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drasiggne = asiggne.ExecuteReader();
+                    if (drasiggne.HasRows)
+                    {
+                        while (drasiggne.Read())
+                        {
+                            folio = drasiggne["Folio"].ToString();
+                            whosend = drasiggne["Who_Send"].ToString();
+                            //container = drasiggne["Container"].ToString();
+                            destination = drasiggne["Destination_Location"].ToString();
+                            origins = drasiggne["Origins_Location"].ToString();
+                            status = drasiggne["Status"].ToString();
+                            //message = drasiggne["Container"].ToString();
+                            shift = drasiggne["shift"].ToString();
+                            date = drasiggne["Date"].ToString();
+                            datetimeadded = drasiggne["Datetime"].ToString();
+                            //Active = drasiggne["Container"].ToString();
+                            grua = drasiggne["GruaRequest"].ToString();
+                            rAR = drasiggne["RaRRequest"].ToString();
+                        }
+                    }
+                    DBSPP.Close();
+
+                    // Crear la lista
+                    List<string> lista = new List<string>();
+
+                    // Consulta SQL
+                    string query = @"SELECT Process_Movement 
+                 FROM RADAEmpires_DZDetailsHisense 
+                 WHERE Activo = '1' AND Folio = '" + OldID.ToString() + "' ORDER BY ID ASC";
+
+                    SqlCommand Moviments = new SqlCommand(query, DBSPP);
+
+                    DBSPP.Open();
+                    SqlDataReader drMoviments = Moviments.ExecuteReader();
+
+                    // Leer y agregar a la lista
+                    while (drMoviments.Read())
+                    {
+                        string movimiento = drMoviments["Process_Movement"].ToString();
+                        lista.Add(movimiento);
+                    }
+
+                    drMoviments.Close(); // Cierra primero el lector
+                    DBSPP.Close();
+
+                    //create generate randoms int value
+                    string randomval = null;
+                    SqlCommand conse = new SqlCommand("Select top (1) ID from RADAEmpire_BRequestContainers order by ID desc", DBSPP);
+                    DBSPP.Open();
+                    SqlDataReader drconse = conse.ExecuteReader();
+                    if (drconse.HasRows)
+                    {
+                        while (drconse.Read())
+                        {
+                            randomval = drconse[0].ToString();//234 + 1216 + 
+                        }
+                    }
+                    else
+                    {
+                        randomval = "0";
+                    }
+                    DBSPP.Close();
+
+                    int sum = int.Parse(randomval) + 1;
+
+                    //Random folio = new Random();
+                    //int val = folio.Next(1, 1000000000);
+                    string Folio = null;
+                    Folio = "MOV" + sum.ToString();
+
+                    // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
+                    DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
+
+                    // Convertir la hora alemana a la hora en una zona horaria específica de EE. UU. (por ejemplo, Nueva York, UTC-5)
+                    TimeZoneInfo usEasternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    DateTime usTime = TimeZoneInfo.ConvertTime(germanTime, usEasternTimeZone);
+
+                    // Formatear la fecha para que sea adecuada para la base de datos
+                    string formattedDate = usTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+
+                    //Guardar informacion a la base de datos del proyecto
+                    DBSPP.Open();
+                    SqlCommand PalletControl = new SqlCommand("insert into RADAEmpire_BRequestContainers" +
+                        "(Folio, Who_Send, Container, Destination_Location, Origins_Location, Status, message, shift, Date, Datetime, Active,GruaRequest, RaRRequest) values " +
+                        "(@Folio, @Who_Send, @Container, @Destination_Location, @Origins_Location, @Status, @message, @shift, @Date, @Datetime, @Active,@GruaRequest, @RaRRequest) ", DBSPP);
+                    //--------------------------------------------------------------------------------------------------------------------------------
+                    PalletControl.Parameters.AddWithValue("@Folio", Folio.ToString());
+                    PalletControl.Parameters.AddWithValue("@Who_Send", whosend.ToString());
+                    PalletControl.Parameters.AddWithValue("@Container", OldContainer.ToUpper());
+                    PalletControl.Parameters.AddWithValue("@Destination_Location", destination.ToUpper());
+                    PalletControl.Parameters.AddWithValue("@Origins_Location", origins.ToUpper());
+                    PalletControl.Parameters.AddWithValue("@Status", status.ToString());
+                    PalletControl.Parameters.AddWithValue("@message", "Canceled by Rada");
+                    PalletControl.Parameters.AddWithValue("@shift", shift.ToString());
+                    PalletControl.Parameters.AddWithValue("@Date", date.ToString());
+                    PalletControl.Parameters.AddWithValue("@Datetime", datetimeadded.ToString());
+                    PalletControl.Parameters.AddWithValue("@Active", true);
+                    PalletControl.Parameters.AddWithValue("@GruaRequest", grua.ToString());
+                    PalletControl.Parameters.AddWithValue("@RaRRequest", rAR.ToString());
+                    PalletControl.ExecuteNonQuery();
+                    DBSPP.Close();
+
+                    DBSPP.Open();
+                    SqlCommand GuardaRegistro = new SqlCommand("insert into RADAEmpires_DRemoves" +
+                        "(Folio, Reason, Datetime, Active,Company) values " +
+                        "(@Folio, @Reason, @Datetime, @Active,@Company) ", DBSPP);
+                    //--------------------------------------------------------------------------------------------------------------------------------
+                    GuardaRegistro.Parameters.AddWithValue("@Folio", Folio.ToString());
+                    GuardaRegistro.Parameters.AddWithValue("@Reason", "Movimiento Remplazado por un contenedor nuevo");
+                    GuardaRegistro.Parameters.AddWithValue("@Datetime", usTime.ToString());
+                    GuardaRegistro.Parameters.AddWithValue("@Active", true);
+                    GuardaRegistro.Parameters.AddWithValue("@Company", "RADA");
+                    GuardaRegistro.ExecuteNonQuery();
+                    DBSPP.Close();
+
+                    //query message
+                    string updateQuer3y = "UPDATE RADAEmpire_CEntryContrainers SET Cancel = @Cancel WHERE Folio_Request = @ID";
+                    using (SqlCommand comdmand = new SqlCommand(updateQuer3y, DBSPP))
+                    {
+                        DBSPP.Open();
+                        comdmand.Parameters.AddWithValue("@ID", Folio);
+                        comdmand.Parameters.AddWithValue("@Cancel", true);
+                        int rowsAffected = comdmand.ExecuteNonQuery();
+                        DBSPP.Close();
+                    }
+
+                    //Guardar informacion a la base de datos del proyecto
+                    DBSPP.Open();
+                    SqlCommand RADAdocument = new SqlCommand("insert into RADAEmpire_CEntryContrainers" +
+                        "(Folio_Request, Username, Time_Confirm, Choffer, FastCard, Time_Finished, Date,AreaWork, Active,Cancel) values " +
+                        "(@Folio_Request, @Username, @Time_Confirm, @Choffer, @FastCard, @Time_Finished, @Date,@AreaWork, @Active, @Cancel) ", DBSPP);
+                    //--------------------------------------------------------------------------------------------------------------------------------
+                    RADAdocument.Parameters.AddWithValue("@Folio_Request", Folio.ToString());
+                    RADAdocument.Parameters.AddWithValue("@Username", "PENDNING CONFIRM");
+                    RADAdocument.Parameters.AddWithValue("@Time_Confirm", "00:00:00");
+                    RADAdocument.Parameters.AddWithValue("@Choffer", "PENDNING CONFIRM");
+                    RADAdocument.Parameters.AddWithValue("@FastCard", "PENDNING CONFIRM");
+                    RADAdocument.Parameters.AddWithValue("@Time_Finished", "00:00:00");
+                    RADAdocument.Parameters.AddWithValue("@Date", usTime.ToString());
+                    RADAdocument.Parameters.AddWithValue("@AreaWork", "RADALogistics");
+                    RADAdocument.Parameters.AddWithValue("@Active", true);
+                    RADAdocument.Parameters.AddWithValue("@Cancel", false);
+                    RADAdocument.ExecuteNonQuery();
+                    DBSPP.Close();
+
+                    // Guardar información de cada paso en la base de datos
+                    DBSPP.Open();
+                    foreach (string paso in lista)
+                    {
+                        SqlCommand ProcessDB = new SqlCommand("INSERT INTO RADAEmpires_DZDetailsHisense " +
+                            "(Folio, Type_StatusContainer, GruaMov, Process_Movement, End_date, Status, Comment, Date_Process, Activo) " +
+                            "VALUES (@Folio, @Type_StatusContainer, @GruaMov, @Process_Movement, @End_date, @Status, @Comment, GETDATE(), @Activo)", DBSPP);
+
+                        ProcessDB.Parameters.AddWithValue("@Folio", Folio.ToString());
+                        ProcessDB.Parameters.AddWithValue("@Type_StatusContainer", status.ToString());
+                        ProcessDB.Parameters.AddWithValue("@GruaMov", grua.ToString());
+                        ProcessDB.Parameters.AddWithValue("@Process_Movement", paso); // Aquí se guarda cada paso de la lista
+                        ProcessDB.Parameters.AddWithValue("@End_date", "00:00:00");
+                        ProcessDB.Parameters.AddWithValue("@Status", "PENDIENTE");
+                        ProcessDB.Parameters.AddWithValue("@Comment", "SIN COMENTARIOS");
+                        ProcessDB.Parameters.AddWithValue("@Activo", true);
+
+                        ProcessDB.ExecuteNonQuery();
+                    }
+                    DBSPP.Close();
+
+                    //Actualizar numero de contenedor
+                    string updateQuery = "UPDATE RADAEmpire_BRequestContainers " +
+                        " SET Container = @Container WHERE Folio = @ID";
+                    using (SqlCommand command = new SqlCommand(updateQuery, DBSPP))
+                    {
+                        DBSPP.Open();
+                        command.Parameters.AddWithValue("@Container", NewContainer.ToUpper());
+                        command.Parameters.AddWithValue("@ID", OldID.ToString());
+                        int rowsAffected = command.ExecuteNonQuery();
+                        DBSPP.Close();
+                    }
+
+                }
+
+                return RedirectToAction("EntryContainer", "RADA");
+            }
+        }
+
+        public ActionResult EntryContainer(string query, string date)
+        {
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
+            {
+                Session["Username"] = Request.Cookies["UserCookie"].Value;
+            }
+
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
+            {
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
+            }
+
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
+            {
+                return RedirectToAction("LogIn", "Login");
+            }
+            else
+            {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 string name = Session["Username"].ToString();
 
                 if (query == "1")
@@ -1852,25 +1899,27 @@ ORDER BY
 
         public ActionResult ViewConfirm(string ID, string choffer, string requestGrua, string RaR)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
-            {
+            {   
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
                 DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
 
@@ -2032,26 +2081,27 @@ ORDER BY
 
         public ActionResult UpdateConfirmContainer(string ID, string Choffer, string Username, string area, string Container)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
-            {
+            { 
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
                 DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
 
@@ -2219,26 +2269,27 @@ ORDER BY
 
         public ActionResult Inventory()
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 GetInventoryControl();
                 ViewBag.Records = GetInventary;
                 ViewBag.Count = GetInventary.Count.ToString();
@@ -2259,11 +2310,11 @@ ORDER BY
                 Session["Type"] = Request.Cookies["UserCookie"].Value;
             }
 
-
             ViewBag.User = Session["Username"];
             ViewBag.Type = Session["Type"];
 
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return Json(new { success = false, redirectUrl = Url.Action("LogIn", "Login") });
             }
@@ -2283,27 +2334,27 @@ ORDER BY
 
         public ActionResult ReturnContainer(string ID)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
-                
+                 ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
 
                 return View();
             }
@@ -2311,26 +2362,27 @@ ORDER BY
 
         public ActionResult ConfirmContainer(string id)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
-            {
+            { 
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
                 DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
 
@@ -2369,26 +2421,27 @@ ORDER BY
 
         public ActionResult ProcessData(string User, string Container, string Location)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 // Obtener la fecha y hora actual en Alemania (zona horaria UTC+1 o UTC+2 dependiendo del horario de verano)
                 DateTime germanTime = DateTime.UtcNow.AddHours(0);  // Alemania es UTC+1
 
@@ -2423,26 +2476,27 @@ ORDER BY
 
         public ActionResult UpdateInventory(string ID)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 string container = null, date = null, location = null;
                 // create generate randoms int value
                 SqlCommand conse = new SqlCommand("Select * from RADAEmpire_CInventoryControl where Active = '1' and ID = '" + ID.ToString() + "'", DBSPP);
@@ -2469,26 +2523,27 @@ ORDER BY
 
         public ActionResult Update(string id, string Username, string Container, string LocationCode, string Date)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
-            {
+            { 
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 string updateQuery = "UPDATE RADAEmpire_CInventoryControl SET Status = @Status, " +
                 " Username = @Username, Container = @Container, " +
                 " LocationCode = @LocationCode, Date = @Date, Datetime = @Datetime WHERE ID = @ID";

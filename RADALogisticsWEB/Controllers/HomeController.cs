@@ -56,26 +56,27 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult AdministratorHome()
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 string username = Session["Username"].ToString();
                 string TypeLog = null;
                 SqlCommand log = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + username + "'", DBSPP);
@@ -110,26 +111,27 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult RadaHome()
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 string username = Session["Username"].ToString();
                 string TypeLog = null;
                 SqlCommand log = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + username + "'", DBSPP);
@@ -164,26 +166,27 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult HisenseHome()
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 string username = Session["Username"].ToString();
                 string TypeLog = null;
                 SqlCommand log = new SqlCommand("Select Type_user from RADAEmpire_AUsers where Active = '1' and Username = '" + username + "'", DBSPP);
@@ -218,26 +221,27 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Restore(string ID)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 string Folio_Request = null;
                 //create generate randoms int value
                 SqlCommand conse = new SqlCommand("Select Folio_Request from RADAEmpire_CEntryContrainers where Active = '1' and Cancel = '1' and Folio_Request = '" + ID.ToString() + "'", DBSPP);
@@ -291,26 +295,27 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Cancellation()
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 GetCancelled();
                 ViewBag.Records = GetDelleted;
                 ViewBag.Count = GetDelleted.Count.ToString();
@@ -321,26 +326,27 @@ namespace RADALogisticsWEB.Controllers
         [HttpPost]
         public ActionResult Cancellation(string Timeend, string TimeStart)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
             {
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 int count = 0;
                 string sqlTimeStart = null;
                 string sqlTimeend = null;
@@ -430,26 +436,27 @@ namespace RADALogisticsWEB.Controllers
 
         public ActionResult Details(string id)
         {
-            if (Session["Username"] == null && Request.Cookies["UserCookie"] == null)
+            // Intentar recuperar Username desde la cookie si está nulo
+            if (Session["Username"] == null && Request.Cookies["UserCookie"] != null)
             {
                 Session["Username"] = Request.Cookies["UserCookie"].Value;
             }
 
-            if (Session["Type"] == null && Request.Cookies["UserCookie"] != null)
+            // Intentar recuperar Type desde la cookie si está nulo
+            if (Session["Type"] == null && Request.Cookies["TypeCookie"] != null)
             {
-                Session["Type"] = Request.Cookies["UserCookie"].Value;
+                Session["Type"] = Request.Cookies["TypeCookie"].Value;
             }
 
-
-            ViewBag.User = Session["Username"];
-            ViewBag.Type = Session["Type"];
-
-            if (Session.Count <= 0)
+            // Validación final: si sigue sin Username o Type, redirigir al login
+            if (Session["Username"] == null || Session["Type"] == null)
             {
                 return RedirectToAction("LogIn", "Login");
             }
             else
-            {
+            { 
+                ViewBag.User = Session["Username"];
+            ViewBag.Type = Session["Type"];
                 string container = null, origins = null, destination = null, status = null, solicitud = null, 
                     confirmacion = null, entrega = null, request = null, choffer = null, comment = null, date = null;
                 //create generate randoms int value
